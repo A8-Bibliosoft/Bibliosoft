@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <title>个人信息管理</title>
+    <link th:href="@{/static/hucss/bootstrap.css}" rel="stylesheet" type="text/css" media="all" />
+    <script type="text/javascript" th:src="@{/static/hujs/jquery-2.1.4.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/hujs/bootstrap-3.1.1.min.js}"></script>
+    <style>
+        .imgsize img{
+            width: 170px;
+            height: 120px;
+        }
+        .imgsize li{
+            float: left;
+            height: 200px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar" role="navigation">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="goHomePage">首页</a></li>
+            <li><a href="#">所有藏书</a></li>
+        </ul>
+        <ul class="nav navbar-nav" style="float: right;">
+            <li><a href="#">我的消息</a></li>
+            <li><a href="goReaderInfo"><span th:text="${session.loginname}"></span></a></li>
+            <li><a href="goOut">退出登录</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <div class="col-md-12">
+        <ul id="pro-info" class="nav nav-tabs">
+            <li class="active"><a href="#info-1" data-toggle="tab">我的信息</a></li>
+            <li><a href="#info-2" data-toggle="tab">我的借阅</a></li>
+            <li><a href="#info-3" data-toggle="tab">我的预约</a></li>
+            <li><a href="#info-4" data-toggle="tab">借阅历史</a></li>
+        </ul>
+        <div id="pro-info-content" class="tab-content" >
+            <div class="tab-pane fade in active" id="info-1">
+                <br>
+                <form class="form-horizontal" role="form" action="" enctype="multipart/form-data" method="post">
+                    <div class="col-md-8 form-group">
+                        <label class="col-md-3 control-label">姓名</label>
+                        <div class="col-md-7">
+                            <input class="form-control" id="name" name="sname" type="text" th:value="${reader.readerName}">
+                        </div>
+                        <br><br><br>
+                        <label class="col-md-3 control-label">性别</label>
+                        <div class="col-md-7">
+                            <select name="choose-sex" class="selectpicker show-tick form-control"  data-live-search="false" id="choose-sex">
+                                <option th:if="${reader.sex} eq 'secret'" value="-1" selected="selected">保密</option>
+                                <option th:if="${reader.sex} eq 'male'" value="-1" selected="selected">男</option>
+                                <option th:if="${reader.sex} eq 'famle'" value="-1" selected="selected">女</option>
+                            </select>
+                        </div>
+                        <input   name="sex" type="text" id="sex" value="" hidden>
+                        <br><br><br>
+                        <label class="col-md-3 control-label">学号</label>
+                        <div class="col-md-7">
+                            <input class="form-control" id="readerId" name="readerId" type="text" th:value="${reader.readerId}">
+                        </div>
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <div class="col-md-12">
+                            <img  style="width: 200px;height: 200px" id="headimgshow" th:src="@{${reader.imgsrc}}">
+                        </div>
+                        <div class="col-md-12">
+                            <input type="file" name="imgFile" id="file-btn" style="display:none;">
+                            <br>
+                            <a href="#" onclick="UpLoad();return false;" class="fa fa-folder-open fa-lg" aria-hidden="true">点击选择文件</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group has-success">
+                        <label class="col-md-2 control-label">电话</label>
+                        <div class="col-md-8">
+                            <input type="text" name="sphone" class="form-control" id="phonenumber" th:value="${reader.phone}" readonly="readonly">
+                        </div>
+                        <button class="col-md-2 btn btn-warning" type="button" onclick="ChangePhone()">更改绑定</button>
+                    </div>
+
+                    <div class="form-group has-success">
+                        <label class="col-md-2 control-label">邮箱</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="email" name="seamil" th:value="${reader.email}" readonly="readonly">
+                        </div>
+                        <button class="col-md-2 btn btn-warning" type="button" onclick="ChangeEmail()">更改绑定</button>
+                    </div>
+
+                    <!--<input type="text" name="panelType" hidden value="0">-->
+                    <button type="submit" class="btn btn-primary" style="float: right" onclick="Change()">保存修改</button>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="info-2">
+                我的借阅
+                <ul class="nav imgsize">
+                    <li th:each="borrow:${borrowlist}"><a th:href="@{'goBookDetail?bookId='+${borrow.bookId}}"><h4 th:text="${borrow.bookName}"></h4>
+                        <img th:src="@{${borrow.bookImg}}" alt=""></a></li>
+                </ul>
+            </div>
+            <div class="tab-pane fade" id="info-3">
+                我的预约
+                <ul class="nav imgsize">
+                    <li th:each="appointment:${appointmentlist}"><a th:href="@{'goBookDetail?bookId='+${appointment.bookId}}"><h4 th:text="${appointment.bookName}"></h4>
+                        <img th:src="@{${appointment.bookImg}}" alt=""></a></li>
+                </ul>
+            </div>
+            <div class="tab-pane fade" id="info-4">
+                历史记录
+                <ul class="nav imgsize">
+                    <li th:each="history:${historylist}"><a th:href="@{'goBookDetail?bookId='+${history.bookId}}"><h4 th:text="${history.bookName}"></h4>
+                        <img th:src="@{${history.bookImg}}" alt=""></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function Change() {
+        var sex=$('#choose-sex option:selected').text();
+        document.getElementById("sex").value=sex;
+    }
+//    var flag="${paneltype}";
+//    if(flag!=null&&flag!="") {
+//        $('#pro-info li:eq('+parseInt(flag)+') a').tab('show');
+//        flag=null;
+//    }
+
+    function ChangePhone(){
+   		window.location.href="UnBoundPhone1.jsp";
+    }
+    function ChangeEmail(){
+   		window.location.href="UnBoundEmail1.jsp";
+    }
+    function UpLoad() {
+        $("#file-btn").click();
+    }
+
+    $('#file-btn').change(function(){
+        //获取input file的files文件数组;
+        //$('#filed')获取的是jQuery对象，.get(0)转为原生对象;
+        //这边默认只能选一个，但是存放形式仍然是数组，所以取第一个元素使用[0];
+        var file = $('#file-btn').get(0).files[0];
+        //创建用来读取此文件的对象
+        var reader = new FileReader();
+        //使用该对象读取file文件
+        reader.readAsDataURL(file);
+        //读取文件成功后执行的方法函数
+        reader.onload=function(e){
+            //读取成功后返回的一个参数e，整个的一个进度事件
+            console.log(e);
+            //选择所要显示图片的img，要赋值给img的src就是e中target下result里面
+            //的base64编码格式的地址
+            $('#headimgshow').get(0).src = e.target.result;
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www/thymeleaf.org">
+<head>
+    <title>We're sorry, but something went wrong (500)</title>
+    <style type="text/css">
+        body {
+            background-color: #fff;
+            color: #666;
+            text-align: center;
+        }
+
+        .dialog{
+            width:40%;
+            margin:200px auto;
+            text-align:center;
+            color:#222;
+            padding: 10px 10px;
+            border: 1px solid lightslategray;
+            font-family: "Microsoft YaHei", Arial, Helvetica, sans-serif;
+            display:none;
+        }
+        .expression{
+            font-weight:bold;
+            font-size:48px;
+        }
+        .text{
+            font-size:30px;
+
+        }
+        .error_text{
+            font-size:26px;
+
+        }
+        .return a{
+            text-decoration:none;
+            cursor: pointer;
+            color: #00ee00;
+        }
+    </style>
+</head>
+
+<body>
+<!-- This file lives in public/500.html -->
+<div class="dialog">
+    <div class="expression">
+        _(:з)∠)_
+    </div>
+    <div class="error_text">
+        500
+    </div>
+    <div class="text">
+        We're sorry, but something went wrong.
+    </div>
+    <div class="return">
+        We've been notified about this issue and we'll take a look at it shortly.
+        You Can Return To <a th:href="@{'/home'}" id="ret">Index Page</a>.
+    </div>
+</div>
+<script src="/static/js/jquery_1.7.2.js" type="text/javascript"></script>
+<script>
+    $(function(){
+        $(".dialog").fadeIn(1000);
+    });
+</script>
+</body>
+</html>

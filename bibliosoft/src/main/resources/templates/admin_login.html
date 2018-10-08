@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<title>后台登录</title>
+<meta name="author" content="DeathGhost" />
+<link rel="stylesheet" type="text/css" href="/static/css/style1.css" />
+<style>
+body{height:100%;background:#16a085;overflow:hidden;}
+canvas{z-index:-1;position:absolute;}
+</style>
+ <script th:src="@{/static/js/jquery_1.7.2.js}"></script>
+<script th:src="@{/static/js/verificationNumbers.js}"></script>
+<script th:src="@{/static/js/Particleground.js}"></script>
+<script>
+$(document).ready(function() {
+  //粒子背景特效
+  $('body').particleground({
+    dotColor: '#5cbdaa',
+    lineColor: '#5cbdaa'
+  });
+  //验证码
+  createCode();
+});
+</script>
+</head>
+<body>
+<dl class="admin_login">
+ <dt>
+  <strong>图书馆后台管理系统</strong>
+  <em>Management System</em>
+ </dt>
+ <dd class="user_icon">
+  <input type="text" placeholder="账号" class="login_txtbx" id="name" name="name"/>
+ </dd>
+ <dd class="pwd_icon">
+  <input type="password" placeholder="密码" class="login_txtbx" id="password" name="password"/>
+ </dd>
+ <dd class="val_icon">
+  <div class="checkcode">
+    <input type="text" id="J_codetext" placeholder="验证码" maxlength="4" class="login_txtbx" name="yzm">
+    <canvas class="J_codeimg" id="myCanvas" onclick="createCode()">对不起，您的浏览器不支持canvas，请下载最新版浏览器!</canvas>
+  </div>
+
+ </dd>
+ <dd>
+  <input type="button" value="立即登陆" class="submit_btn" onclick="adminLoginCheck()"/>
+ </dd>
+ <dd>
+
+ </dd>
+</dl>
+<script type="text/javascript">
+    function adminLoginCheck(){
+var gcode = $("#J_codetext").val();
+      if(gcode !== code){
+          alert("failed");
+      }
+      else{
+          var name = $("#name").val();
+          var password = $("#password").val();
+          var mycode = "name="+name+"&password="+password;
+      $.ajax({
+          type:"POST",
+          url:'/admin_login',
+          data : mycode ,
+          async : false,
+          cache : false,
+          success: function(data){
+              // alert(data);
+              if("success" === data){
+                  // saveCookie();
+                  window.location.href="/lib_list";//进入主页
+              }else if("usererror" === data){
+                 alert("用户名密码错误");
+              }else if("codeerror" === data){
+                  $("#code").tips({
+                      side : 1,
+                      msg : "Verification code input is incorrect",
+                      bg : '#FF5080',
+                      time : 15
+                  });
+                  showfh();
+                  $("#code").focus();
+              }else{
+                  $("#name").tips({
+                      side : 1,
+                      msg : "Missing parameters",
+                      bg : '#FF5080',
+                      time : 15
+                  });
+                  showfh();
+                  $("#name").focus();
+              }
+          },
+          fail: function (data) {
+              alert(data);
+          }
+
+          }
+
+      );}
+
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <link href="../static/assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../static/css/style.css"/>
+    <link href="../static/assets/css/codemirror.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/assets/css/ace.min.css"/>
+    <link rel="stylesheet" href="../static/assets/css/font-awesome.min.css"/>
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="../static/assets/css/font-awesome-ie7.min.css"/>
+    <![endif]-->
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="../static/assets/css/ace-ie.min.css"/>
+    <![endif]-->
+    <script src="../static/assets/js/jquery.min.js"></script>
+    <title>view reader</title>
+</head>
+<body>
+<div class="member_show">
+    <div class="member_jbxx clearfix">
+        <img class="img" src="../static/images/reader.png">
+        <dl class="right_xxln">
+            <dt>
+                <span th:text="${reader.getReaderName()}">
+
+                </span>
+                <!--欠费 -->
+                <span style="color: red">Arrears: 00.00 ￥</span>
+            </dt>
+            <!-- 个人简介 -->
+            <dd class="" style="margin-left:0">这家伙很懒，什么也没有留下</dd>
+        </dl>
+    </div>
+    <div class="member_content">
+        <ul>
+            <li><label class="label_name">sex：</label><span class="name" th:text="${reader.getSex()}"></span></li>
+            <li><label class="label_name">phone：</label><span class="name" th:text="${reader.getPhone()}"></span></li>
+            <li><label class="label_name">ID：</label><span class="name" th:text="${reader.getReaderId()}"></span></li>
+            <li><label class="label_name">email：</label><span class="name" th:text="${reader.getEmail()}"></span></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

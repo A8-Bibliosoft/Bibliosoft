@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Search</title>
+	<!-- for-mobile-apps -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="" />
+	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+			function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<!-- //for-mobile-apps -->
+	<link th:href="@{/static/hucss/bootstrap.css}" rel="stylesheet" type="text/css" media="all" />
+	<script type="text/javascript" th:src="@{/static/hujs/jquery-2.1.4.min.js}"></script>
+	<script type="text/javascript" th:src="@{/static/hujs/bootstrap-3.1.1.min.js}"></script>
+	<link rel="stylesheet" th:href="@{/static/hucss/swipebox.css}">
+	<link th:href="@{/static/hucss/style.css}" rel="stylesheet" type="text/css" media="all" />
+	<!-- js -->
+
+	<script type="text/javascript" th:src="@{/static/hujs/jquery-2.1.4.min.js}"></script>
+	<!-- //js -->
+	<!--animate-->
+	<link th:href="@{/static/hucss/animate.css}" rel="stylesheet" type="text/css" media="all">
+	<script th:src="@{/static/hujs/wow.min.js}"></script>
+		<script>
+			 new WOW().init();
+		</script>
+	<!--//end-animate-->
+	<link href='http://fonts.googleapis.com/css?family=Quicksand:400,300,700' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+	<!-- start-smoth-scrolling -->
+	<script type="text/javascript" th:src="@{/static/hujs/move-top.js}"></script>
+	<script type="text/javascript" th:src="@{/static/hujs/easing.js}"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			$(".scroll").click(function(event){
+				event.preventDefault();
+				$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+			});
+		});
+	</script>
+	<!-- start-smoth-scrolling -->
+	<script type="text/javascript" th:src="@{/static/hujs/numscroller-1.0.js}"></script>
+	<style>
+		.imgsize img{
+			width: 170px;
+			height: 120px;
+		}
+		.imgsize li{
+			float: left;
+			height: 200px;
+			width: 200px;
+		}
+	</style>
+</head>
+<body>
+<!-- header -->
+<div id="home" class="banner w3l">
+	<div class="container">
+		<nav class="navbar navbar-default  wow zoomIn" data-wow-duration="1.5s" data-wow-delay="0.3s">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header logo">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<h1>
+					<a class="navbar-brand" href="goHomePage">Library图书馆</a>
+				</h1>
+				
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse nav-wil" id="bs-example-navbar-collapse-1">
+				<nav class="cl-effect-1">
+					<ul class="nav navbar-nav ">
+						<li><a class="scroll hvr-bounce-to-bottom active" href="#about">ABOUT</a></li>
+						<li><a class="scroll hvr-bounce-to-bottom" href="#ban-bot">SERVICES</a></li>
+						<li><a class="scroll hvr-bounce-to-bottom" href="#gallery">GALLERY</a></li>
+						<li><a class="scroll hvr-bounce-to-bottom" href="#team">TEAM</a></li>
+						<li><a class="scroll hvr-bounce-to-bottom" href="#contact">CONTACT</a></li>
+					</ul>
+				</nav>
+			</div><!-- /navbar-collapse -->
+		</nav>
+        <div id="readeronline" style="float: right" >
+            <a th:if="${session.loginname} eq null" href="goLogin" >登录</a>
+            <div th:if="${session.loginname} ne null">
+                <a href="goReaderInfo"><span th:text="${session.loginname}"></span></a>
+                <a href="goOut">退出登录</a>
+            </div>
+        </div>
+		<!-- 搜索框-->
+        <h1 style="text-align: center;margin-top: 150px;color: white;">书籍查找</h1>
+        <form method="post" action="search" class="form-horizontal" role="form" style="margin-top: 250px;margin-left: 50px;">
+            <div class="form-group">
+                <select name="find_code" id="find_code" class="col-md-2" style="height: 35px;border-radius: 5px">
+                    <option value="0" selected="">书名</option>
+                    <option value="1">著者</option>
+                    <option value="2">ISBN</option>
+                </select>
+                <input name="find_type" type="text" id="find_type" value="" hidden="hidden" >
+                <div class="col-md-8" style="padding: 0;margin: 0;">
+                    <input class="form-control" name="find_info" type="text">
+                </div>
+                <input type="submit" value="提交" class="btn btn-primary col-md-2" onclick="submitfind()">
+            </div>
+        </form>
+	</div>
+</div>
+<!-- //header -->
+
+<!-- Search -->
+<div class="container">
+	<div class="col-md-4">
+		<ul class="nav" >
+			<li th:each="booktype:${booktypelist}"><a href="#" th:onclick="'javascript:turn('+this+','+${booktype.typeId}+');'" th:text="${booktype.typeName}"></a></li>
+		</ul>
+	</div>
+	<form action="goSearch" method="post" name="form1" id="form1" hidden>
+		<input type="text" id="booktypeid" name="booktypeid" value="">
+	</form>
+	<div id="search_detail"  class="col-md-8">
+		<ul class="nav imgsize" >
+			<li th:each="book:${booklist}"><a  th:href="@{'goBookDetail?bookId='+${book.bookId}}"><h4 th:text="${book.bookName}"></h4>
+				<img th:src="@{${book.bookImg}}" alt=""></a></li>
+		</ul>
+	</div>
+</div>
+
+
+<!-- //Search -->
+
+<!-- //twitter-content -->
+<div class="newsletter all_pad wow fadeInUp animated" data-wow-delay=".5s">
+	<div class="container">
+		<h3 class="title">NEWSLETTER</h3>
+			<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit</p>
+			<div class="sub">
+				<form action="#" method="post">
+					<input type="text" name="Name" placeholder="Name" required="">
+					<input type="email" name="Email" placeholder="Email" required="">
+					<input type="submit" value="SUBSCRIBE NOW" >
+				</form>
+			</div>
+	</div>
+</div>
+<!-- map -->
+<div id="contact" class="map">
+	<iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d2482.432383990807!2d0.028213999961443994!3d51.52362882484525!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1423469959819" style="border:0"></iframe>
+	<div class="map-pos wow zoomIn" data-wow-duration="1.5s" data-wow-delay="0.1s">
+		<h3>ADDRESS</h3>
+		<p>1234k Avenue, 4th block</p>
+		<p>Newyork City.</p>
+		<p>Call : 123 456 7890</p>
+		<p><a href="mailto:info@example.com">info@example.com</a></p>
+	</div>
+</div>
+<div class="contact-form">
+	<div class="container">
+		<form action="#" method="post">
+			<div class="col-md-6 contact-left">
+				<input type="text" value="Name" name="Name" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Name';}" required="">
+				<input type="email address" value="Email" name="Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email';}" required="">
+				<input type="text" value="Mobile Number" name="Mobile Number" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Mobile Number';}" required="">
+			</div>
+			<div class="col-md-6 contact-right">
+				<textarea name="Message..." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Message...';}" required>Message...</textarea>
+				<input type="submit" value="Submit" >
+			</div>
+			<div class="clearfix"></div>
+		</form>
+	</div>
+</div>
+<div class="footer text-center">
+	<div class="container">
+		<ul class="foo-nav">
+			<li><a class="scroll" href="#home">HOME</a></li>
+			<li><a class="scroll" href="#about">ABOUT</a></li>
+			<li><a class="scroll" href="#ban-bot">SERVICES</a></li>
+			<li><a class="scroll" href="#gallery">GALLERY</a></li>
+			<li><a class="scroll" href="#team">TEAM</a></li>
+			<li><a class="scroll" href="#contact">CONTACT</a></li>
+		</ul>
+		<p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>+123 456 7890</p>
+		<ul class="social-one">
+			<li><a class="fb1" href="#"></a></li>
+			<li><a class="fb2" href="#"></a></li>
+			<li><a class="fb3" href="#"></a></li>
+			<li><a class="fb4" href="#"></a></li>
+		</ul>
+	</div>
+</div>
+<div class="copy-right">
+	<div class="container">
+		<p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+	</div>
+</div>
+<!-- //map -->
+<!-- smooth scrolling -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+		/*
+			var defaults = {
+			containerID: 'toTop', // fading element id
+			containerHoverID: 'toTopHover', // fading element hover id
+			scrollSpeed: 1200,
+			easingType: 'linear' 
+			};
+		*/										$().UItoTop({ easingType: 'easeOutQuart' });
+		});
+	</script>
+	<a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+<!-- //smooth scrolling -->
+<script type="text/javascript" th:src="@{/static/hujs/bootstrap-3.1.1.min.js}"></script>
+
+<!--huhao -->
+<script>
+    function submitfind() {
+        var type=$('#find_code option:selected').val();
+        document.getElementById("find_type").value=type;
+    }
+
+    function turn(obj,num) {
+        document.getElementById("booktypeid").value=num;
+        document.form1.submit();
+    }
+</script>
+</body>
+</html>

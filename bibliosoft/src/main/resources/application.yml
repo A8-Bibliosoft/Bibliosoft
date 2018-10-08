@@ -1,0 +1,98 @@
+spring:
+  #profiles:
+  #active: dev/prod
+  datasource:
+    type: com.mchange.v2.c3p0.ComboPooledDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/bibliosoft?characterEncoding=utf8
+#    username: root
+#    password: 1234
+    url: jdbc:mysql://109.238.6.149:3306/bibliosoft?characterEncoding=utf8
+    username: root
+    password: IXiM09u7Tq
+#DataSource End
+
+#JPA(Java Persistence API) Configuration
+  jpa:
+    database: MYSQL
+    show-sql: false
+
+#Hibernate ddl-auto(validate|create|create-drop|update)
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        temp:
+          use_jdbc_metadata_defaults: false
+        format_sql: false
+    #懒加载
+    open-in-view: false
+#Hibernate End
+
+#MVC 视图解析器
+  mvc:
+    static-path-pattern: /static/**
+    favicon:
+      enabled: true
+#   view:
+#      prefix: /templates/
+#      suffix: .html
+
+#静态资源位置
+  resources:
+    static-locations: classpath:/static,classpath:/public,classpath:/resources,classpath:/META-INF/resources
+
+#Spring整合thymeleaf configuration
+  thymeleaf:
+    #关闭thymeleaf缓存，开发时使用，否则没有实时画面
+    cache: false
+    #检查模板是否存在，然后再呈现
+    check-template-location: true
+    #Content-Type
+    servlet:
+      content-type: text/html
+    #应该从解决方案中排除的试图名称，逗号分割列表
+    #excluded-view-names:
+    #模板编码
+    mode: HTML
+    #启用MVC Thymeleaf视图分辨率
+    enabled: true
+    #在构建URL时预先看名称的前缀
+    prefix: classpath:/templates/
+    #后缀
+    suffix: .html
+
+  #设置国际化的基础名称
+  messages:
+    basename: i18n.message
+  #设置上传文件的配置
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      resolve-lazily: true
+      max-request-size: 10MB
+      location:
+#Thymeleaf End
+
+#Custom Configuration
+#reader:
+# readerName: maoge
+# sex: male
+#Server Configuration
+server:
+  port: 8080
+  tomcat:
+    uri-encoding: UTF-8
+    max-connections: 10000
+  servlet:
+    session:
+      timeout: 30m
+  #context-path:
+
+#Log Configuration
+logging:
+    level:
+      org:
+        springframework: WARN

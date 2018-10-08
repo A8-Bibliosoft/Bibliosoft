@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/css/style.css"/>
+    <link rel="stylesheet" href="/static/assets/css/ace.min.css"/>
+    <link rel="stylesheet" href="/static/assets/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/static/Widget/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <link href="/static/Widget/icheck/icheck.css" rel="stylesheet" type="text/css"/>
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="/static/assets/css/font-awesome-ie7.min.css"/>
+    <![endif]-->
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="/static/assets/css/ace-ie.min.css"/>
+    <![endif]-->
+    <script src="/static/js/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="/static/assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/static/assets/js/typeahead-bs2.min.js" type="text/javascript"></script>
+    <!-- page specific plugin scripts -->
+    <script src="/static/assets/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="/static/assets/js/jquery.dataTables.bootstrap.js" type="text/javascript"></script>
+    <script src="/static/js/H-ui.js" type="text/javascript"></script>
+    <script src="/static/js/H-ui.admin.js" type="text/javascript"></script>
+    <script src="/static/assets/layer/layer.js" type="text/javascript"></script>
+    <script src="/static/assets/laydate/laydate.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/static/Widget/zTree/js/jquery.ztree.all-3.5.min.js"></script>
+    <script src="/static/js/lrtk.js" type="text/javascript"></script>
+    <title>book list</title>
+</head>
+<body>
+<div class=" page-content clearfix">
+    <div id="products_style">
+        <div class="search_style">
+            <div class="title_names">Search Query</div>
+            <form action="/book_search" method="post" id="search" onsubmit="return search_check()">
+                <ul class="search_content clearfix">
+                    <li>
+                        <label class="l_f">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You Can
+                            Search&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <input name="bookname" id="bookname" type="text" class="text_add"
+                               placeholder="Enter book name to search." style=" width:250px"/>
+                    </li>
+                    <li>
+                        <label class="l_f">Add Time</label>
+                        <input class="inline laydate-icon" name="bookaddtime" id="start" style="margin-left:10px;">
+                    </li>
+                    <li style="width:90px;">
+                        <button type="button" class="btn_search" th:onclick="'javascript:submit()'">
+                            <i class="icon-search"></i>
+                        </button>
+                    </li>
+                </ul>
+            </form>
+        </div>
+        <div class="border clearfix">
+            <span class="l_f">
+                <a href="/bookadd_detail" title="addbook" class="btn btn-warning Order_form">
+                    <i class="icon-plus"></i>Add Book
+                </a>
+            </span>
+            <span class="r_f">
+                Total:&nbsp;<b th:text="${totalcount}"></b>&nbsp;Items
+            </span>
+        </div>
+        <!--书籍列表展示-->
+        <div class="table_menu_list">
+            <table class="table table-striped table-bordered table-hover" id="sample-table">
+                <thead>
+                <tr>
+                    <!-- 按照ID排序 -->
+                    <th width="40">ID</th>
+                    <th width="80">Book ID</th>
+                    <th width="180">Book Name</th>
+                    <th width="120">ISBN</th>
+                    <th width="120">Author</th>
+                    <th width="100">Price</th>
+                    <th width="200">Position</th>
+                    <th width="200">Add Time</th>
+                    <th width="70">Status</th>
+                    <th width="160">Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="book : ${books}">
+                    <td th:text="${book.getId()}"></td>
+                    <td th:text="${book.getBookId()}"></td>
+                    <td>
+                        <u style="cursor:pointer" class="text-primary" th:text="${book.getBookName()}"
+                           th:onclick="'javascript:member_show('+${book.getId()}+')'">
+                            <!-- 两个参数的话，一直传不成功，它竟然把thymeleaf取回的值转变成了js变量名，而不是字符串 -->
+                        </u>
+                    </td>
+                    <td th:text="${book.getBookIsbn()}"></td>
+                    <td th:text="${book.getBookAuthor()}"></td>
+                    <td th:text="${book.getBookPrice()}"></td>
+                    <td th:text="${book.getBookPosition()}"></td>
+                    <td th:text="${book.getRegisterTime()}"></td>
+
+                    <td class="td-status">
+                        <span class="label label-success radius" th:text="${book.getBookStatus()}"></span>
+                    </td>
+                    <td class="td-manage">
+                        <!--<a th:if="${book.getBookStatus()} == ''"-->
+                        <!--th:onClick="'javascript:member_stop('+this+','+${book.getId()}+')'" href="javascript:;"-->
+                        <!--title="Disable"-->
+                        <!--class="btn btn-xs btn-success">-->
+                        <!--<i class="icon-ok bigger-120"></i>-->
+                        <!--</a>-->
+                        <!--<a th:if="${book.getBookStatus()} == ''"-->
+                        <!--th:onClick="'javascript:member_start('+this+','+${book.getId()}+')'"-->
+                        <!--href="javascript:;" title="Enable"-->
+                        <!--class="btn btn-xs btn-primary">-->
+                        <!--<i class="icon-ok bigger-120"></i>-->
+                        <!--</a>-->
+
+                        <a title="Edit" th:onclick="'javascript:member_edit('+ this +','+${book.getBookId()}+')'"
+                           href="javascript:;"
+                           class="btn btn-xs btn-info">
+                            <i class="icon-edit bigger-120"></i>
+                        </a>
+                        <a title="Delete" href="javascript:;"
+                           th:onclick="'javascript:member_del(' + this + ',' +${book.getId()}+')'"
+                           class="btn btn-xs btn-warning">
+                            <i class="icon-trash  bigger-120"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div id="fenye" style="width: 100%;margin: 0 auto;">
+                <!--页码-->
+                <ul class="pager">
+
+                    <li th:if="${currpage eq 1}" style="margin: 0 5px;" class="disabled">
+                        <a href="javascript:return false;" >
+                            index
+                        </a>
+                    </li>
+                    <li th:if="${currpage ne 1}" style="margin: 0 5px;">
+                        <a th:href="@{'/book_page?currpage=1'}">
+                            index
+                        </a>
+                    </li>
+                    <li th:if="${currpage ne 1}" style="margin: 0 5px;">
+                        <a th:href="@{/book_page(currpage=${currpage}-1)}">&larr; Older</a>
+                    </li>
+                    <li th:if="${currpage eq 1}" style="margin: 0 5px;" class="disabled">
+                        <a href="javascript:return false;">&larr; Older</a>
+                    </li>
+                    <li style="margin: 0 5px;">
+                        the&nbsp;<em style="color: mediumvioletred;" th:text="${currpage}"></em>&nbsp;page
+                    </li>
+                    <li style="margin: 0 5px;">
+                        total:&nbsp;<em style="color: mediumvioletred;" th:text="${totalpages}"></em>&nbsp;pages
+                    </li>
+                    <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
+                        <a href="javascript:return false;">Newer &rarr;</a>
+                    </li>
+                    <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
+                        <a th:href="@{/book_page(currpage=${currpage}+1)}">Newer &rarr;</a>
+                    </li>
+                    <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
+                        <a href="javascript:return false;">
+                            index
+                        </a>
+                    </li>
+                    <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
+                        <a th:href="@{/book_page(currpage=${totalpages})}">
+                            &nbsp;last&nbsp;
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--添加用户图层-->
+    <div class="add_menber" id="add_menber_style" style="display:none">
+        <form action="/edit_book" method="post" id="addbook">
+            <ul class=" page-content">
+                <li><label class="label_name">Book ID：</label>
+                    <span class="add_name">
+                        <input value="" name="bookId" type="text" class="text_add" id="book_id"/>
+                    </span>
+                    <div class="prompt l_f"></div>
+                </li>
+                <li>
+                    <label class="label_name">Book Name：</label>
+                    <span class="add_name">
+                        <input name="bookName" type="text" class="text_add" id="book_name"/>
+                    </span>
+                    <div class="prompt r_f"></div>
+                </li>
+                <li>
+                    <label class="label_name">Position：</label>
+                    <span class="add_name">
+                        <input name="bookPosition" type="text" class="text_add" id="book_position"/>
+                    </span>
+                    <!--<span class="add_name">-->
+                         <!--<label><input name="form-field-radio" type="radio" checked="checked" class="ace" value="male">-->
+                             <!--<span class="lbl">male</span></label>&nbsp;&nbsp;&nbsp;-->
+                         <!--<label><input name="form-field-radio" type="radio" class="ace" value="famle">-->
+                             <!--<span class="lbl">famle</span></label>&nbsp;&nbsp;&nbsp;-->
+                         <!--<label><input name="form-field-radio" type="radio" class="ace" value="secret">-->
+                             <!--<span class="lbl">secret</span></label>-->
+                    <!--</span>-->
+                    <div class="prompt l_f"></div>
+                </li>
+                <li><label class="label_name">ISBN：</label>
+                    <span class="add_name"><input name="isbn" type="text" class="text_add"/></span>
+                    <div class="prompt r_f"></div>
+                </li>
+                <li><label class="label_name">Price：</label>
+                    <span class="add_name"><input name="price" type="text" class="text_add"/></span>
+                    <div class="prompt l_f"></div>
+                </li>
+                <li><label class="label_name">Author：</label>
+                    <span class="add_name">
+                        <input name="author" type="text" class="text_add"/>
+                    </span>
+                    <div class="prompt r_f"></div>
+                </li>
+                <li>
+                    <label class="label_name">Status：</label>
+                    <span class="add_name">
+                        <label>
+                            <input name="form-field-radio1" type="radio" checked="checked" class="ace" value="0">
+                            <span class="lbl">在架上</span>
+                        </label>
+                        <label>
+                            <input name="form-field-radio1" type="radio" class="ace" value="1">
+                            <span class="lbl">已被借走</span>
+                        </label>
+                        <label>
+                            <input name="form-field-radio1" type="radio" class="ace" value="2">
+                            <span class="lbl">已损坏</span>
+                        </label>
+                        <label>
+                            <input name="form-field-radio1" type="radio" class="ace" value="3">
+                            <span class="lbl">正在购买</span>
+                        </label>
+                        <label>
+                            <input name="form-field-radio1" type="radio" class="ace" value="4">
+                            <span class="lbl">已被预约</span>
+                        </label>
+                    </span>
+                    <div class="prompt l_f"></div>
+                </li>
+                <li>
+                    <input name="flag" id="flag" type="text" hidden="hidden"/>
+                </li>
+            </ul>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    //date input
+    laydate({
+        elem: '#start',
+        event: 'focus'
+    });
+
+    //check form before submit
+    function search_check() {
+        var bookname = $("#bookname").val();
+        var bookaddtime = $("#bookaddtime").val();
+        //alert(searchvalue);
+        if ((bookname == null && bookaddtime == null) || (bookname == "" && bookaddtime == "")) {
+            layer.msg("You should input somthing to search!", {icon: 5, time: 1000});
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function submit() {
+        $("#search").submit();
+    }
+
+    jQuery(function ($) {
+        var oTable1 = $('#sample-table').dataTable({
+            "aaSorting": [CDATA[1, "desc"]],//默认第几个排序
+            "bStateSave": true,//状态保存
+            "aoColumnDefs": [
+                //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+                {"orderable": false, "aTargets": [0, 2, 3, 4, 5, 8, 9]}// 制定列不参与排序
+            ]
+        });
+
+
+        $('table th input:checkbox').on('click', function () {
+            var that = this;
+            $(this).closest('table').find('tr > td:first-child input:checkbox')
+                .each(function () {
+                    this.checked = that.checked;
+                    $(this).closest('tr').toggleClass('selected');
+                });
+
+        });
+
+
+        $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+
+        function tooltip_placement(context, source) {
+            var $source = $(source);
+            var $parent = $source.closest('table')
+            var off1 = $parent.offset();
+            var w1 = $parent.width();
+
+            var off2 = $source.offset();
+            var w2 = $source.width();
+
+            if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
+            return 'left';
+        }
+    });
+    $(function () {
+        $("#products_style").fix({
+            float: 'left',
+            //minStatue : true,
+            skin: 'green',
+            durationTime: false,
+            spacingw: 30,//设置隐藏时的距离
+            spacingh: 260,//设置显示时间距
+        });
+    });
+</script>
+<script type="text/javascript">
+
+    /*书籍-查看*/
+    function member_show(id) {
+        var url = "/book_show/" + id;
+        var w = 500;
+        var h = 400;
+        layer_show("Book Info", url + '#?=' + id, w, h);
+    }
+
+    /*书籍-编辑*/
+    function member_edit(obj, id) {
+        $('#book_id').val(id);
+        $('#flag').val('edit');
+        $('#book_id').attr("readonly","readonly");
+        $('#book_name').focus();
+        layer.open({
+            type: 1,
+            title: 'Modify Information',
+            maxmin: true,
+            shadeClose: false, //点击遮罩关闭层
+            area: ['800px', '400px'],
+            content: $('#add_menber_style'),
+            btn: ['Submit', 'Cancel'],
+            yes: function (index, layero) {
+                var num = 0;
+                var str = "";
+                $(".add_menber input[type$='text']").each(function (n) {
+                    if ($(this).val() == "") {
+
+                        layer.alert(str += "" + $(this).attr("name") + "Can not be empty！\r\n", {
+                            title: 'Info',
+                            icon: 0,
+                        });
+                        num++;
+                        return false;
+                    }
+                });
+                if (num > 0) {
+                    return false;
+                }
+                else {
+                    layer.alert('Added successfully！', {
+                        title: 'Info',
+                        icon: 1,
+                    });
+                    layer.close(index);
+                    $('#addbook').submit();
+                    $('#book_id').val('');
+                    $('#reader_id').removeAttr("readonly");
+                }
+            }
+        });
+    }
+
+    /*书籍-删除*/
+    function member_del(obj, id) {
+        layer.confirm('确认要删除吗？', function (index) {
+            $(obj).parents("tr").remove();
+            $.post("/book/" + id,{},function(data){
+                if (data.msg == "success"){
+                    layer.msg('delete successful!', {icon: 1, time: 700});
+                } else{
+                    layer.msg('delete failed!', {icon: 1, time: 70});
+                }
+            });
+
+        });
+    }
+
+    //面包屑返回值
+    var index = parent.layer.getFrameIndex(window.name);
+    parent.layer.iframeAuto(index);
+    $('.Order_form').on('click', function () {
+        var cname = $(this).attr("title");
+        var chref = $(this).attr("href");
+        var cnames = parent.$('.Current_page').html();
+        var herf = parent.$("#iframe").attr("src");
+        parent.$('#parentIframe').html(cname);
+        parent.$('#iframe').attr("src", chref).ready();
+        ;
+        parent.$('#parentIframe').css("display", "inline-block");
+        parent.$('.Current_page').attr({"name": herf, "href": "javascript:void(0)"}).css({
+            "color": "#4c8fbd",
+            "cursor": "pointer"
+        });
+        //parent.$('.Current_page').html("<a href='javascript:void(0)' name="+herf+" class='iframeurl'>" + cnames + "</a>");
+        parent.layer.close(index);
+
+    });
+</script>

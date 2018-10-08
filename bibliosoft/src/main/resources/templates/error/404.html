@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www/thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Page Not Found(404)</title>
+<style type="text/css">
+	.float{
+		width:40%;
+        padding: 10px 10px;
+        border: 1px solid lightslategray;
+		margin:200px auto;
+		text-align:center;
+		color:#222;
+		font-family: "Microsoft YaHei", Arial, Helvetica, sans-serif;
+        display: none;
+	}
+	.expression{
+		font-weight:bold;
+		font-size:48px;
+	}
+	.text{
+		font-size:36px;
+
+	}
+	.error_text{
+		font-size:26px;
+
+	}
+	.return a{
+		text-decoration:none;
+        cursor: pointer;
+        color: #00ee00;
+	}
+</style>
+</head>
+<body>
+	<div class="float">
+        <div class="expression">
+            o(╥﹏╥)o
+        </div>
+        <div class="error_text">
+            404
+        </div>
+        <div class="text">
+            Sorry, Page not found.
+        </div>
+        <div class="return">
+            	You Can Return To <a th:href="@{'/home'}" id="ret">Index Page</a>.
+        </div>
+    </div>
+    <script src="/static/js/jquery_1.7.2.js" type="text/javascript"></script>
+    <script>
+        $(function(){
+            $(".float").fadeIn(1000);
+        });
+    </script>
+</body>
+</html>
