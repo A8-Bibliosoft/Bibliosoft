@@ -2,9 +2,7 @@ package com.lib.bibliosoft.repository;
 
 import com.lib.bibliosoft.entity.BookSort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,8 +21,6 @@ public interface BookSortRepository extends JpaRepository<BookSort, Integer> {
 
     List<BookSort> findByBookAuthorLike(String bookAuthor);
 
-    @Transactional
-    @Query(value = "select * from booksort where type_id=? group by book_isbn",nativeQuery = true)
     List<BookSort> findByTypeId(Integer typeId);
 }
 
