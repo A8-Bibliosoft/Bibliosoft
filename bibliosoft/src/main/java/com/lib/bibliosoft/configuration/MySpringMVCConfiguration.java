@@ -76,7 +76,7 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
 
             }
         };
-        registry.addInterceptor(handlerInterceptor).addPathPatterns("/**").excludePathPatterns("/lib_login", "/goLogin", "/goHomePage", "/bookBook", "/goSearch", "/goOut", "/search", "/goBookDetail",  "/reader_login",  "/admin_login", "/goAdminLogin", "/goHomePage",  "/librarian_login", "/code", "/404", "/500", "/static/**");
+        registry.addInterceptor(handlerInterceptor).addPathPatterns("/**").excludePathPatterns("/lib_login", "/goLogin", "/goHomePage", "/bookBook", "/goSearch", "/goOut", "/search", "/goBookDetail",  "/reader_login",  "/admin_login", "/goAdminLogin", "/goHomePage","/goReaderInfo",  "/librarian_login", "/code", "/404", "/500", "/static/**");
     }
 
     /**
