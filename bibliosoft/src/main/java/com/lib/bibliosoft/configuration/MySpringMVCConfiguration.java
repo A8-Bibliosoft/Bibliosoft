@@ -47,17 +47,21 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
                  */
                 if (session.getAttribute("islogin")!= null){
                     logger.info("已登录，操作正常");
-                    switch (session.getAttribute("logintype").toString()){
-                        case "reader":
-
-                        case "librarian":
-
-                        case "admin":
-
-                        default:
-                            response.sendRedirect("/goHomePage");
-                            return false;
-                    }
+//                    switch (session.getAttribute("logintype").toString()){
+//                        case "reader":
+//                            request.getRequestDispatcher("/goHomePage").forward(request, response);
+//                            return true;
+//                        case "librarian":
+//                            request.getRequestDispatcher("/lib_index").forward(request, response);
+//                            return true;
+//                        case "admin":
+//                            request.getRequestDispatcher("/lib_list").forward(request, response);
+//                            return true;
+//                        default:
+//                            request.getRequestDispatcher("/goHomePage").forward(request, response);
+//                            return false;
+//                    }
+                    return true;
                 }
                 else{
                     logger.info("未登录，请登录后再操作");

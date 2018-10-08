@@ -81,11 +81,17 @@ public class BookService {
      * @param bookname
      * @param bookaddtime
      * @return
+     * @Date: 9:39 PM. 10/8/2018
      */
     public List<Book> searchBookByNameOrAddTime(String bookname, String bookaddtime) throws ParseException {
+        Date date = null;
         if(bookname == null || "".equals(bookname)){
-            Date date = Date.valueOf(bookaddtime);
-            return bookRepository.findByRegisterTime(date);
+            if (bookaddtime == null || "".equals(bookaddtime)){
+                return null;
+            }else{
+                date = Date.valueOf(bookaddtime);
+                return bookRepository.findByRegisterTime(date);
+            }
         }
         if (bookaddtime == null || "".equals(bookaddtime)){
             return  bookRepository.findByBookNameLike('%' + bookname + '%');

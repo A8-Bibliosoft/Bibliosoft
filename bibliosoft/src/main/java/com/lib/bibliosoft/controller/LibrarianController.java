@@ -67,7 +67,7 @@ public class LibrarianController {
      */
     @PostMapping("/librarian_login")
     @ResponseBody
-    public String readerLogin(String loginname,
+    public String loginReader(String loginname,
                               String password,
                               String code,
                               HttpServletRequest request,

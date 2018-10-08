@@ -59,7 +59,7 @@ public class AdminController {
 
     @PostMapping("/admin_login")
     @ResponseBody
-    public String readerLogin(String name, String password,
+    public String loginAdmin(String name, String password,
                               HttpServletRequest request, HttpServletResponse response) throws IOException {
         Admin admin =null;
         if((admin= adminRepository.findByAdminName(name))!=null){

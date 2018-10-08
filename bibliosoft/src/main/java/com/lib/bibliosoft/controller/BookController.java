@@ -213,19 +213,27 @@ public class BookController {
         logger.info("book name==={}, book add time==={}",bookname, bookaddtime);
         List<Book> searchBook = null;
         try {
-            searchBook = bookService.searchBookByNameOrAddTime(bookname, bookaddtime);
+            if (bookService.searchBookByNameOrAddTime(bookname, bookaddtime) != null){
+                searchBook = bookService.searchBookByNameOrAddTime(bookname, bookaddtime);
+                model.addAttribute("totalcount", searchBook.size());
+                Integer totalPages = (searchBook.size() + pagesize - 1)/pagesize;
+                model.addAttribute("totalpages", totalPages);
+                model.addAttribute("currpage",1);
+            }else {
+                model.addAttribute("totalcount", 0);
+                model.addAttribute("totalpages", 0);
+                model.addAttribute("currpage",0);
+            }
+
         } catch (ParseException e) {
             logger.error("Parse Date Error={}", e);
             e.printStackTrace();
         }
 
-        logger.info("查询结果===大小size={}",searchBook.size());
+        //logger.info("查询结果===大小size={}",searchBook.size());
         model.addAttribute("books",searchBook);
         //写死了
-        model.addAttribute("currpage",1);
-        model.addAttribute("totalcount", searchBook.size());
-        Integer totalPages = (searchBook.size() + pagesize - 1)/pagesize;
-        model.addAttribute("totalpages", totalPages);
+
         return "book_list";
     }
 
@@ -324,9 +332,9 @@ public class BookController {
         logger.info("path juedui={}",ph);
         if (FileUtil.upload(bookcover, upload.getAbsolutePath(), bookcover.getOriginalFilename())){
             // 上传成功，给出页面提示
-            msg = "Upload Cover success!";
+            msg = "Add Book success!";
         }else {
-            msg = "Upload Cover failed!";
+            msg = "Add Book failed!";
         }
 
         Map<String,Object> map = new HashMap<String,Object>();

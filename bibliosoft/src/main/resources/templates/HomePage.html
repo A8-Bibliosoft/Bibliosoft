@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="" />
+	<link rel="shortcut icon" th:href="@{/static/images/favicon.ico}"/>
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
 		function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- //for-mobile-apps -->
@@ -35,11 +36,17 @@
 			$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
 		});
 	});
+    //判断当前窗口是否有顶级窗口，如果有就让当前的窗口的地址栏发生变化， 
+    function loadTopWindow(){
+        if (window.top!=null && window.top.document.URL!=document.URL){
+            window.top.location= document.URL; //这样就可以让登陆窗口显示在整个窗口了 
+        }
+    }
 </script>
 <!-- start-smoth-scrolling -->
 <script type="text/javascript" th:src="@{/static/hujs/numscroller-1.0.js}"></script>
 </head>
-<body>
+<body onload="loadTopWindow()">
 <!-- header -->
 <div id="home" class="banner w3l">
 	<div class="container">
@@ -71,6 +78,8 @@
 							</div><!-- /navbar-collapse -->
 		</nav>
 		<div id="readeronline" style="float: right" >
+			<a href="/lib_login">Librarian</a>
+			<a href="/goAdminLogin">Admin</a>
 			<a th:if="${session.loginname} eq null" href="goLogin" >登录</a>
 			<div th:if="${session.loginname} ne null">
                 <a href="goReaderInfo"><span th:text="${session.loginname}"></span></a>
@@ -636,7 +645,7 @@
 </div>
 <div class="copy-right">
 	<div class="container">
-		<p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+		<p>Copyright &copy; 2016.Company name All rights reserved</p>
 	</div>
 </div>
 <!-- //map -->

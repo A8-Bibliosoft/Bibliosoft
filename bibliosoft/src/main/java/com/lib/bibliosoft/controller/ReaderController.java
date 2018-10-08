@@ -262,7 +262,7 @@ public class ReaderController {
 
     @PostMapping("/reader_login")
     @ResponseBody
-    public String readerLogin(Integer readerId, String password, String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String loginReader(Integer readerId, String password, String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Reader reader=null;
         if((reader=readerRepository.findByReaderId(readerId))!=null){
             HttpSession session = request.getSession();

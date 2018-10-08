@@ -9,6 +9,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @Author: 毛文杰
@@ -24,7 +25,7 @@ public class HttpAspect {
     /**
      * 设置切面的作用地点
      */
-//    @Pointcut("execution(public * com.lib.bibliosoft.controller.BookController.*(..))")
+//    @Pointcut("execution(public * com.lib.bibliosoft.controller..*(..))")
 //    public void log(){
 //    }
 //
@@ -33,6 +34,8 @@ public class HttpAspect {
 //        logger.info("before");
 //        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 //        HttpServletRequest request = servletRequestAttributes.getRequest();
+//        HttpSession session = request.getSession();
+//
 //        //url
 //        logger.info("url={}", request.getRequestURL());
 //        //method
