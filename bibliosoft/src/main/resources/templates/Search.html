@@ -122,7 +122,7 @@
 	</form>
 	<div id="search_detail"  class="col-md-8">
 		<ul class="nav imgsize" >
-			<li th:each="book:${booklist}"><a  th:href="@{'goBookDetail?bookId='+${book.bookId}}"><h4 th:text="${book.bookName}"></h4>
+			<li th:each="book:${booklist}"><a  th:href="@{'goBookDetail?bookIsbn='+${book.bookIsbn}}"><h4 th:text="${book.bookName}"></h4>
 				<img th:src="@{${book.bookImg}}" alt=""></a></li>
 		</ul>
 	</div>

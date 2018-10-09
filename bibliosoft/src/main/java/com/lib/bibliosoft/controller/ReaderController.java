@@ -335,27 +335,35 @@ public class ReaderController {
     public String search(Model model,String find_type,String find_info,Integer booktypeid) throws Exception{
         model.addAttribute("booktypelist",bookTypeRepository.findAll());
         model.addAttribute("booklist",bookSortRepository.findByTypeId(booktypeid));
-        switch(find_type){
-            case "0":
-                model.addAttribute("booklist",bookSortRepository.findByBookNameLike("%"+find_info+"%"));break;
-            case "1":
-                model.addAttribute("booklist", bookSortRepository.findByBookAuthorLike("%"+find_info+"%"));break;
-            case "2":
-                model.addAttribute("booklist",bookSortRepository.findByBookIsbn(find_info));break;
-            default:
-                model.addAttribute("booklist","Error!");
+        if(find_info!=null&&!find_info.equals("")) {
+            switch (find_type) {
+                case "0":
+                    model.addAttribute("booklist", bookSortRepository.findByBookNameLike("%" + find_info + "%"));
+                    break;
+                case "1":
+                    model.addAttribute("booklist", bookSortRepository.findByBookAuthorLike("%" + find_info + "%"));
+                    break;
+                case "2":
+                    model.addAttribute("booklist", bookSortRepository.findByBookIsbn(find_info));
+                    break;
+                default:
+                    model.addAttribute("booklist", "Error!");
+            }
         }
         return "Search";
     }
 
     @RequestMapping("/goBookDetail")
-    public String goBookDetail(Model model,Integer bookId){
-        Book book=bookRepository.findByBookId(bookId);
-        model.addAttribute("book",book);
-        model.addAttribute("bookStatus1",bookRepository.countAllByBookStatusAndBookIsbn(1,book.getBookIsbn()));
-        model.addAttribute("bookStatus4",bookRepository.countAllByBookStatusAndBookIsbn(4,book.getBookIsbn()));
-        model.addAttribute("bookStatus0",bookRepository.countAllByBookStatusAndBookIsbn(0,book.getBookIsbn()));
-        return "BookDetail";
+    public String goBookDetail(Model model,String bookIsbn){
+        List<Book> booklist=bookRepository.findBookByBookIsbn(bookIsbn);
+        if(booklist.size()>0){
+            model.addAttribute("book",booklist.get(0));
+            model.addAttribute("bookStatus1",bookRepository.countAllByBookStatusAndBookIsbn(1,booklist.get(0).getBookIsbn()));
+            model.addAttribute("bookStatus4",bookRepository.countAllByBookStatusAndBookIsbn(4,booklist.get(0).getBookIsbn()));
+            model.addAttribute("bookStatus0",bookRepository.countAllByBookStatusAndBookIsbn(0,booklist.get(0).getBookIsbn()));
+            return "BookDetail";
+        }
+       return "HomePage";
     }
 
     @RequestMapping("/goOut")
@@ -365,8 +373,19 @@ public class ReaderController {
     }
 
     @RequestMapping("/bookBook")
-    public String bookBook(Integer bookId){
-        bookRepository.updateBookStatus(4,bookId);
-        return "redirect:goBookDetail?bookId="+bookId;
+    @ResponseBody
+    public String bookBook(HttpServletRequest request,Integer bookId){
+        HttpSession session=request.getSession();
+        if(session.getAttribute("islogin")==null){
+            return "unlogin";
+        }
+        Book book=bookRepository.findByBookId(bookId);
+        List<Book> reminebooklist=bookRepository.findByBookStatusAndBookIsbn(0,book.getBookIsbn());
+        if(reminebooklist.size()>0){
+            bookRepository.updateBookStatus(4,reminebooklist.get(0).getBookId());
+            return "success";
+        }else {
+            return "default";
+        }
     }
 }
