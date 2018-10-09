@@ -57,8 +57,13 @@
         <hr>
         <form action="bookBook" >
             <input type="text" th:value="${book.bookId}" name="bookId" hidden="hidden">
-            <input type="submit" class="btn btn-primary" value="预约" style="display:block;margin:0 auto">
+            <input type="submit" class="btn btn-primary" value="预约" style="display:block;margin:0 auto" onclick="bookresult()">
         </form>
     </div>
+    <script language='javascript' th:inline="javascript">
+        function bookresult() {
+            alert([[${result}]]);
+        }
+    </script>
 </body>
 </html>

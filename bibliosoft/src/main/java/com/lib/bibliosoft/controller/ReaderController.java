@@ -349,12 +349,20 @@ public class ReaderController {
     }
 
     @RequestMapping("/goBookDetail")
-    public String goBookDetail(Model model,Integer bookId){
+    public String goBookDetail(Model model,String result,Integer bookId){
+        logger.info(result);
         Book book=bookRepository.findByBookId(bookId);
         model.addAttribute("book",book);
         model.addAttribute("bookStatus1",bookRepository.countAllByBookStatusAndBookIsbn(1,book.getBookIsbn()));
         model.addAttribute("bookStatus4",bookRepository.countAllByBookStatusAndBookIsbn(4,book.getBookIsbn()));
         model.addAttribute("bookStatus0",bookRepository.countAllByBookStatusAndBookIsbn(0,book.getBookIsbn()));
+        if(result!=null){
+            if (result.equals("true")){
+                model.addAttribute("result","预约成功！");
+            }else if (result.equals("false")){
+                model.addAttribute("result","预约失败！预约书籍已无剩余！");
+            }
+        }
         return "BookDetail";
     }
 
@@ -365,8 +373,19 @@ public class ReaderController {
     }
 
     @RequestMapping("/bookBook")
-    public String bookBook(Integer bookId){
-        bookRepository.updateBookStatus(4,bookId);
-        return "redirect:goBookDetail?bookId="+bookId;
+    public String bookBook(HttpServletRequest request,Integer bookId){
+        HttpSession session=request.getSession();
+        if(session.getAttribute("islogin")==null){
+            return "ReaderLogin";
+        }
+        Book book=bookRepository.findByBookId(bookId);
+        List<Book> reminebooklist=bookRepository.findByBookStatusAndBookIsbn(0,book.getBookIsbn());
+
+        if(reminebooklist.size()>0){
+            bookRepository.updateBookStatus(4,reminebooklist.get(0).getBookId());
+            return "redirect:goBookDetail?result=true&bookId="+bookId;
+        }else {
+            return "redirect:goBookDetail?result=false&bookId=" + bookId;
+        }
     }
 }
