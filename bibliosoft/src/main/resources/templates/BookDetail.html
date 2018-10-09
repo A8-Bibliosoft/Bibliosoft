@@ -60,7 +60,6 @@
     <script language='javascript' th:inline="javascript">
         function bookresult() {
             var code="bookId="+[[${book.bookId}]];
-            alert(code);
             $.ajax({
                 type: "POST",
                 url: "/bookBook",
@@ -68,7 +67,6 @@
                 async: false,
                 cache: false,
                 success: function (data) {
-                    //alert(data);
                     if ("success" === data) {
                         alert("预约成功！");
                     } else if ("default" === data) {

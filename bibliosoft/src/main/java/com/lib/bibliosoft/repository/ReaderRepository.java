@@ -30,8 +30,6 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
      * @return
      */
     Reader findReaderByReaderId(Integer id);
-    //Reader huhao
-    Reader findByReaderId(Integer readerId);
     /**
      * find a reader or readers by reader_name or phone
      * @param string
@@ -50,5 +48,11 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
     @Modifying
     @Query(value = "update reader r set r.status = ?2 where r.id = ?1", nativeQuery = true)
     void updateReaderStatusById(Integer id, String status);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update reader r set r.reader_name=?3, r.sex=?2, r.imgsrc=?4, where r.reader_id = ?1", nativeQuery = true)
+    void updateReaderBasic(Integer readerId,String sex,String readerName,String imgsrc);
+
 }
 
