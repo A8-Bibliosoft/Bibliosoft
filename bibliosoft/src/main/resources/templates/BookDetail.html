@@ -55,14 +55,32 @@
         </div>
         <br><br>
         <hr>
-        <form action="bookBook" >
-            <input type="text" th:value="${book.bookId}" name="bookId" hidden="hidden">
-            <input type="submit" class="btn btn-primary" value="预约" style="display:block;margin:0 auto" onclick="bookresult()">
-        </form>
+        <p style="text-align: center;"><a onclick="bookresult()" class="flip-link btn btn-info" >预约</a></p>
     </div>
     <script language='javascript' th:inline="javascript">
         function bookresult() {
-            alert([[${result}]]);
+            var code="bookId="+[[${book.bookId}]];
+            alert(code);
+            $.ajax({
+                type: "POST",
+                url: "/bookBook",
+                data: code,
+                async: false,
+                cache: false,
+                success: function (data) {
+                    //alert(data);
+                    if ("success" === data) {
+                        alert("预约成功！");
+                    } else if ("default" === data) {
+                        alert("预约失败！书籍库存不足！");
+                    } else if ("unlogin" === data) {
+                        window.location.href="goLogin";
+                    }
+                },
+                fail: function (data) {
+                    alert(data);
+                }
+            });
         }
     </script>
 </body>
