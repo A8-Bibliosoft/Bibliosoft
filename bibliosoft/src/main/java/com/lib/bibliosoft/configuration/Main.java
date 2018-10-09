@@ -1,6 +1,5 @@
 package com.lib.bibliosoft.configuration;
 
-import com.lib.bibliosoft.service.impl.BookService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
@@ -14,7 +13,7 @@ public class Main {
     public static void main(String args[]){
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DataSourceConfiguration.class);
 
-        BookService bookService = context.getBean(BookService.class);
-        context.destroy();
+//        BookService bookService = context.getBean(BookService.class);
+//        context.destroy();
     }
 }

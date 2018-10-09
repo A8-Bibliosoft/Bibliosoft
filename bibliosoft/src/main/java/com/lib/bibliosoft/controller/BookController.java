@@ -6,6 +6,7 @@ import com.lib.bibliosoft.repository.BookRepository;
 import com.lib.bibliosoft.service.impl.BookService;
 import com.lib.bibliosoft.utils.FileUtil;
 import com.lib.bibliosoft.utils.ResultUtil;
+import com.lib.bibliosoft.utils.ScanerIsbn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -364,5 +365,33 @@ public class BookController {
         return "book_show";
     }
 
+    /**
+     *
+     * @param isbn
+     * @param time
+     * @param position
+     * @param status
+     * @return String
+     * @Title: BookController.java
+     * @Author: 毛文杰
+     * @Description:
+     * @Date: 2:19 PM. 10/9/2018
+     */
+    @PostMapping("/book_isbn")
+    public ResponseEntity<Map<String,Object>> getInfoByDouBan(String isbn, String time, String position, String status){
+
+        //get the book and improve it's information
+        Book book = ScanerIsbn.getBookInfoByIsbn(isbn);
+        Date t = Date.valueOf(time);
+        Integer s = Integer.parseInt(status);
+        book.setRegisterTime(t);
+        book.setBookPosition(position);
+        book.setBookStatus(s);
+        bookService.addBook(book);
+
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("msg", "Add-book successful!");
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+    }
 }
 

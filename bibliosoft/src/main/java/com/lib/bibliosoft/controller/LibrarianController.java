@@ -26,7 +26,7 @@ import java.util.List;
  * @Author: 毛文杰
  * @Description: controller for librarian
  * @Date: Created in 10:21 AM. 10/4/2018
- * @Modify By:
+ * @Modify By: maowenjie
  */
 @Controller
 public class LibrarianController {
@@ -113,12 +113,13 @@ public class LibrarianController {
      * logout the system
      * @param request
      * @param response
-     * @return
+     * @return String
      */
     @GetMapping("lib_logout")
     public String lib_logout(HttpServletRequest request,HttpServletResponse response){
         request.getSession().invalidate();
         return "/lib_login";
     }
+
 
 }

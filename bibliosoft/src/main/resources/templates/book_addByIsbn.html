@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/css/style.css"/>
+    <link href="/static/assets/css/codemirror.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="/static/assets/css/ace.min.css"/>-->
+    <link rel="stylesheet" href="/static/font/css/font-awesome.min.css"/>
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="/static/assets/css/ace-ie.min.css"/>
+    <![endif]-->
+    <script src="/static/js/jquery-1.9.1.min.js"></script>
+    <script src="/static/assets/js/bootstrap.min.js"></script>
+    <script src="/static/assets/js/typeahead-bs2.min.js"></script>
+    <script src="/static/assets/js/jquery.dataTables.min.js"></script>
+    <script src="/static/assets/js/jquery.dataTables.bootstrap.js"></script>
+    <script src="/static/assets/layer/layer.js" type="text/javascript"></script>
+    <script src="/static/assets/laydate/laydate.js" type="text/javascript"></script>
+    <script src="/static/js/dragDivResize.js" type="text/javascript"></script>
+    <title>Add BookByISBN</title>
+    <style>
+        .myclass{
+            width: 100%;
+            height: 500px;
+            margin: 0 auto;
+        }
+        .Competence_add{
+            /*border: 1px solid grey;*/
+            margin: 100px auto 0;
+            width: 500px;
+        }
+        .myinput{
+            width: 100%;
+            height: 30px;
+            margin: 0 auto;
+        }
+        .mybutton{
+            width: 70%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<!-- 2018-10-09 5:20 PM maowenjie -->
+<body>
+<div class="Competence_add_style clearfix">
+    <div class="myclass">
+        <div class="title_name">Add Book</div>
+        <form id="myform">
+            <div class="Competence_add">
+                <div class="form-group">
+                    <!--<label class="col-sm-2 control-label no-padding-right" for="form-field-1">-->
+                    <!--Book ISBN-->
+                    <!--</label>-->
+                    <div class="myinput">
+                        <input type="text" placeholder="book ISBN" name="bookisbn" id="bookisbn" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="myinput">
+                        <input type="text" placeholder="book Position" name="bookposition" id="bookposition" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <!--<label class="col-sm-2 control-label no-padding-right" for="form-field-1">-->
+                        <!--Register Time：-->
+                    <!--</label>-->
+                    <div class="myinput">
+                        <input class="inline laydate-icon form-control" name="bookaddtime"
+                               placeholder="Register time" id="bookaddtime">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <!--<label class="col-sm-2 control-label no-padding-right" for="form-field-1">-->
+                        <!--Status：-->
+                    <!--</label>-->
+                    <div class="myinput">
+                        <span class="select-box">
+                            <select class="form-control" title="Select status"  name="bookstatus" id="bookstatus">
+                                <option value="0">On the shelf</option>
+                                <option value="1">Borrowed</option>
+                                <option value="2">Damaged</option>
+                                <option value="3">Buying</option>
+                                <option value="4">Reserved</option>
+                            </select>
+                        </span>
+                    </div>
+                </div>
+
+                <!--按钮操作-->
+                <div class="mybutton">
+                    <button onclick="book_save_submit();" class="btn btn-primary radius" type="submit">
+                        <i class="fa fa-save "></i> Save&Submit
+                    </button>
+                    &nbsp;&nbsp;
+                    <button onclick="window.location.href='/book_list'" class="btn btn-secondary  btn-warning" type="button">
+                        <i class="fa fa-reply"></i> Return
+                    </button>
+                    &nbsp;&nbsp;
+                    <button class="btn btn-default radius" type="reset">&nbsp;&nbsp;Cancel&nbsp;&nbsp;
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    function book_save_submit(){
+        var bookstatus = $("#bookstatus").val();
+        var bookaddtime = $("#bookaddtime").val();
+        var bookposition = $("#bookposition").val();
+        var bookisbn = $("#bookisbn").val();
+        if(bookstatus == "" || bookaddtime == "" || bookposition == "" || bookisbn == ""){
+            layer.msg("Please complete the data form！");
+        }else{
+            var data="isbn="+bookisbn+"&time="+bookaddtime+"&status="+bookstatus+"&position="+bookposition;
+            $.ajax({
+                type: "post",
+                url: "/book_isbn",
+                data: data,
+                success: function(data){
+                    layer.alert(data.msg);
+                    setTimeout('$("#myform")[0].reset()',1000);
+                }
+            });
+        }
+    }
+    function input_reset(){
+
+    }
+
+
+    laydate({
+        elem: '#bookaddtime',
+        event: 'focus'
+    });
+
+</script>

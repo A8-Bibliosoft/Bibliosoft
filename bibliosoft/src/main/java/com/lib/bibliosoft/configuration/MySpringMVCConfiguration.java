@@ -47,20 +47,6 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
                  */
                 if (session.getAttribute("islogin")!= null){
                     logger.info("已登录，操作正常");
-//                    switch (session.getAttribute("logintype").toString()){
-//                        case "reader":
-//                            request.getRequestDispatcher("/goHomePage").forward(request, response);
-//                            return true;
-//                        case "librarian":
-//                            request.getRequestDispatcher("/lib_index").forward(request, response);
-//                            return true;
-//                        case "admin":
-//                            request.getRequestDispatcher("/lib_list").forward(request, response);
-//                            return true;
-//                        default:
-//                            request.getRequestDispatcher("/goHomePage").forward(request, response);
-//                            return false;
-//                    }
                     return true;
                 }
                 else{
@@ -113,6 +99,7 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
         registry.addViewController("/system_setting").setViewName("system_setting");
         registry.addViewController("/book_add").setViewName("book_add");
         registry.addViewController("/book_list").setViewName("book_list");
+        registry.addViewController("/book_addByIsbn").setViewName("book_addByIsbn");
         registry.addViewController("/book_category_add").setViewName("book_category_add");
         registry.addViewController("/bookadd_detail").setViewName("bookadd_detail");
         super.addViewControllers(registry);

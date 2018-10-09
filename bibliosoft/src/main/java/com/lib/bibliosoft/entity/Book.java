@@ -44,6 +44,8 @@ public class Book {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date registerTime;
 
+    private String bookPublisher;
+
     public Book() {
 
     }
@@ -134,5 +136,13 @@ public class Book {
 
     public void setBookAuthor(String bookAuthor) {
         this.bookAuthor = bookAuthor;
+    }
+
+    public String getBookPublisher() {
+        return bookPublisher;
+    }
+
+    public void setBookPublisher(String bookPublisher) {
+        this.bookPublisher = bookPublisher;
     }
 }
