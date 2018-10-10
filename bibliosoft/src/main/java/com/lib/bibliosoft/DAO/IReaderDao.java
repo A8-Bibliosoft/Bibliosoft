@@ -16,11 +16,11 @@ public interface IReaderDao {
 //  原生SQL实现更新方法接口
 //  @Query(value = "update reader set reader_name=?1 where reader_id=?2 ", nativeQuery = true)
 //  @Modifying
-    void updateReader(Integer id, String sex, String readerName, String phone, Integer readerId, String email, String status);
+    void updateReader(Integer id, String sex, String readerName, String phone, String readerId, String email, String status);
 
     List<Reader> findAll();
     Reader findById(Integer id);
-    Reader findByReaderId(Integer id);
+    Reader findByReaderId(String id);
     void addReader(Reader reader);
     void deleteReader(Reader reader);
     Reader findByUsername(String name);

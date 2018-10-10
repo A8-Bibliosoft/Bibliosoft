@@ -20,7 +20,7 @@ public class ReaderDAO implements IReaderDao {
     private ReaderRepository readerRepository;
 
     @Override
-    public Reader findByReaderId(Integer id) {
+    public Reader findByReaderId(String id) {
         return readerRepository.findReaderByReaderId(id);
     }
 
@@ -56,7 +56,7 @@ public class ReaderDAO implements IReaderDao {
      * update reader's info
      */
     @Override
-    public void updateReader(Integer id, String sex, String readerName, String phone, Integer readerId, String email, String status) {
+    public void updateReader(Integer id, String sex, String readerName, String phone, String readerId, String email, String status) {
         readerRepository.updateReader(id, sex, readerName, phone, readerId, email, status);
     }
 

@@ -14,13 +14,13 @@ import java.util.List;
 public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Integer> {
 
     //已还书籍
-    List<BorrowRecord> findByReaderIdAndReturntimeIsNotNull(Integer readerId);
+    List<BorrowRecord> findByReaderIdAndReturntimeIsNotNull(String readerId);
 
     //未还书籍
-    List<BorrowRecord> findByReaderIdAndReturntimeIsNull(Integer readerId);
+    List<BorrowRecord> findByReaderIdAndReturntimeIsNull(String readerId);
 
     //归还提醒
-    List<BorrowRecord> findByReaderIdAndLastdayLessThan(Integer readerId, Integer lastday);
+    List<BorrowRecord> findByReaderIdAndLastdayLessThan(String readerId, Integer lastday);
 
 
     @Transactional

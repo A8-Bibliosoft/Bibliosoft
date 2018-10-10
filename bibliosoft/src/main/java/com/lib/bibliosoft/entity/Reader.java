@@ -16,7 +16,7 @@ public class Reader {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer readerId;
+    private String readerId;
     private String phone;
     private String email;
     private String readerName;
@@ -52,11 +52,11 @@ public class Reader {
         this.id = id;
     }
 
-    public Integer getReaderId() {
+    public String getReaderId() {
         return readerId;
     }
 
-    public void setReaderId(Integer readerId) {
+    public void setReaderId(String readerId) {
         this.readerId = readerId;
     }
 

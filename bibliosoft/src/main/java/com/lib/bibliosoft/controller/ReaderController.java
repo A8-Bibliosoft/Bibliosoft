@@ -7,6 +7,7 @@ import com.lib.bibliosoft.entity.BorrowRecord;
 import com.lib.bibliosoft.entity.Reader;
 import com.lib.bibliosoft.repository.*;
 import com.lib.bibliosoft.service.IReaderService;
+import com.lib.bibliosoft.utils.FileNameUtil;
 import com.lib.bibliosoft.utils.FileUtil;
 import com.lib.bibliosoft.utils.VerifyCode;
 import org.slf4j.Logger;
@@ -107,8 +108,7 @@ public class ReaderController {
      */
     @GetMapping("/reader_show/{id}")
     public String show_reader(@PathVariable("id") String readerId, Model model){
-        Integer readerid = Integer.parseInt(readerId);
-        Reader reader = iReaderDao.findByReaderId(readerid);
+        Reader reader = iReaderDao.findByReaderId(readerId);
         model.addAttribute("reader", reader);
         return "reader_show";
     }
@@ -138,7 +138,7 @@ public class ReaderController {
      * @return
      */
     @PostMapping("/add_reader")
-    public String reader_add(Integer readerId,String readerName,
+    public String reader_add(String readerId,String readerName,
                              @RequestParam("form-field-radio") String sex,
                              String phone, String email,
                              @RequestParam("form-field-radio1") String status, String flag){
@@ -269,7 +269,7 @@ public class ReaderController {
 
     @PostMapping("/reader_login")
     @ResponseBody
-    public String loginReader(Integer readerId, String password, String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String loginReader(String readerId, String password, String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Reader reader=null;
         if((reader=readerRepository.findReaderByReaderId(readerId))!=null){
             HttpSession session = request.getSession();
@@ -298,9 +298,9 @@ public class ReaderController {
     @RequestMapping("/goReaderInfo")
     public String goReaderInfo(Model model,HttpServletRequest request) throws Exception{
         HttpSession session=request.getSession();
-        Integer readerId=null;
+        String readerId=null;
         if(session.getAttribute("readerId")!=null){
-            readerId=Integer.parseInt(session.getAttribute("readerId").toString());
+            readerId=session.getAttribute("readerId").toString();
             List<Book> borrowbooklist=new ArrayList<Book>();
             List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNull(readerId);
             for(int i=0;i<borrowRecordList.size();i++){
@@ -330,24 +330,39 @@ public class ReaderController {
     }
 
     @RequestMapping("/changeReaderInfo")
-    public String changeReaderInfo(HttpServletRequest request,String readerName,String sex,MultipartFile imgFile){
+    public synchronized String changeReaderInfo (HttpServletRequest request,String readerName,String sex,MultipartFile imgFile){
         HttpSession session=request.getSession();
-        Integer readerId=Integer.parseInt(session.getAttribute("readerId").toString());
-        // 要上传的目标文件存放路径
-        //String localPath = "E:/Develop/Files/Photos";
-        File p = null;
-        try {
-            p = new File(ResourceUtils.getURL("classpath:").getPath());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        String readerId=session.getAttribute("readerId").toString();
+        if(!imgFile.isEmpty()){
+            // 要上传的目标文件存放路径
+            File p = null;
+            try {
+                p = new File(ResourceUtils.getURL("classpath:").getPath());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            File upload = new File(p.getAbsolutePath(),"static/readerimages/");
+            if(!upload.exists())
+                upload.mkdirs();
+
+            //删除原图片
+            Reader reader=readerRepository.findReaderByReaderId(readerId);
+            if(reader.getImgsrc()!=null){
+                String oldimgrc=reader.getImgsrc().substring(21);
+                logger.info(upload.getAbsolutePath()+"\\"+oldimgrc);
+                File oldImg=new File(upload.getAbsolutePath()+"\\"+oldimgrc);
+                if(oldImg.delete()){logger.info("删除原图片成功");}else{logger.info("删除原图片失败");}
+            }
+            // 上传成功或者失败的提示
+            String newfilename=FileNameUtil.getFileName(imgFile.getOriginalFilename());
+            FileUtil.upload(imgFile, upload.getAbsolutePath(), newfilename);
+            String imgsrc="/static/readerimages/"+newfilename;
+            //logger.info(imgsrc);
+            //logger.info(upload.getAbsolutePath());
+            readerRepository.updateReaderBasic(readerId,sex,readerName,imgsrc);
+        }else{
+            readerRepository.updateReaderBasic(readerId,sex,readerName);
         }
-        File upload = new File(p.getAbsolutePath(),"static/readerimages/");
-        if(!upload.exists())
-            upload.mkdirs();
-        // 上传成功或者失败的提示
-       FileUtil.upload(imgFile, upload.getAbsolutePath(), imgFile.getOriginalFilename());
-       logger.info(upload.getAbsolutePath());
-        //readerRepository.updateReaderBasic(readerId,sex,readerName,imgsrc);
         return "redirect:goReaderInfo";
     }
 
@@ -410,11 +425,11 @@ public class ReaderController {
         if(session.getAttribute("islogin")==null){
             return "unlogin";
         }
-        Integer readerId=Integer.parseInt(session.getAttribute("readerId").toString());
+        String readerId=session.getAttribute("readerId").toString();
         Book book=bookRepository.findByBookId(bookId);
         List<Book> reminebooklist=bookRepository.findByBookStatusAndBookIsbn(0,book.getBookIsbn());
         if(reminebooklist.size()>0){
-            appointmentRecordRepository.insertAppointment(bookId,readerId,120);
+            appointmentRecordRepository.insertAppointment(reminebooklist.get(0).getBookId(),readerId,120);
             bookRepository.updateBookStatus(4,reminebooklist.get(0).getBookId());
             return "success";
         }else {

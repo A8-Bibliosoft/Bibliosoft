@@ -69,6 +69,7 @@
                 success: function (data) {
                     if ("success" === data) {
                         alert("预约成功！");
+                        window.location.href="goBookDetail?bookIsbn="+[[${book.bookIsbn}]];
                     } else if ("default" === data) {
                         alert("预约失败！书籍库存不足！");
                     } else if ("unlogin" === data) {
