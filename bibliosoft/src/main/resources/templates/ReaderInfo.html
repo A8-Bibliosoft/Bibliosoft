@@ -44,31 +44,31 @@
         <div id="pro-info-content" class="tab-content" >
             <div class="tab-pane fade in active" id="info-1">
                 <br>
-                <form class="form-horizontal" role="form" action="" enctype="multipart/form-data" method="post">
+                <form class="form-horizontal" role="form" action="changeReaderInfo" enctype="multipart/form-data" method="post">
                     <div class="col-md-8 form-group">
                         <label class="col-md-3 control-label">姓名</label>
                         <div class="col-md-7">
-                            <input class="form-control" id="name" name="sname" type="text" th:value="${reader.readerName}">
+                            <input class="form-control" id="name" name="readerName" type="text" th:value="${reader.readerName}">
                         </div>
                         <br><br><br>
                         <label class="col-md-3 control-label">性别</label>
                         <div class="col-md-7">
                             <select name="choose-sex" class="selectpicker show-tick form-control"  data-live-search="false" id="choose-sex">
-                                <option th:if="${reader.sex} eq 'secret'" value="-1" selected="selected">保密</option>
-                                <option th:if="${reader.sex} eq 'male'" value="-1" selected="selected">男</option>
-                                <option th:if="${reader.sex} eq 'famle'" value="-1" selected="selected">女</option>
+                                <option value="0" >secret</option>
+                                <option value="1" >male</option>
+                                <option value="2" >famle</option>
                             </select>
                         </div>
                         <input   name="sex" type="text" id="sex" value="" hidden>
                         <br><br><br>
-                        <label class="col-md-3 control-label">学号</label>
+                        <label class="col-md-3 control-label">欠费金额</label>
                         <div class="col-md-7">
-                            <input class="form-control" id="readerId" name="readerId" type="text" th:value="${reader.readerId}">
+                            <input class="form-control" id="readerId" name="readerId" type="text" value="0" readonly="readonly">
                         </div>
                     </div>
                     <div class="col-md-4 form-group">
                         <div class="col-md-12">
-                            <img  style="width: 200px;height: 200px" id="headimgshow" th:src="@{${reader.imgsrc}}">
+                            <img  style="width: 200px;height: 200px" id="headimgshow" th:src="${reader.imgsrc}">
                         </div>
                         <div class="col-md-12">
                             <input type="file" name="imgFile" id="file-btn" style="display:none;">
@@ -80,7 +80,7 @@
                     <div class="form-group has-success">
                         <label class="col-md-2 control-label">电话</label>
                         <div class="col-md-8">
-                            <input type="text" name="sphone" class="form-control" id="phonenumber" th:value="${reader.phone}" readonly="readonly">
+                            <input type="text" name="phone" class="form-control" id="phonenumber" th:value="${reader.phone}" readonly="readonly">
                         </div>
                         <button class="col-md-2 btn btn-warning" type="button" onclick="ChangePhone()">更改绑定</button>
                     </div>
@@ -88,31 +88,35 @@
                     <div class="form-group has-success">
                         <label class="col-md-2 control-label">邮箱</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" id="email" name="seamil" th:value="${reader.email}" readonly="readonly">
+                            <input type="text" class="form-control" id="email" name="eamil" th:value="${reader.email}" readonly="readonly">
                         </div>
                         <button class="col-md-2 btn btn-warning" type="button" onclick="ChangeEmail()">更改绑定</button>
                     </div>
 
-                    <!--<input type="text" name="panelType" hidden value="0">-->
+                    <div class="form-group has-success">
+                        <label class="col-md-2 control-label">密码</label>
+                        <div class="col-md-8">
+                            <input type="password" name="password" class="form-control"  th:value="${reader.password}" readonly="readonly">
+                        </div>
+                        <button class="col-md-2 btn btn-warning" type="button" onclick="ChangePassword()">更改密码</button>
+                    </div>
+
                     <button type="submit" class="btn btn-primary" style="float: right" onclick="Change()">保存修改</button>
                 </form>
             </div>
             <div class="tab-pane fade" id="info-2">
-                我的借阅
                 <ul class="nav imgsize">
-                    <li th:each="borrow:${borrowlist}"><a th:href="@{'goBookDetail?bookId='+${borrow.bookId}}"><h4 th:text="${borrow.bookName}"></h4>
+                    <li th:each="borrow:${borrowlist}"><a th:href="@{'goBookDetail?bookIsbn='+${borrow.bookIsbn}}"><h4 th:text="${borrow.bookName}"></h4>
                         <img th:src="@{${borrow.bookImg}}" alt=""></a></li>
                 </ul>
             </div>
             <div class="tab-pane fade" id="info-3">
-                我的预约
                 <ul class="nav imgsize">
-                    <li th:each="appointment:${appointmentlist}"><a th:href="@{'goBookDetail?bookId='+${appointment.bookId}}"><h4 th:text="${appointment.bookName}"></h4>
+                    <li th:each="appointment:${appointmentlist}"><a th:href="@{'goBookDetail?bookIsbn='+${appointment.bookIsbn}}"><h4 th:text="${appointment.bookName}"></h4>
                         <img th:src="@{${appointment.bookImg}}" alt=""></a></li>
                 </ul>
             </div>
             <div class="tab-pane fade" id="info-4">
-                历史记录
                 <ul class="nav imgsize">
                     <li th:each="history:${historylist}"><a th:href="@{'goBookDetail?bookId='+${history.bookId}}"><h4 th:text="${history.bookName}"></h4>
                         <img th:src="@{${history.bookImg}}" alt=""></a></li>
@@ -121,16 +125,21 @@
         </div>
     </div>
 </div>
-<script>
+<script language='javascript' th:inline="javascript">
+
+    var readerSex=[[${reader.sex}]];
+    if(readerSex=="male"){
+        $("#choose-sex").val("1");
+    }else if(readerSex=="famle"){
+        $("#choose-sex").val("2");
+    }else{
+        $("#choose-sex").val("0");
+    }
+
     function Change() {
         var sex=$('#choose-sex option:selected').text();
         document.getElementById("sex").value=sex;
     }
-//    var flag="${paneltype}";
-//    if(flag!=null&&flag!="") {
-//        $('#pro-info li:eq('+parseInt(flag)+') a').tab('show');
-//        flag=null;
-//    }
 
     function ChangePhone(){
    		window.location.href="UnBoundPhone1.jsp";

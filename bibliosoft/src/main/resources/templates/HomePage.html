@@ -60,7 +60,7 @@
 									<span class="icon-bar"></span>
 								</button>
 								<h1>
-									<a class="navbar-brand" href="goHomePage">Library图书馆</a>
+									<a class="navbar-brand" href="goHomePage" th:text="#{homepage.libraryname}">Library图书馆</a>
 								</h1>
 								
 							</div>
@@ -90,23 +90,23 @@
 		<div class="banner-info wow bounceInDown" data-wow-duration="1s" data-wow-delay="0s">
 			<script th:src="@{/static/hujs/responsiveslides.min.js}"></script>
 			<script>
-									// You can also use "$(window).load(function() {"
-									$(function () {
-									 // Slideshow 4
-									$("#slider3").responsiveSlides({
-										auto: true,
-										pager: false,
-										nav: true,
-										speed: 500,
-										namespace: "callbacks",
-										before: function () {
-									$('.events').append("<li>before event fired.</li>");
-									},
-									after: function () {
-										$('.events').append("<li>after event fired.</li>");
-										}
-										});
-										});
+				// You can also use "$(window).load(function() {"
+				$(function () {
+				 // Slideshow 4
+				$("#slider3").responsiveSlides({
+					auto: true,
+					pager: false,
+					nav: true,
+					speed: 500,
+					namespace: "callbacks",
+					before: function () {
+				$('.events').append("<li>before event fired.</li>");
+				},
+				after: function () {
+					$('.events').append("<li>after event fired.</li>");
+					}
+					});
+					});
 			</script>
 			<div  class="callbacks_container">
 				<ul class="rslides" id="slider3">

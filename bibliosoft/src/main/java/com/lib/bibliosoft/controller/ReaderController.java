@@ -7,22 +7,30 @@ import com.lib.bibliosoft.entity.BorrowRecord;
 import com.lib.bibliosoft.entity.Reader;
 import com.lib.bibliosoft.repository.*;
 import com.lib.bibliosoft.service.IReaderService;
+import com.lib.bibliosoft.utils.FileNameUtil;
+import com.lib.bibliosoft.utils.FileUtil;
 import com.lib.bibliosoft.utils.VerifyCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.sql.Date;
+import java.util.*;
 
 /**
  * @Author: 毛文杰
@@ -100,8 +108,7 @@ public class ReaderController {
      */
     @GetMapping("/reader_show/{id}")
     public String show_reader(@PathVariable("id") String readerId, Model model){
-        Integer readerid = Integer.parseInt(readerId);
-        Reader reader = iReaderDao.findByReaderId(readerid);
+        Reader reader = iReaderDao.findByReaderId(readerId);
         model.addAttribute("reader", reader);
         return "reader_show";
     }
@@ -131,7 +138,7 @@ public class ReaderController {
      * @return
      */
     @PostMapping("/add_reader")
-    public String reader_add(Integer readerId,String readerName,
+    public String reader_add(String readerId,String readerName,
                              @RequestParam("form-field-radio") String sex,
                              String phone, String email,
                              @RequestParam("form-field-radio1") String status, String flag){
@@ -262,9 +269,9 @@ public class ReaderController {
 
     @PostMapping("/reader_login")
     @ResponseBody
-    public String loginReader(Integer readerId, String password, String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String loginReader(String readerId, String password, String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Reader reader=null;
-        if((reader=readerRepository.findByReaderId(readerId))!=null){
+        if((reader=readerRepository.findReaderByReaderId(readerId))!=null){
             HttpSession session = request.getSession();
             String key = session.getAttribute(VerifyCode.RANDOMCODEKEY).toString();
             response.setContentType("text/plain;charset=UTF-8");
@@ -291,33 +298,72 @@ public class ReaderController {
     @RequestMapping("/goReaderInfo")
     public String goReaderInfo(Model model,HttpServletRequest request) throws Exception{
         HttpSession session=request.getSession();
-        Integer readerId=Integer.parseInt(session.getAttribute("readerId").toString());
+        String readerId=null;
+        if(session.getAttribute("readerId")!=null){
+            readerId=session.getAttribute("readerId").toString();
+            List<Book> borrowbooklist=new ArrayList<Book>();
+            List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNull(readerId);
+            for(int i=0;i<borrowRecordList.size();i++){
+                borrowbooklist.add(bookRepository.findByBookId(borrowRecordList.get(i).getBookId()));
+            }
 
-        List<Book> borrowbooklist=new ArrayList<Book>();
-        List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNull(readerId);
-        for(int i=0;i<borrowRecordList.size();i++){
-            borrowbooklist.add(bookRepository.findByBookId(borrowRecordList.get(i).getBookId()));
+            List<Book> appointmentbooklist=new ArrayList<Book>();
+            List<AppointmentRecord> appointmentRecordList=appointmentRecordRepository.findByReaderId(readerId);
+            for(int i=0;i<appointmentRecordList.size();i++){
+                appointmentbooklist.add(bookRepository.findByBookId(appointmentRecordList.get(i).getBookId()));
+            }
+
+            List<Book> historybooklist=new ArrayList<Book>();
+            List<BorrowRecord> historyRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNotNull(readerId);
+            for(int i=0;i<historyRecordList.size();i++){
+                historybooklist.add(bookRepository.findByBookId(historyRecordList.get(i).getBookId()));
+            }
+
+            model.addAttribute("reader",readerRepository.findReaderByReaderId(readerId));
+            model.addAttribute("borrowlist",borrowbooklist);
+            model.addAttribute("appointmentlist",appointmentbooklist);
+            model.addAttribute("historylist",historybooklist);
+            return "ReaderInfo";
         }
 
-        List<Book> appointmentbooklist=new ArrayList<Book>();
-        List<AppointmentRecord> appointmentRecordList=appointmentRecordRepository.findByReaderId(readerId);
-        for(int i=0;i<appointmentRecordList.size();i++){
-            appointmentbooklist.add(bookRepository.findByBookId(appointmentRecordList.get(i).getBookId()));
+        return "redirect:goLogin";
+    }
+
+    @RequestMapping("/changeReaderInfo")
+    public synchronized String changeReaderInfo (HttpServletRequest request,String readerName,String sex,MultipartFile imgFile){
+        HttpSession session=request.getSession();
+        String readerId=session.getAttribute("readerId").toString();
+        if(!imgFile.isEmpty()){
+            // 要上传的目标文件存放路径
+            File p = null;
+            try {
+                p = new File(ResourceUtils.getURL("classpath:").getPath());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            File upload = new File(p.getAbsolutePath(),"static/readerimages/");
+            if(!upload.exists())
+                upload.mkdirs();
+
+            //删除原图片
+            Reader reader=readerRepository.findReaderByReaderId(readerId);
+            if(reader.getImgsrc()!=null){
+                String oldimgrc=reader.getImgsrc().substring(21);
+                logger.info(upload.getAbsolutePath()+"\\"+oldimgrc);
+                File oldImg=new File(upload.getAbsolutePath()+"\\"+oldimgrc);
+                if(oldImg.delete()){logger.info("删除原图片成功");}else{logger.info("删除原图片失败");}
+            }
+            // 上传成功或者失败的提示
+            String newfilename=FileNameUtil.getFileName(imgFile.getOriginalFilename());
+            FileUtil.upload(imgFile, upload.getAbsolutePath(), newfilename);
+            String imgsrc="/static/readerimages/"+newfilename;
+            //logger.info(imgsrc);
+            //logger.info(upload.getAbsolutePath());
+            readerRepository.updateReaderBasic(readerId,sex,readerName,imgsrc);
+        }else{
+            readerRepository.updateReaderBasic(readerId,sex,readerName);
         }
-
-        List<Book> historybooklist=new ArrayList<Book>();
-        List<BorrowRecord> historyRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNotNull(readerId);
-        for(int i=0;i<historyRecordList.size();i++){
-            historybooklist.add(bookRepository.findByBookId(historyRecordList.get(i).getBookId()));
-        }
-
-
-
-        model.addAttribute("reader",readerRepository.findByReaderId(readerId));
-        model.addAttribute("borrowlist",borrowbooklist);
-        model.addAttribute("appointmentlist",appointmentbooklist);
-        model.addAttribute("historylist",historybooklist);
-        return "ReaderInfo";
+        return "redirect:goReaderInfo";
     }
 
     @RequestMapping("/goHomePage")
@@ -379,13 +425,16 @@ public class ReaderController {
         if(session.getAttribute("islogin")==null){
             return "unlogin";
         }
+        String readerId=session.getAttribute("readerId").toString();
         Book book=bookRepository.findByBookId(bookId);
         List<Book> reminebooklist=bookRepository.findByBookStatusAndBookIsbn(0,book.getBookIsbn());
         if(reminebooklist.size()>0){
+            appointmentRecordRepository.insertAppointment(reminebooklist.get(0).getBookId(),readerId,120);
             bookRepository.updateBookStatus(4,reminebooklist.get(0).getBookId());
             return "success";
         }else {
             return "default";
         }
     }
+
 }

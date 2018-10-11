@@ -29,9 +29,7 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
      * @param id
      * @return
      */
-    Reader findReaderByReaderId(Integer id);
-    //Reader huhao
-    Reader findByReaderId(Integer readerId);
+    Reader findReaderByReaderId(String id);
     /**
      * find a reader or readers by reader_name or phone
      * @param string
@@ -44,11 +42,22 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
     @Transactional
     @Modifying
     @Query(value = "update reader r set r.reader_name=?3, r.sex=?2, r.phone=?4, r.reader_id=?5, r.email=?6, r.status=?7 where r.id = ?1", nativeQuery = true)
-    void updateReader(Integer id, String sex, String readerName, String phone, Integer readerId, String email, String status);
+    void updateReader(Integer id, String sex, String readerName, String phone, String readerId, String email, String status);
 
     @Transactional
     @Modifying
     @Query(value = "update reader r set r.status = ?2 where r.id = ?1", nativeQuery = true)
     void updateReaderStatusById(Integer id, String status);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update reader r set r.reader_name=?3, r.sex=?2, r.imgsrc=?4 where r.reader_id = ?1", nativeQuery = true)
+    void updateReaderBasic(String readerId,String sex,String readerName,String imgsrc);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update reader r set r.reader_name=?3, r.sex=?2 where r.reader_id = ?1", nativeQuery = true)
+    void updateReaderBasic(String readerId,String sex,String readerName);
+
 }
 

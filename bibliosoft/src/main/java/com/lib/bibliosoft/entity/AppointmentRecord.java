@@ -9,7 +9,7 @@ public class AppointmentRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer readerId;
+    private String readerId;
 
     private Integer bookId;
 
@@ -23,11 +23,11 @@ public class AppointmentRecord {
         this.id = id;
     }
 
-    public Integer getReaderId() {
+    public String getReaderId() {
         return readerId;
     }
 
-    public void setReaderId(Integer readerId) {
+    public void setReaderId(String readerId) {
         this.readerId = readerId;
     }
 

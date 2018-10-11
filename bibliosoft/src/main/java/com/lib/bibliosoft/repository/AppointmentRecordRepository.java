@@ -11,12 +11,12 @@ import java.util.List;
 
 @Repository
 public interface AppointmentRecordRepository extends JpaRepository<AppointmentRecord, Integer> {
-    List<AppointmentRecord> findByReaderId(Integer readerId);
+    List<AppointmentRecord> findByReaderId(String readerId);
 
     @Transactional
     @Modifying
     @Query(value = "insert into appointmentrecord(book_id, reader_id, lasttime) VALUES (?1,?2,?3)",nativeQuery = true)
-    void insertAppointment(Integer bookId, Integer readerId, float lasttime);
+    void insertAppointment(Integer bookId, String readerId, float lasttime);
 
     void deleteById(Integer id);
 }

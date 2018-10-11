@@ -46,7 +46,7 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
                  * 判断是否登录
                  */
                 if (session.getAttribute("islogin")!= null){
-                    logger.info("已登录，操作正常");
+                    //logger.info("已登录，操作正常");
                     return true;
                 }
                 else{
