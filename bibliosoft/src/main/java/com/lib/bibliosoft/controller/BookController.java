@@ -390,7 +390,8 @@ public class BookController {
         bookService.addBook(book);
 
         Map<String,Object> map = new HashMap<String,Object>();
-        map.put("msg", "Add-book successful!");
+        map.put("msg", "Add-book successful! This bookid is: " + book.getBookId());
+        map.put("bookid", book.getBookId());
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
 }
