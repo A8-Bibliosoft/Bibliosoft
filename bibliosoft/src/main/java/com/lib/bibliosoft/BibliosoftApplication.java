@@ -6,11 +6,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.nio.charset.Charset;
 
 @Configuration
 @SpringBootApplication
+@EnableScheduling
 public class BibliosoftApplication {
 
     //You can change the banner shape as you want, just add a text file named "banner.txt"

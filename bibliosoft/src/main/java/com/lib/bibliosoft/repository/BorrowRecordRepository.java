@@ -33,6 +33,9 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
     @Query(value = "update borrowrecord set returntime=?1,lastday=?2 where id=?3",nativeQuery = true)
     void updateBorrow(Date returntime, Integer lastday, Integer id);
 
-
+    @Transactional
+    @Modifying
+    @Query(value = "update borrowrecord set lastday=lastday-1 where lastday>0 and returntime is NULL",nativeQuery = true)
+    void minusLastday();
 }
 

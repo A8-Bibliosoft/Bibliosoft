@@ -118,7 +118,7 @@
             </div>
             <div class="tab-pane fade" id="info-4">
                 <ul class="nav imgsize">
-                    <li th:each="history:${historylist}"><a th:href="@{'goBookDetail?bookId='+${history.bookId}}"><h4 th:text="${history.bookName}"></h4>
+                    <li th:each="history:${historylist}"><a th:href="@{'goBookDetail?bookIsbn='+${history.bookIsbn}}"><h4 th:text="${history.bookName}"></h4>
                         <img th:src="@{${history.bookImg}}" alt=""></a></li>
                 </ul>
             </div>

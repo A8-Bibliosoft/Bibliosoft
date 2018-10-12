@@ -20,6 +20,8 @@ public class BorrowRecord {
 
     private  Integer lastday;
 
+    private Integer debt;
+
     public Integer getId() {
         return id;
     }
@@ -66,5 +68,13 @@ public class BorrowRecord {
 
     public void setLastday(Integer lastday) {
         this.lastday = lastday;
+    }
+
+    public Integer getDebt() {
+        return debt;
+    }
+
+    public void setDebt(Integer debt) {
+        this.debt = debt;
     }
 }

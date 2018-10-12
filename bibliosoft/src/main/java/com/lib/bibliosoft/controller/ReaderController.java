@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ClassUtils;
@@ -436,5 +437,11 @@ public class ReaderController {
             return "default";
         }
     }
-
+    //计时测试
+    //第一层returntime!=null 第二层lastday>0 第三层?
+    @Scheduled(cron = "*/10 * * * * *")  //cron接受cron表达式，根据cron表达式确定定时规则
+    public void testCron() {
+        borrowRecordRepository.minusLastday();
+        logger.info("===initialDelay: 执行方法");
+    }
 }

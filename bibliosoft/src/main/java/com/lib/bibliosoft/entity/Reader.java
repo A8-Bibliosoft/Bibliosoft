@@ -24,6 +24,7 @@ public class Reader {
     private String sex;
     private String imgsrc;
     private String status;
+    private Integer alldebt;
 
     @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
     @JoinColumn(name = "id")
@@ -124,4 +125,11 @@ public class Reader {
         this.feedbackList = feedbackList;
     }
 
+    public Integer getAlldebt() {
+        return alldebt;
+    }
+
+    public void setAlldebt(Integer alldebt) {
+        this.alldebt = alldebt;
+    }
 }
