@@ -88,7 +88,9 @@
                         </span>
                     </div>
                 </div>
-
+                <div class="form-group">
+                    <span id="showbookid" style="width:100%;"></span>
+                </div>
                 <!--按钮操作-->
                 <div class="mybutton">
                     <button onclick="book_save_submit();" class="btn btn-primary radius" type="submit">
@@ -123,14 +125,18 @@
                 url: "/book_isbn",
                 data: data,
                 success: function(data){
-                    layer.alert(data.msg);
-                    setTimeout('$("#myform")[0].reset()',1000);
+                    layer.alert(data.msg, {
+                        title: 'Info',
+                        icon: 1,
+                    });
+                    setTimeout('resetandshow(data.bookid)',1000);
                 }
             });
         }
     }
-    function input_reset(){
-
+    function resetandshow(bookid){
+        $('#showbookid').html("此本书的bookid是："+bookid);
+        $("#myform")[0].reset();
     }
 
 
