@@ -18,6 +18,14 @@ public interface AppointmentRecordRepository extends JpaRepository<AppointmentRe
     @Query(value = "insert into appointmentrecord(book_id, reader_id, lasttime) VALUES (?1,?2,?3)",nativeQuery = true)
     void insertAppointment(Integer bookId, String readerId, float lasttime);
 
-    void deleteById(Integer id);
+    @Transactional
+    @Modifying
+    @Query(value = "update appointmentrecord set lasttime=lasttime-1 where lasttime>0",nativeQuery = true)
+    void minusLasttime();
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from appointmentrecord where lasttime=0",nativeQuery = true)
+    void clearLasttime();
 }
 

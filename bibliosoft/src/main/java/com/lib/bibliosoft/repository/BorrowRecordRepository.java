@@ -13,29 +13,68 @@ import java.util.List;
 @Repository
 public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Integer> {
 
-    //已还书籍
+    //个人已还记录
     List<BorrowRecord> findByReaderIdAndReturntimeIsNotNull(String readerId);
 
-    //未还书籍
+    //个人未还记录
     List<BorrowRecord> findByReaderIdAndReturntimeIsNull(String readerId);
 
-    //归还提醒
-    List<BorrowRecord> findByReaderIdAndLastdayLessThan(String readerId, Integer lastday);
+    //个人欠款记录
+    @Transactional
+    @Query(value = "select * from borrowrecord where reader_id=?1 and borrowrecord.debt>0",nativeQuery = true)
+    List<BorrowRecord> findByReaderIdAndDebt();
 
 
+    //所有未还记录
+    List<BorrowRecord> findByReturntimeIsNull();
+    //所有欠款记录
+    @Transactional
+    @Query(value = "select * from borrowrecord where borrowrecord.debt>0",nativeQuery = true)
+    List<BorrowRecord> findByDebt();
+
+    //借书
     @Transactional
     @Modifying
-    @Query(value = "insert into borrowrecord(book_id, borrowtime, lastday, reader_id, returntime) VALUES (?1,?2,?3,?4,?5)",nativeQuery = true)
-    void insertBorrow(Integer bookId, Date borrowtime, Integer lastday, Integer readerId, Date returntime);
+    @Query(value = "insert into borrowrecord(book_id, borrowtime, lastday, reader_id) VALUES (?1,?2,?3,?4)",nativeQuery = true)
+    void insertBorrow(Integer bookId, Date borrowtime, Integer lastday, Integer readerId);
 
+    //还书日期
     @Transactional
     @Modifying
-    @Query(value = "update borrowrecord set returntime=?1,lastday=?2 where id=?3",nativeQuery = true)
-    void updateBorrow(Date returntime, Integer lastday, Integer id);
+    @Query(value = "update borrowrecord set returntime=?1,lastday=?2 where book_id=?3 and debt=0",nativeQuery = true)
+    void updateBorrow(Date returntime, Integer lastday, Integer bookId);
 
+    //倒计时借书日期减少
     @Transactional
     @Modifying
     @Query(value = "update borrowrecord set lastday=lastday-1 where lastday>0 and returntime is NULL",nativeQuery = true)
     void minusLastday();
+
+    //倒计时还书提醒
+    @Transactional
+    @Query(value = "select * from borrowrecord where lastday=7 and returntime is NULL",nativeQuery = true)
+    List<BorrowRecord> findByLastday();
+
+
+    //倒计时欠款增加
+    @Transactional
+    @Modifying
+    @Query(value = "update borrowrecord set debt=debt+1 where lastday=0 and returntime is NULL",nativeQuery = true)
+    void addDebt();
+
+    //还款清空
+    @Transactional
+    @Modifying
+    @Query(value = "update borrowrecord set debt=0 where reader_id=?1 and returntime is NULL",nativeQuery = true)
+    void clearDebt(String readerId);
+
+    //归还提醒
+    List<BorrowRecord> findByReaderIdAndLastdayLessThan(String readerId, Integer lastday);
+
+    //书籍续借
+    @Transactional
+    @Modifying
+    @Query(value = "update borrowrecord set lastday=?2 where book_id=?1",nativeQuery = true)
+    void renew(Integer bookId,Integer lastday);
 }
 

@@ -437,11 +437,25 @@ public class ReaderController {
             return "default";
         }
     }
-    //计时测试
+    //计时测试 还书期限
     //第一层returntime!=null 第二层lastday>0 第三层?
-    @Scheduled(cron = "*/10 * * * * *")  //cron接受cron表达式，根据cron表达式确定定时规则
-    public void testCron() {
-        borrowRecordRepository.minusLastday();
-        logger.info("===initialDelay: 执行方法");
-    }
+//    @Scheduled(cron = "*/10 * * * * *")  //cron接受cron表达式，根据cron表达式确定定时规则
+//    public void testCron1() {
+//        borrowRecordRepository.minusLastday();
+//        List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByLastday();
+//        if(borrowRecordList.size()>0){
+//            logger.info("发邮件啦!!");
+//        }
+//        logger.info("===initialDelay: 执行方法");
+//    }
+
+    //预约时间
+//    @Scheduled(cron = "0 0 */1 * * ?")  //cron接受cron表达式，根据cron表达式确定定时规则
+//    @Scheduled(cron = "*/10 * * * * *")
+//    public void testCron2() {
+//        appointmentRecordRepository.minusLasttime();
+//        appointmentRecordRepository.clearLasttime();
+//        logger.info("===initialDelay: 执行方法");
+//    }
+
 }

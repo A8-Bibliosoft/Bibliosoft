@@ -13,7 +13,7 @@ public class AppointmentRecord {
 
     private Integer bookId;
 
-    private  float lasttime;
+    private  Integer lasttime;
 
     public Integer getId() {
         return id;
@@ -39,11 +39,11 @@ public class AppointmentRecord {
         this.bookId = bookId;
     }
 
-    public float getLasttime() {
+    public Integer getLasttime() {
         return lasttime;
     }
 
-    public void setLasttime(float lasttime) {
+    public void setLasttime(Integer lasttime) {
         this.lasttime = lasttime;
     }
 }

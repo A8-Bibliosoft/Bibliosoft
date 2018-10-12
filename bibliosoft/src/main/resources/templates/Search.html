@@ -42,13 +42,12 @@
 	<script type="text/javascript" th:src="@{/static/hujs/numscroller-1.0.js}"></script>
 	<style>
 		.imgsize img{
-			width: 170px;
+			width: 85px;
 			height: 120px;
 		}
-		.imgsize li{
-			float: left;
-			height: 200px;
-			width: 200px;
+		.imgsize a{
+			height: 150px;
+			width: 100%;
 		}
 	</style>
 </head>
@@ -122,8 +121,15 @@
 	</form>
 	<div id="search_detail"  class="col-md-8">
 		<ul class="nav imgsize" >
-			<li th:each="book:${booklist}"><a  th:href="@{'goBookDetail?bookIsbn='+${book.bookIsbn}}"><h4 th:text="${book.bookName}"></h4>
-				<img th:src="@{${book.bookImg}}" alt=""></a></li>
+			<li th:each="book:${booklist}">
+				<a th:href="@{'goBookDetail?bookIsbn='+${book.bookIsbn}}">
+					<img th:src="${book.bookImg}" alt="bookImage" style="float: left">
+                    <div >
+                        <h4 th:text="${book.bookName}"></h4>
+                        <h4 th:text="${book.bookAuthor}"></h4>
+                    </div>
+				</a>
+			</li>
 		</ul>
 	</div>
 </div>
