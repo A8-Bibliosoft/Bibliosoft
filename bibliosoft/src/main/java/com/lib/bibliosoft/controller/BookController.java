@@ -110,22 +110,27 @@ public class BookController {
     }
 
     /**
-     *@Title: BookController.java
-     *@Params: isbn
-     *@Return: List<Book>
-     *@Author: 毛文杰
-     *@Description:
-     *@Date: 11:14 PM. 9/27/2018
+     * @Title: BookController.java
+     * @Params: isbn
+     * @Return: List<Book>
+     * @Author: 毛文杰
+     * @Description:
+     * @Date: 11:14 PM. 9/27/2018
+     * @ModifyTime 8:14 PM. 10/12/2018
      */
     @GetMapping("/book_sBybisbn")
     public String findBooksByIsbn(@RequestParam("isbn") String isbn, Model model){
         List<Book> books = bookRepository.findBookByBookIsbn(isbn);
         logger.info("bookisbn={}", isbn);
-        model.addAttribute("totalcount", books.size());
+        Integer totalcount =  books.size();
+        model.addAttribute("totalcount", totalcount);
         Integer totalPages = (totalcount + pagesize - 1)/pagesize;
         model.addAttribute("totalpages", totalPages);
         model.addAttribute("books",books);
-        model.addAttribute("currpage",1);
+        if(totalcount == 0)
+            model.addAttribute("currpage",0);
+        else
+            model.addAttribute("currpage",1);
         return "book_list";
     }
 
