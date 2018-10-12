@@ -54,6 +54,23 @@
                     </li>
                 </ul>
             </form>
+            <!-- 按bookid搜索 -->
+            <div style="padding: 100px 100px 10px;">
+                <form class="bs-example bs-example-form" role="form">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="sbookid" placeholder="enter bookid to search.">
+                                <span class="input-group-btn">
+                                    <button onclick="searchByBookid()" class="btn btn-default" type="button">
+                                        Go!
+                                    </button>
+					            </span>
+                            </div><!-- /input-group -->
+                        </div><!-- /.col-lg-6 -->
+                    </div><!-- /.row -->
+                </form>
+            </div>
         </div>
         <div class="border clearfix">
             <span class="l_f">
@@ -103,19 +120,6 @@
                         <span class="label label-success radius" th:text="${book.getBookStatus()}"></span>
                     </td>
                     <td class="td-manage">
-                        <!--<a th:if="${book.getBookStatus()} == ''"-->
-                        <!--th:onClick="'javascript:member_stop('+this+','+${book.getId()}+')'" href="javascript:;"-->
-                        <!--title="Disable"-->
-                        <!--class="btn btn-xs btn-success">-->
-                        <!--<i class="icon-ok bigger-120"></i>-->
-                        <!--</a>-->
-                        <!--<a th:if="${book.getBookStatus()} == ''"-->
-                        <!--th:onClick="'javascript:member_start('+this+','+${book.getId()}+')'"-->
-                        <!--href="javascript:;" title="Enable"-->
-                        <!--class="btn btn-xs btn-primary">-->
-                        <!--<i class="icon-ok bigger-120"></i>-->
-                        <!--</a>-->
-
                         <a title="Edit" th:onclick="'javascript:member_edit('+ this +','+${book.getBookId()}+')'"
                            href="javascript:;"
                            class="btn btn-xs btn-info">
@@ -135,7 +139,7 @@
                 <ul class="pager">
 
                     <li th:if="${currpage eq 1}" style="margin: 0 5px;" class="disabled">
-                        <a href="javascript:return false;" >
+                        <a href="javascript:return false;">
                             index
                         </a>
                     </li>
@@ -199,14 +203,6 @@
                     <span class="add_name">
                         <input name="bookPosition" type="text" class="text_add" id="book_position"/>
                     </span>
-                    <!--<span class="add_name">-->
-                         <!--<label><input name="form-field-radio" type="radio" checked="checked" class="ace" value="male">-->
-                             <!--<span class="lbl">male</span></label>&nbsp;&nbsp;&nbsp;-->
-                         <!--<label><input name="form-field-radio" type="radio" class="ace" value="famle">-->
-                             <!--<span class="lbl">famle</span></label>&nbsp;&nbsp;&nbsp;-->
-                         <!--<label><input name="form-field-radio" type="radio" class="ace" value="secret">-->
-                             <!--<span class="lbl">secret</span></label>-->
-                    <!--</span>-->
                     <div class="prompt l_f"></div>
                 </li>
                 <li><label class="label_name">ISBN：</label>
@@ -259,6 +255,21 @@
 </body>
 </html>
 <script>
+    function searchByBookid(){
+        var bookid = $("#sbookid").val();
+        if(bookid != "" && bookid != null){
+            alert(bookid);
+            $.ajax({
+                type: "GET",
+                url: '/book_sBybid?bookid='+bookid,
+                success: function (data) {
+                }
+            });
+        }else{
+            layer.alert("please input something to search!");
+        }
+    }
+
     //date input
     laydate({
         elem: '#start',
@@ -344,7 +355,7 @@
     function member_edit(obj, id) {
         $('#book_id').val(id);
         $('#flag').val('edit');
-        $('#book_id').attr("readonly","readonly");
+        $('#book_id').attr("readonly", "readonly");
         $('#book_name').focus();
         layer.open({
             type: 1,
@@ -389,10 +400,10 @@
     function member_del(obj, id) {
         layer.confirm('确认要删除吗？', function (index) {
             $(obj).parents("tr").remove();
-            $.post("/book/" + id,{},function(data){
-                if (data.msg == "success"){
+            $.post("/book/" + id, {}, function (data) {
+                if (data.msg == "success") {
                     layer.msg('delete successful!', {icon: 1, time: 700});
-                } else{
+                } else {
                     layer.msg('delete failed!', {icon: 1, time: 70});
                 }
             });

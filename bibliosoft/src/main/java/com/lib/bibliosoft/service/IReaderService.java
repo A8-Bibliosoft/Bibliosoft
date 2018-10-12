@@ -19,4 +19,6 @@ public interface IReaderService {
     Page<Reader> getPageSort(Integer pageNum, Integer pageLimit);
 
     List<Reader> searchReaderByPhoneOrName(String string);
+
+    Integer findBorrowCountByReaderId(String readerId);
 }

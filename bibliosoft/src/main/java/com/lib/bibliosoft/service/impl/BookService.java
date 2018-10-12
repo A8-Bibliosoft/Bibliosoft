@@ -80,7 +80,8 @@ public class BookService {
      * Fuzzy query about book's register time or name
      * @param bookname
      * @param bookaddtime
-     * @return
+     * @return List
+     * @Author maowenjie
      * @Date: 9:39 PM. 10/8/2018
      */
     public List<Book> searchBookByNameOrAddTime(String bookname, String bookaddtime) throws ParseException {

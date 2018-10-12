@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * @Author: 毛文杰
- * @Description:
+ * @Description: service for reader
  * @Date: Created in 4:42 PM. 9/30/2018
  * @Modify By:
  */
@@ -56,8 +56,28 @@ public class ReaderService implements IReaderService {
         return readerRepository.findAll(pageable);
     }
 
+    /**
+     *@Title: ReaderService.java
+     *@Params: string
+     *@Return: List<Reader>
+     *@Author: 毛文杰
+     *@Description:
+     */
     @Override
     public List<Reader> searchReaderByPhoneOrName(String string) {
         return iReaderDao.searchReaderByPhoneOrName(string);
+    }
+
+    /**
+     *@Title: ReaderService.java
+     *@Params: readerId
+     *@Return: Integer
+     *@Author: 毛文杰
+     *@Description: find borrow count of the reader now
+     *@Date: 3:33 PM. 10/12/2018
+     */
+    @Override
+    public Integer findBorrowCountByReaderId(String readerId) {
+        return iReaderDao.getBorrowCountByReaderId(readerId);
     }
 }

@@ -1,6 +1,7 @@
 package com.lib.bibliosoft.repository;
 
 import com.lib.bibliosoft.entity.BorrowRecord;
+import com.lib.bibliosoft.entity.Reader;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,6 +24,17 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
     @Transactional
     @Query(value = "select * from borrowrecord where reader_id=?1 and borrowrecord.debt>0",nativeQuery = true)
     List<BorrowRecord> findByReaderIdAndDebt();
+
+    /**
+     *@Author: 毛文杰
+     *@Description: find all borrow record by readerId
+     *@Date: 4:09 PM. 10/12/2018
+     */
+    @Query(value = "select * from borrowrecord where reader_id = ?1", nativeQuery = true)
+    List<BorrowRecord> findAllByReaderId(String readerId);
+
+//    @Query(value = "select book_id from borrowrecord where reader_id = ?1", nativeQuery = true)
+//    List<Integer> findBookIdByReaderId(String readerid);
 
 
     //所有未还记录
@@ -76,5 +88,6 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
     @Modifying
     @Query(value = "update borrowrecord set lastday=?2 where book_id=?1",nativeQuery = true)
     void renew(Integer bookId,Integer lastday);
+
 }
 

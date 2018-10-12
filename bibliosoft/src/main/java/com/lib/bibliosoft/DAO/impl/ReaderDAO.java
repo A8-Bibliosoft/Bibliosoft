@@ -1,6 +1,7 @@
 package com.lib.bibliosoft.DAO.impl;
 import com.lib.bibliosoft.DAO.IReaderDao;
 import com.lib.bibliosoft.entity.Reader;
+import com.lib.bibliosoft.repository.BorrowRecordRepository;
 import com.lib.bibliosoft.repository.ReaderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ public class ReaderDAO implements IReaderDao {
     @Autowired
     private ReaderRepository readerRepository;
 
+    @Autowired
+    private BorrowRecordRepository borrowRecordRepository;
+
     @Override
     public Reader findByReaderId(String id) {
         return readerRepository.findReaderByReaderId(id);
@@ -32,6 +36,19 @@ public class ReaderDAO implements IReaderDao {
     @Override
     public void updateReaderStatusById(Integer id, String status) {
         readerRepository.updateReaderStatusById(id, status);
+    }
+
+    /**
+     *@Title: ReaderDAO.java
+     *@Params: readerId
+     *@Return: Integer
+     *@Author: 毛文杰
+     *@Description: conspicuous
+     *@Date: 3:34 PM. 10/12/2018
+     */
+    @Override
+    public Integer getBorrowCountByReaderId(String readerId) {
+        return borrowRecordRepository.findAllByReaderId(readerId).size();
     }
 
     public List<Reader> findAll(){

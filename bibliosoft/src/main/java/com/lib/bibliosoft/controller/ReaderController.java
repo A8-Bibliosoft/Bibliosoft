@@ -94,7 +94,7 @@ public class ReaderController {
             list.add(readerIterator.next());
         }
         logger.info("list.size = {}",list.size());
-        logger.info("list[0]={}", list.get(0));
+        //logger.info("list[0]={}", list.get(0));
         //放在model
         model.addAttribute("readers", list);
         model.addAttribute("currpage",currpage);
@@ -105,12 +105,18 @@ public class ReaderController {
      * show detail information of a reader
      * @param readerId
      * @param model
-     * @return
+     * @return string
+     * @modify 毛文杰
+     * @Date 2018-10-12 PM 15:29
      */
     @GetMapping("/reader_show/{id}")
     public String show_reader(@PathVariable("id") String readerId, Model model){
+        //查询出这个reader的详细信息
         Reader reader = iReaderDao.findByReaderId(readerId);
         model.addAttribute("reader", reader);
+        //找出借了几本书
+        Integer borrownum = iReaderService.findBorrowCountByReaderId(readerId);
+        model.addAttribute("num", borrownum);
         return "reader_show";
     }
 
@@ -458,4 +464,18 @@ public class ReaderController {
 //        logger.info("===initialDelay: 执行方法");
 //    }
 
+    /**
+     *@Title: ReaderController.java
+     *@Params: readerid
+     *@Return: String
+     *@Author: 毛文杰
+     *@Description:
+     *@Date: 4:01 PM. 10/12/2018
+     */
+    @GetMapping("/borrowbook")
+    public String gotoBorrowBookList(@RequestParam("readerid") String readerid, Model model){
+        List<BorrowRecord> bookRecords = borrowRecordRepository.findAllByReaderId(readerid);
+        model.addAttribute("borrowRecords", bookRecords);
+        return "borrowBookList";
+    }
 }

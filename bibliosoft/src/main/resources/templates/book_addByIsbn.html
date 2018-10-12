@@ -88,12 +88,9 @@
                         </span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <span id="showbookid" style="width:100%;"></span>
-                </div>
                 <!--按钮操作-->
                 <div class="mybutton">
-                    <button onclick="book_save_submit();" class="btn btn-primary radius" type="submit">
+                    <button onclick="book_save_submit();" class="btn btn-primary radius" type="button">
                         <i class="fa fa-save "></i> Save&Submit
                     </button>
                     &nbsp;&nbsp;
@@ -106,11 +103,16 @@
                 </div>
             </div>
         </form>
+        <!-- 用于显示图书id，删掉，现在是选择在弹出框显示bookid -->
+        <!--<div class="form-group">-->
+            <!--<span id="showbookid" style="width:100%;"></span>-->
+        <!--</div>-->
     </div>
 </div>
 </body>
 </html>
 <script type="text/javascript">
+    //提交按钮
     function book_save_submit(){
         var bookstatus = $("#bookstatus").val();
         var bookaddtime = $("#bookaddtime").val();
@@ -127,19 +129,25 @@
                 success: function(data){
                     layer.alert(data.msg, {
                         title: 'Info',
-                        icon: 1,
+                        icon: 1
                     });
-                    setTimeout('resetandshow(data.bookid)',1000);
+                    //setTimeout(function(){resetandshow(data)},1000);
+                    //reset表格,清空内容以便下次添加
+                    setTimeout(resetform,1000);
                 }
             });
         }
     }
-    function resetandshow(bookid){
-        $('#showbookid').html("此本书的bookid是："+bookid);
+    function resetform(){
         $("#myform")[0].reset();
     }
+    //显示出图书id，并且reset表格，但是这个功能有点鸡肋，删掉了
+    // function resetandshow(data){
+    //     $('#showbookid').html("此本书的bookid是："+data.bookid);
+    //     $("#myform")[0].reset();
+    // }
 
-
+    //日期input输入框插件
     laydate({
         elem: '#bookaddtime',
         event: 'focus'

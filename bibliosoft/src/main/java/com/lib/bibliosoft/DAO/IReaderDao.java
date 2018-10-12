@@ -27,4 +27,6 @@ public interface IReaderDao {
     List<Reader> searchReaderByPhoneOrName(String string);
 
     void updateReaderStatusById(Integer id, String status);
+
+    Integer getBorrowCountByReaderId(String readerId);
 }

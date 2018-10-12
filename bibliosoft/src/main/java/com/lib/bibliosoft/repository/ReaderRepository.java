@@ -58,6 +58,5 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
     @Modifying
     @Query(value = "update reader r set r.reader_name=?3, r.sex=?2 where r.reader_id = ?1", nativeQuery = true)
     void updateReaderBasic(String readerId,String sex,String readerName);
-
 }
 

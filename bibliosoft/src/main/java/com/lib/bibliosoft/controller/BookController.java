@@ -123,14 +123,6 @@ public class BookController {
         return bookRepository.findBookByBookIsbn(isbn);
     }
 
-//    /**
-//     * insert two items to database
-//     */
-//    @PostMapping("/books/two")
-//    public void booksTwo(){
-//        bookService.insertTwo();
-//    }
-
     /**
      * get the price of a book，Throw the exception to the ExceptionHandler for processing
      * @param id
@@ -171,7 +163,7 @@ public class BookController {
     }
 
     /**
-     * paging search
+     * paging list book
      * @param currpage
      * @param model
      * @return
@@ -233,10 +225,29 @@ public class BookController {
 
         //logger.info("查询结果===大小size={}",searchBook.size());
         model.addAttribute("books",searchBook);
-        //写死了
-
         return "book_list";
     }
+
+    /**
+     *@Title: BookController.java
+     *@Params: bookid, model
+     *@Return: String
+     *@Author: 毛文杰
+     *@Description: find a book by its bookid
+     *@Date: 5:22 PM. 10/12/2018
+     */
+    @GetMapping("/book_sBybid")
+    public String searchBookByBookid(@RequestParam("bookid") String sbookid, Model model){
+        Integer bookid = Integer.parseInt(sbookid);
+        Book books = bookRepository.findBookByBookId(bookid);
+        logger.info("bookid={}", bookid);
+        model.addAttribute("totalcount", 1);
+        model.addAttribute("totalpages", 1);
+        model.addAttribute("currpage",1);
+        model.addAttribute("books",books);
+        return "book_list";
+    }
+
 
 
     /**
@@ -380,6 +391,7 @@ public class BookController {
     @PostMapping("/book_isbn")
     public ResponseEntity<Map<String,Object>> getInfoByDouBan(String isbn, String time, String position, String status){
 
+        Map<String,Object> map = new HashMap<String,Object>();
         //get the book and improve it's information
         Book book = ScanerIsbn.getBookInfoByIsbn(isbn);
         Date t = Date.valueOf(time);
@@ -387,9 +399,14 @@ public class BookController {
         book.setRegisterTime(t);
         book.setBookPosition(position);
         book.setBookStatus(s);
-        bookService.addBook(book);
-
-        Map<String,Object> map = new HashMap<String,Object>();
+        try {
+            bookService.addBook(book);
+        }catch(Exception e){
+            logger.error("添加书籍出错！error = {}", e.getMessage());
+            map.put("msg", "Add-book failed!");
+            e.printStackTrace();
+            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.valueOf(500));
+        }
         map.put("msg", "Add-book successful! This bookid is: " + book.getBookId());
         map.put("bookid", book.getBookId());
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

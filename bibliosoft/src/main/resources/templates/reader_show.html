@@ -23,7 +23,8 @@
 <body>
 <div class="member_show">
     <div class="member_jbxx clearfix">
-        <img class="img" src="../static/images/reader.png">
+        <img class="img" th:if="${reader.getImgsrc() eq null}" src="../static/images/reader.png" th:src="@{../static/images/reader.png}" />
+        <img class="img" th:if="${reader.getImgsrc() ne null}" src="../static/images/reader.png" th:src="${reader.getImgsrc()}" />
         <dl class="right_xxln">
             <dt>
                 <span th:text="${reader.getReaderName()}">
@@ -32,8 +33,8 @@
                 <!--欠费 -->
                 <span style="color: #eee">Arrears: 00.00 ￥</span>
             </dt>
-            <!-- 个人简介 -->
-            <dd class="" style="margin-left:0">这家伙很懒，什么也没有留下</dd>
+            <!-- 借了几本书，都是哪几本 -->
+            <dd class="" style="margin-left:0">Has borrowed：<a th:href="@{/borrowbook(readerid=${reader.getReaderId()})}" th:text="${num}"></a> Books.</dd>
         </dl>
     </div>
     <div class="member_content">
