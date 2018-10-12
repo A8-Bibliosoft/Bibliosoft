@@ -35,42 +35,48 @@
     <div id="products_style">
         <div class="search_style">
             <div class="title_names">Search Query</div>
-            <form action="/book_search" method="post" id="search" onsubmit="return search_check()">
+
                 <ul class="search_content clearfix">
-                    <li>
-                        <label class="l_f">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You Can
-                            Search&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        <input name="bookname" id="bookname" type="text" class="text_add"
-                               placeholder="Enter book name to search." style=" width:250px"/>
-                    </li>
-                    <li>
-                        <label class="l_f">Add Time</label>
-                        <input class="inline laydate-icon" name="bookaddtime" id="start" style="margin-left:10px;">
-                    </li>
-                    <li style="width:90px;">
-                        <button type="button" class="btn_search" th:onclick="'javascript:submit()'">
-                            <i class="icon-search"></i>
-                        </button>
-                    </li>
-                </ul>
-            </form>
-            <!-- 按bookid搜索 -->
-            <div style="padding: 100px 100px 10px;">
-                <form class="bs-example bs-example-form" role="form">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="sbookid" placeholder="enter bookid to search.">
-                                <span class="input-group-btn">
-                                    <button onclick="searchByBookid()" class="btn btn-default" type="button">
-                                        Go!
+                    <form action="/book_search" method="post" id="search" onsubmit="return search_check()">
+                        <li>
+                            <input name="bookname" id="bookname" type="text" class="text_add"
+                                   placeholder="Enter book name to search." style=" width:240px"/>
+                        </li>
+                        <li>
+                            <input class="inline laydate-icon" placeholder="Add Time" name="bookaddtime" id="start" style="margin-left:10px;padding-left: 4px;">
+                        </li>
+                        <li style="width:90px;">
+                            <button type="button" class="btn_search" th:onclick="'javascript:submit()'">
+                                <i class="icon-search"></i>
+                            </button>
+                        </li>
+                    </form>
+                    <!-- 按bookid搜索 -->
+                    <form action="/book_sBybid" class="bs-example bs-example-form" role="form" id="mysform" onsubmit="return searchByBookid()">
+                            <div class="col-lg-3">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="bookid" id="sbookid" placeholder="enter bookid to search.">
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-default" type="submit">
+                                        Search!
                                     </button>
 					            </span>
-                            </div><!-- /input-group -->
-                        </div><!-- /.col-lg-6 -->
-                    </div><!-- /.row -->
-                </form>
-            </div>
+                                </div><!-- /input-group -->
+                            </div><!-- /.col-lg-3 -->
+                    </form>
+                    <form action="/book_sBybisbn" id="mysform2" onsubmit="return searchByisbn()">
+                            <div class="col-lg-3">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="isbn" id="sbookisbn" placeholder="enter isbn to search.">
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-default" type="submit">
+                                        Search!
+                                    </button>
+					            </span>
+                                </div><!-- /input-group -->
+                            </div><!-- /.col-lg-3 -->
+                    </form>
+                </ul>
         </div>
         <div class="border clearfix">
             <span class="l_f">
@@ -258,15 +264,20 @@
     function searchByBookid(){
         var bookid = $("#sbookid").val();
         if(bookid != "" && bookid != null){
-            alert(bookid);
-            $.ajax({
-                type: "GET",
-                url: '/book_sBybid?bookid='+bookid,
-                success: function (data) {
-                }
-            });
+            return true;
         }else{
             layer.alert("please input something to search!");
+            return false;
+        }
+    }
+
+    function searchByisbn(){
+        var isbn = $("#sbookisbn").val();
+        if(isbn != "" && isbn != null){
+            return true;
+        }else{
+            layer.alert("please input something to search!");
+            return false;
         }
     }
 

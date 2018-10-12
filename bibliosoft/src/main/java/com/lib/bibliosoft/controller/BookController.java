@@ -117,10 +117,16 @@ public class BookController {
      *@Description:
      *@Date: 11:14 PM. 9/27/2018
      */
-    @GetMapping("/books/isbn/{isbn}")
-    @ResponseBody
-    public List<Book> findBooksByIsbn(@PathVariable("isbn") String isbn){
-        return bookRepository.findBookByBookIsbn(isbn);
+    @GetMapping("/book_sBybisbn")
+    public String findBooksByIsbn(@RequestParam("isbn") String isbn, Model model){
+        List<Book> books = bookRepository.findBookByBookIsbn(isbn);
+        logger.info("bookisbn={}", isbn);
+        model.addAttribute("totalcount", books.size());
+        Integer totalPages = (totalcount + pagesize - 1)/pagesize;
+        model.addAttribute("totalpages", totalPages);
+        model.addAttribute("books",books);
+        model.addAttribute("currpage",1);
+        return "book_list";
     }
 
     /**
@@ -237,13 +243,20 @@ public class BookController {
      *@Date: 5:22 PM. 10/12/2018
      */
     @GetMapping("/book_sBybid")
-    public String searchBookByBookid(@RequestParam("bookid") String sbookid, Model model){
-        Integer bookid = Integer.parseInt(sbookid);
-        Book books = bookRepository.findBookByBookId(bookid);
+    public String searchBookByBookid(String bookid, Model model){
+        Integer ibookid = Integer.parseInt(bookid);
+//        List<Book> books = bookRepository.findBookByBookIsbn(sbookid);
+        Book books = bookRepository.findBookByBookId(ibookid);
         logger.info("bookid={}", bookid);
-        model.addAttribute("totalcount", 1);
-        model.addAttribute("totalpages", 1);
-        model.addAttribute("currpage",1);
+        if(books != null){
+            model.addAttribute("totalcount", 1);
+            model.addAttribute("totalpages", 1);
+            model.addAttribute("currpage",1);
+        }else{
+            model.addAttribute("totalcount", 0);
+            model.addAttribute("totalpages", 0);
+            model.addAttribute("currpage",0);
+        }
         model.addAttribute("books",books);
         return "book_list";
     }
