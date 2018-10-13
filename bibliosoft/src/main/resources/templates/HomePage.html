@@ -80,12 +80,12 @@
 		<div id="readeronline" style="float: right" >
 			<a href="/lib_login">Librarian</a>
 			<a href="/goAdminLogin">Admin</a>
-			<a th:if="${session.loginname} eq null" href="goLogin" >登录</a>
+			<a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}">登录</a>
 			<div th:if="${session.loginname} ne null">
                 <a href="goReaderInfo"><span th:text="${session.loginname}"></span></a>
 				<a href="goOut">退出登录</a>
 			</div>
-		</div>
+        </div>
 
 		<div class="banner-info wow bounceInDown" data-wow-duration="1s" data-wow-delay="0s">
 			<script th:src="@{/static/hujs/responsiveslides.min.js}"></script>
