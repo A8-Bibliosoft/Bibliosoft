@@ -14,6 +14,8 @@ import java.util.List;
 @Repository
 public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Integer> {
 
+    BorrowRecord findByBookId(Integer bookId);
+
     //个人已还记录
     List<BorrowRecord> findByReaderIdAndReturntimeIsNotNull(String readerId);
 
@@ -48,12 +50,12 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
     @Transactional
     @Modifying
     @Query(value = "insert into borrowrecord(book_id, borrowtime, lastday, reader_id) VALUES (?1,?2,?3,?4)",nativeQuery = true)
-    void insertBorrow(Integer bookId, Date borrowtime, Integer lastday, Integer readerId);
+    void insertBorrow(Integer bookId, Date borrowtime, Integer lastday, String readerId);
 
     //还书日期
     @Transactional
     @Modifying
-    @Query(value = "update borrowrecord set returntime=?1,lastday=?2 where book_id=?3 and debt=0",nativeQuery = true)
+    @Query(value = "update borrowrecord set returntime=?1,lastday=?2 where book_id=?3 and debt=0 and returntime is null",nativeQuery = true)
     void updateBorrow(Date returntime, Integer lastday, Integer bookId);
 
     //倒计时借书日期减少

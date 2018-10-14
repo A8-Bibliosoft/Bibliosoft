@@ -39,22 +39,22 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
     public void addInterceptors(InterceptorRegistry registry) {
 
         HandlerInterceptor handlerInterceptor = new HandlerInterceptor() {
-            @Override
-            public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-                HttpSession session = request.getSession();
-                /**
-                 * 判断是否登录
-                 */
-                if (session.getAttribute("islogin")!= null){
-                    //logger.info("已登录，操作正常");
-                    return true;
-                }
-                else{
-                    logger.info("未登录，请登录后再操作");
-                    response.sendRedirect("/goHomePage");
-                    return false;
-                }
-            }
+//            @Override
+//            public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+//                HttpSession session = request.getSession();
+//                /**
+//                 * 判断是否登录
+//                 */
+//                if (session.getAttribute("islogin")!= null){
+//                    logger.info("已登录，操作正常");
+//                    return true;
+//                }
+//                else{
+//                    logger.info("未登录，请登录后再操作");
+//                    response.sendRedirect("/goHomePage");
+//                    return false;
+//                }
+//            }
 
             @Override
             public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {

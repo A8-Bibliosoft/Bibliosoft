@@ -80,6 +80,8 @@
 		<div id="readeronline" style="float: right" >
 			<a href="/lib_login">Librarian</a>
 			<a href="/goAdminLogin">Admin</a>
+			<a href="/goBorrowBook">BorrowBook</a>
+            <a href="/goReturnBook">BorrowBook</a>
 			<a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}">登录</a>
 			<div th:if="${session.loginname} ne null">
                 <a href="goReaderInfo"><span th:text="${session.loginname}"></span></a>

@@ -1,10 +1,7 @@
 package com.lib.bibliosoft.controller;
 
 import com.lib.bibliosoft.DAO.IReaderDao;
-import com.lib.bibliosoft.entity.AppointmentRecord;
-import com.lib.bibliosoft.entity.Book;
-import com.lib.bibliosoft.entity.BorrowRecord;
-import com.lib.bibliosoft.entity.Reader;
+import com.lib.bibliosoft.entity.*;
 import com.lib.bibliosoft.repository.*;
 import com.lib.bibliosoft.service.IReaderService;
 import com.lib.bibliosoft.utils.FileNameUtil;
@@ -14,12 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +24,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -60,6 +54,8 @@ public class ReaderController {
     private AppointmentRecordRepository appointmentRecordRepository;
     @Autowired
     private BorrowRecordRepository borrowRecordRepository;
+    @Autowired
+    private DefSettingRepository defSettingRepository;
 
     /**
      * logger
@@ -69,7 +65,6 @@ public class ReaderController {
     private Integer pagesize = 6;
 
     private Integer totalCount;
-
 
     /**
      * list all the reader
@@ -432,17 +427,60 @@ public class ReaderController {
         if(session.getAttribute("islogin")==null){
             return "unlogin";
         }
+        //获取默认预约时间
+        DefSetting defSetting=defSettingRepository.findDefSettingById(4);
+        logger.info(defSetting.getDeftype());
         String readerId=session.getAttribute("readerId").toString();
         Book book=bookRepository.findByBookId(bookId);
         List<Book> reminebooklist=bookRepository.findByBookStatusAndBookIsbn(0,book.getBookIsbn());
         if(reminebooklist.size()>0){
-            appointmentRecordRepository.insertAppointment(reminebooklist.get(0).getBookId(),readerId,120);
+            appointmentRecordRepository.insertAppointment(reminebooklist.get(0).getBookId(),readerId,defSetting.getDefnumber());
             bookRepository.updateBookStatus(4,reminebooklist.get(0).getBookId());
             return "success";
         }else {
             return "default";
         }
     }
+
+    //读者借书
+    @RequestMapping("/goBorrowBook")
+    public String goBorrowBook(){
+        return "BorrowBook";
+    }
+
+    @RequestMapping("/borrowBook")
+    public synchronized String borrowBook(String readerId,Integer bookId){
+        //获取借书期限  借书前提 读者未被封禁 未欠款 借书少于3本
+        if(bookRepository.findByBookId(bookId)!=null&&readerRepository.findReaderByReaderId(readerId)!=null){
+            List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNull(readerId);
+            if(borrowRecordList.size()<3){
+                DefSetting defSetting=defSettingRepository.findDefSettingById(3);
+                bookRepository.updateBookStatus(1,bookId);
+                borrowRecordRepository.insertBorrow(bookId,new Date(),defSetting.getDefnumber(),readerId);
+                return null;
+            }
+            return null;
+        }
+       return null;
+    }
+
+    //读者还书
+    @RequestMapping("/goReturnBook")
+    public String goReturnBook(){
+        return "ReturnBook";
+    }
+
+    @RequestMapping("/returnBook")
+    public synchronized String returnBook(Integer bookId){
+        if(bookRepository.findByBookId(bookId)!=null&&borrowRecordRepository.findByBookId(bookId)!=null){
+            bookRepository.updateBookStatus(0,bookId);
+            //已考虑重复问题，查找为归还的书 returntime is null
+            borrowRecordRepository.updateBorrow(new Date(),0,bookId);
+            return null;
+        }
+        return null;
+    }
+
     //计时测试 还书期限
     //第一层returntime!=null 第二层lastday>0 第三层?
 //    @Scheduled(cron = "*/10 * * * * *")  //cron接受cron表达式，根据cron表达式确定定时规则
@@ -463,6 +501,8 @@ public class ReaderController {
 //        appointmentRecordRepository.clearLasttime();
 //        logger.info("===initialDelay: 执行方法");
 //    }
+
+
 
     /**
      *@Title: ReaderController.java
