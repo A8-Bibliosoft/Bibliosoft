@@ -14,7 +14,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  * @Author: 毛文杰
@@ -99,7 +98,7 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
 //        registry.addViewController("/librarian_info").setViewName("librarian_info");
         registry.addViewController("/system_setting").setViewName("system_setting");
         registry.addViewController("/book_add").setViewName("book_add");
-        registry.addViewController("/book_list").setViewName("book_list");
+        registry.addViewController("/book_position").setViewName("book_position");
         registry.addViewController("/book_addByIsbn").setViewName("book_addByIsbn");
         registry.addViewController("/book_category_add").setViewName("book_category_add");
         registry.addViewController("/bookadd_detail").setViewName("bookadd_detail");
@@ -116,3 +115,4 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
     }
 
 }
+
