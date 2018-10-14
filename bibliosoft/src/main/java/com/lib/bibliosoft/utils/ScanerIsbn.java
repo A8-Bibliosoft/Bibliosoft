@@ -9,66 +9,97 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * @Author: 毛文杰
- * @Description:
- * @Date: Created in 12:19 PM. 10/9/2018
- * @Modify By: maowenjie
+ * @author 毛文杰
+ * @description
+ * @date Created in 12:19 PM. 10/9/2018
+ * @modify By maowenjie 2:05 PM. 10/14/2018
  */
 public class ScanerIsbn {
 
     private static Logger logger = LoggerFactory.getLogger(ScanerIsbn.class);
 
     /**
-     *@Title: ScanerIsbn.java
-     *@Params: isbn
-     *@Return: Book
-     *@Author: 毛文杰
-     *@Description: get the detail info by isbn
-     *@Date: 2:10 PM. 10/9/2018
+     * @title ScanerIsbn.java
+     * @param isbn the book's identifier, but not unique
+     * @param num you can add a batch of books one time
+     * @return Book
+     * @author 毛文杰
+     * @description get the detail info by isbn
+     * @date 2:10 PM. 10/9/2018
+     * @modify 2:05 PM. 10/14/2018
      */
-    public static Book getBookInfoByIsbn(String isbn) {
-//        isbn = "9787806719633";
-        String url = "https://api.douban.com/v2/book/isbn/:" + isbn;
+    public static List<Book> getBookInfoByIsbn(String isbn, Integer num, String time, String position, String status) {
 
+        /*解析豆瓣数据库返回的json数据*/
+        String url = "https://api.douban.com/v2/book/isbn/:" + isbn;
         String json = loadJSON(url);
         JSONObject jsonObject = JSONObject.parseObject(json);
         String sauthor = jsonObject.getString("author");
         String publisher = jsonObject.getString("publisher");
         String image = jsonObject.getString("image");
         String sprice = jsonObject.getString("price").replace("元","");
-        float price = Float.parseFloat(sprice);
-        String id = jsonObject.getString("id");
-        Integer bookid = Integer.parseInt(id);
+        //从豆瓣获得的信息价格可能为空
+        float price = 0;
+        if (sprice == null || "".equals(sprice)){}
+        else {
+            price = Float.parseFloat(sprice);
+        }
         String title = jsonObject.getString("title");
         String desc = jsonObject.getString("summary");
+        /*再次从豆瓣获得isbn13位的编码*/
         //String risbn = jsonObject.getString("isbn13");
-        String []author = sauthor.split("\"");
+        /*从豆瓣获得的话，这个也有可能为空！。。。不能处理它这种乱七八糟令人捉摸不透的bug，不管了，以后只接受正版书籍的添加*/
+        String author = sauthor.split("\"")[1];
+        String id = jsonObject.getString("id");
+        /*解析完成*/
 
-        logger.info("bookId={},bookAuthor={},bookPublisher={},bookImage={},bookPrice={},bookTitle={}",id,author[1],publisher,image,price,title);
+        Date t = Date.valueOf(time);
+        Integer s = Integer.parseInt(status);
+        List<Book> books = new ArrayList<>();
+        /*the max value of isbn now*/
+        Integer maxbookid = BookIdUtil.getMaxBookId(isbn);
+        /*what about bookId? 竟然同一个isbn号对应的bookid也相同...那就递增吧*/
+        Integer bookid;
+        /*如果之前不存在此isbn*/
+        if (maxbookid == -1)
+            bookid = Integer.parseInt(id);
+        else//存在就在原来基础上加一
+            bookid = maxbookid+1;
 
-        //Create a new book, add some attributes first, then pass it to the controller.
-        Book book = new Book();
-        book.setBookAuthor(author[1]);
-        book.setBookDesc(desc);
-        book.setBookId(bookid);
-        book.setBookIsbn(isbn);
-        book.setBookName(title);
-        book.setBookImg(image);
-        book.setBookPrice(price);
-        book.setBookPublisher(publisher);
-        return book;
+        for (int i=0; i<num; i++){
+            //Create a new book, add some attributes
+            Book book = new Book();
+            book.setRegisterTime(t);
+            book.setBookPosition(position);
+            book.setBookStatus(s);
+            book.setBookAuthor(author);
+            book.setBookDesc(desc);
+            book.setBookIsbn(isbn);
+            book.setBookName(title);
+            book.setBookImg(image);
+            book.setBookPrice(price);
+            book.setBookPublisher(publisher);
+            //每次都加一
+            book.setBookId(bookid++);
+            books.add(book);
+        }
+
+        logger.info("bookId={},bookAuthor={},bookPublisher={},bookImage={},bookPrice={},bookTitle={}",id,author,publisher,image,price,title);
+        return books;
     }
     /**
-     *@Title: ScanerIsbn.java
-     *@Params: url
-     *@Return: json String
-     *@Author: 毛文杰
-     *@Description: 通过传入调用豆瓣书籍数据库的url来获得书籍信息，转换成String返回
-     *@Date: 2:00 PM. 10/9/2018
+     *@title ScanerIsbn.java
+     *@params url
+     *@return json String
+     *@author 毛文杰
+     *@description 通过传入调用豆瓣书籍数据库的url来获得书籍信息，转换成String返回
+     *@date 2:00 PM. 10/9/2018
      */
-
     public static String loadJSON(String url) {
         StringBuilder json = new StringBuilder();
         try {
@@ -88,7 +119,7 @@ public class ScanerIsbn {
         return json.toString();
     }
 
-    //            String result = HttpUtil.se("https://api.douban.com/v2/book/isbn/:" + isbn, "utf-8");
+//            String result = HttpUtil.se("https://api.douban.com/v2/book/isbn/:" + isbn, "utf-8");
 //            //将返回字符串转换为JSON对象
 //            JSONObject json=JSONObject.fromObject(result);
 //            //得到出版社

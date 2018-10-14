@@ -9,8 +9,10 @@ package com.lib.bibliosoft.enums;
 public enum ResultEnum {
     UNKNOWN_ERROR(-1, "未知错误"),
     SUCCESS(0, "成功"),
-    TOO_SMALL(100, "价格太低"),
-    TOO_LARGE(101, "价格太高"),
+//    TOO_SMALL(100, "价格太低"),
+//    TOO_LARGE(101, "价格太高"),
+    ADD_BOOK_FAILED(102, "Add-book failed!"),
+    ADD_BOOK_SUCCESS(103, "Add-book successful!"),
     ;
     private Integer code;
 
