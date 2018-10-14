@@ -65,7 +65,7 @@
 					<span class="icon-bar"></span>
 				</button>
 				<h1>
-					<a class="navbar-brand" href="goHomePage">Library图书馆</a>
+					<a class="navbar-brand" href="goHomePage" th:text="#{homepage.libraryname}">Library图书馆</a>
 				</h1>
 				
 			</div>
@@ -83,26 +83,27 @@
 			</div><!-- /navbar-collapse -->
 		</nav>
         <div id="readeronline" style="float: right" >
-            <a th:if="${session.loginname} eq null" href="goLogin" >登录</a>
-            <div th:if="${session.loginname} ne null">
+            <a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}">登录</a>
+			<span><a style="color:white;cursor: pointer" th:href="@{/goSearch(l='zh_CN')}">中文</a>&nbsp;&nbsp;<a th:href="@{/goSearch(l='en_US')}" style="color:white;cursor: pointer;">english</a></span>
+			<div th:if="${session.loginname} ne null">
                 <a href="goReaderInfo"><span th:text="${session.loginname}"></span></a>
-                <a href="goOut">退出登录</a>
+                <a href="goOut" th:text="#{homepage.logout}">退出登录</a>
             </div>
         </div>
 		<!-- 搜索框-->
-        <h1 style="text-align: center;margin-top: 150px;color: white;">书籍查找</h1>
+        <h1 style="text-align: center;margin-top: 150px;color: white;" th:text="#{search.title}">书籍查找</h1>
         <form method="post" action="search" class="form-horizontal" role="form" style="margin-top: 250px;margin-left: 50px;">
             <div class="form-group">
                 <select name="find_code" id="find_code" class="col-md-2" style="height: 35px;border-radius: 5px">
-                    <option value="0" selected="">书名</option>
-                    <option value="1">著者</option>
-                    <option value="2">ISBN</option>
+                    <option value="0" selected="" th:text="#{search.bookname}">书名</option>
+                    <option value="1" th:text="#{search.author}">著者</option>
+                    <option value="2" th:text="#{search.isbn}">ISBN</option>
                 </select>
-                <input name="find_type" type="text" id="find_type" value="" hidden="hidden" >
+                <input name="find_type" type="text" id="find_type" value="" hidden="hidden" />
                 <div class="col-md-8" style="padding: 0;margin: 0;">
                     <input class="form-control" name="find_info" type="text">
                 </div>
-                <input type="submit" value="提交" class="btn btn-primary col-md-2" onclick="submitfind()">
+                <input type="submit" class="btn btn-primary col-md-2" th:value="#{search.submit}" onclick="submitfind()">
             </div>
         </form>
 	</div>

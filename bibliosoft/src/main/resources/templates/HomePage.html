@@ -80,10 +80,12 @@
 		<div id="readeronline" style="float: right" >
 			<a href="/lib_login">Librarian</a>
 			<a href="/goAdminLogin">Admin</a>
-			<a th:if="${session.loginname} eq null" href="goLogin" >登录</a>
+			<a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}"></a>
+			<span><a style="color:white;cursor: pointer" th:href="@{/goHomePage(l='zh_CN')}">中文</a>&nbsp;&nbsp;<a th:href="@{/goHomePage(l='en_US')}" style="color:white;cursor: pointer;">english</a></span>
 			<div th:if="${session.loginname} ne null">
                 <a href="goReaderInfo"><span th:text="${session.loginname}"></span></a>
-				<a href="goOut">退出登录</a>
+				<a href="goOut" th:text="#{homepage.logout}">退出登录</a>
+
 			</div>
 		</div>
 
@@ -218,7 +220,7 @@
 							<div class="item-img"><img th:src="@{/static/huimages/g1.jpg}" alt=" " /></div>
 						</div>
 					</a>
-					<div class="view-pos"><h4>查找书籍</h4></div>
+					<div class="view-pos"><h4 th:text="#{homepage.search}">查找书籍</h4></div>
 					<p>Doloremque laudantium</p>
 				</div>
 			</div>
@@ -237,7 +239,7 @@
 							<div class="item-img"><img th:src="@{/static/huimages/g2.jpg}" alt=" " /></div>
 						</div>
 					</a>
-					<div class="view-pos"><h4>书籍分类</h4></div>
+					<div class="view-pos"><h4 th:text="#{homepage.classification}">书籍分类</h4></div>
 					<p>Doloremque laudantium</p>
 				</div>
 			</div>
@@ -256,7 +258,7 @@
 							<div class="item-img"><img th:src="@{/static/huimages/g3.jpg}" alt=" " /></div>
 						</div>
 					</a>
-					<div class="view-pos"><h4>书籍建购</h4></div>
+					<div class="view-pos"><h4 th:text="#{homepage.advice}">书籍建购</h4></div>
 					<p>Doloremque laudantium</p>
 				</div>
 			</div>

@@ -416,7 +416,7 @@ public class ReaderController {
             model.addAttribute("bookStatus0",bookRepository.countAllByBookStatusAndBookIsbn(0,booklist.get(0).getBookIsbn()));
             return "BookDetail";
         }
-       return "HomePage";
+        return "HomePage";
     }
 
     @RequestMapping("/goOut")
