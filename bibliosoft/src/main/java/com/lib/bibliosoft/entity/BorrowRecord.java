@@ -1,5 +1,7 @@
 package com.lib.bibliosoft.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -14,8 +16,10 @@ public class BorrowRecord {
 
     private Integer bookId;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date borrowtime;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date returntime;
 
     private  Integer lastday;

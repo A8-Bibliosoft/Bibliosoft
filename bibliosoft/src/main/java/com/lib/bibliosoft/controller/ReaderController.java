@@ -322,9 +322,12 @@ public class ReaderController {
             }
 
             model.addAttribute("reader",readerRepository.findReaderByReaderId(readerId));
-            model.addAttribute("borrowlist",borrowbooklist);
-            model.addAttribute("appointmentlist",appointmentbooklist);
-            model.addAttribute("historylist",historybooklist);
+//            model.addAttribute("borrowlist",borrowbooklist);
+//            model.addAttribute("appointmentlist",appointmentbooklist);
+//            model.addAttribute("historylist",historybooklist);
+            model.addAttribute("borrowlist",borrowRecordList);
+            model.addAttribute("appointmentlist",appointmentRecordList);
+            model.addAttribute("historylist",historyRecordList);
             return "ReaderInfo";
         }
 

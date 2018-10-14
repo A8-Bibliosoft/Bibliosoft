@@ -107,22 +107,34 @@
             <div class="tab-pane fade" id="info-2">
                 <ul class="nav imgsize">
                     <li th:each="borrow:${borrowlist}">
-                        <a th:href="@{'goBookDetail?bookIsbn='+${borrow.bookIsbn}}"><h4 th:text="${borrow.bookName}"></h4>
-                        <img th:src="@{${borrow.bookImg}}" alt=""></a>
-
+                        <!--<a th:href="@{'goBookDetail?bookIsbn='+${borrow.bookIsbn}}">-->
+                            <!--<h4 th:text="${borrow.bookName}"></h4>-->
+                            <!--<img th:src="@{${borrow.bookImg}}" alt="">-->
+                        <!--</a>-->
+                        <span>借书时间:</span><p th:text="${borrow.borrowtime}"></p>
+                        <span>剩余还书天数:</span><p th:text="${borrow.lastday}"></p>
+                        <span>该书籍欠费:</span><p th:text="${borrow.debt}"></p>
                     </li>
                 </ul>
             </div>
             <div class="tab-pane fade" id="info-3">
                 <ul class="nav imgsize">
-                    <li th:each="appointment:${appointmentlist}"><a th:href="@{'goBookDetail?bookIsbn='+${appointment.bookIsbn}}"><h4 th:text="${appointment.bookName}"></h4>
-                        <img th:src="@{${appointment.bookImg}}" alt=""></a></li>
+                    <!--<li th:each="appointment:${appointmentlist}"><a th:href="@{'goBookDetail?bookIsbn='+${appointment.bookIsbn}}"><h4 th:text="${appointment.bookName}"></h4>-->
+                        <!--<img th:src="@{${appointment.bookImg}}" alt=""></a>-->
+                    <!--</li>-->
                 </ul>
             </div>
             <div class="tab-pane fade" id="info-4">
                 <ul class="nav imgsize">
-                    <li th:each="history:${historylist}"><a th:href="@{'goBookDetail?bookIsbn='+${history.bookIsbn}}"><h4 th:text="${history.bookName}"></h4>
-                        <img th:src="@{${history.bookImg}}" alt=""></a></li>
+                    <li th:each="history:${historylist}">
+                        <!--<a th:href="@{'goBookDetail?bookIsbn='+${history.bookIsbn}}">-->
+                            <!--<h4 th:text="${history.bookName}"></h4>-->
+                            <!--<img th:src="@{${history.bookImg}}" alt="">-->
+                        <!--</a>-->
+                        <span>借书时间:</span><p th:text="${history.borrowtime}"></p>
+                        <span>还书时间:</span><p th:text="${history.returntime}"></p>
+                        <span>该书籍曾欠费:</span><p th:text="${history.debt}"></p>
+                    </li>
                 </ul>
             </div>
         </div>
