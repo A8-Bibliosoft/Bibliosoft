@@ -64,6 +64,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <div class="myinput">
+                        <!-- default one -->
+                        <input type="text" placeholder="book Number(default 1)" value="1" name="booknumber" id="booknumber" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
                     <!--<label class="col-sm-2 control-label no-padding-right" for="form-field-1">-->
                         <!--Register Time：-->
                     <!--</label>-->
@@ -118,10 +124,11 @@
         var bookaddtime = $("#bookaddtime").val();
         var bookposition = $("#bookposition").val();
         var bookisbn = $("#bookisbn").val();
+        var booknum = $("#booknumber").val();
         if(bookstatus == "" || bookaddtime == "" || bookposition == "" || bookisbn == ""){
             layer.msg("Please complete the data form！");
         }else{
-            var data="isbn="+bookisbn+"&time="+bookaddtime+"&status="+bookstatus+"&position="+bookposition;
+            var data="isbn="+bookisbn+"&time="+bookaddtime+"&status="+bookstatus+"&position="+bookposition+"&num="+booknum;
             $.ajax({
                 type: "post",
                 url: "/book_isbn",
@@ -153,4 +160,7 @@
         event: 'focus'
     });
 
+    $(function(){
+        $("#bookisbn").focus();
+    });
 </script>

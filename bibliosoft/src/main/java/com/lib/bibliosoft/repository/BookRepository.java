@@ -79,6 +79,9 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     @Transactional
     @Modifying
     @Query(value = "update book set book_status = ?1 where book_id = ?2",nativeQuery = true)
-    void updateBookStatus(Integer bookStatus,Integer bookId);
+    void updateBookStatus(Integer bookStatus, Integer bookId);
+
+    @Query(value = "select MAX(book_id) from book where book_isbn = ?1", nativeQuery = true)
+    Integer getMaxBookIdNow(String isbn);
 }
 

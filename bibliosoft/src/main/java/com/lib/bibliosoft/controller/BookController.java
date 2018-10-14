@@ -1,11 +1,14 @@
 package com.lib.bibliosoft.controller;
 
 import com.lib.bibliosoft.entity.Book;
-import com.lib.bibliosoft.entity.Result;
+import com.lib.bibliosoft.entity.BookDelRecord;
+import com.lib.bibliosoft.entity.Librarian;
+import com.lib.bibliosoft.enums.ResultEnum;
+import com.lib.bibliosoft.repository.BookDelRecordRepository;
 import com.lib.bibliosoft.repository.BookRepository;
 import com.lib.bibliosoft.service.impl.BookService;
+import com.lib.bibliosoft.utils.FileNameUtil;
 import com.lib.bibliosoft.utils.FileUtil;
-import com.lib.bibliosoft.utils.ResultUtil;
 import com.lib.bibliosoft.utils.ScanerIsbn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,14 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.ResourceUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Date;
@@ -42,29 +44,33 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
+    @Autowired
+    private BookDelRecordRepository bookDelRecordRepository;
+
     private final static Logger logger = LoggerFactory.getLogger(BookController.class);
 
+    /*共查询出的数目*/
     private Integer totalcount;
 
+    /*每页的大小*/
     private Integer pagesize = 6;
 
-    private String path;
-
-
     /**
+     * Test
      * add a book
-     * @return
+     * @return Result<Book>
      */
-    @PostMapping("/books")
-    @ResponseBody
-    public Result<Book> bookAdd(@Valid Book book, BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
-            return ResultUtil.error(1, bindingResult.getFieldError().getDefaultMessage());
-        }
-        return ResultUtil.success(bookRepository.save(book));
-    }
+//    @PostMapping("/books")
+//    @ResponseBody
+//    public Result<Book> bookAdd(@Valid Book book, BindingResult bindingResult){
+//        if (bindingResult.hasErrors()){
+//            return ResultUtil.error(1, bindingResult.getFieldError().getDefaultMessage());
+//        }
+//        return ResultUtil.success(bookRepository.save(book));
+//    }
 
     /**
+     * Test
      * find a book by id
      * @param id
      * @return
@@ -76,14 +82,14 @@ public class BookController {
         //the return statement also can write like this:
         //return bookRepository.findById(id).get();
         //When the method does not receive a parameter or the parameter is illegal, an error will be reported.
-
     }
 
     /**
-     * update a book by id
-     * @param id
-     * @param position
-     * @return
+     * Test
+     * update a book's position by id
+     * @param id the book's id
+     * @param position book's position
+     * @return a Book
      */
     @PutMapping("/books/{id}")
     @ResponseBody
@@ -95,29 +101,42 @@ public class BookController {
     }
 
     /**
-     *@Title: BookController.java
-     *@Params: id
-     *@Return: ResponseEntity
-     *@Author: 毛文杰
-     *@Description: delete a book by it's id
-     *@Date: 6:10 PM. 10/7/2018
+     * @title  BookController.java
+     * @param id book's id not bookid
+     * @return ResponseEntity type
+     * @author  毛文杰
+     * @description delete a book by it's id
+     * @date  6:10 PM. 10/7/2018
      */
+    @Transactional
     @PostMapping("/book/{id}")
-    public ResponseEntity<Map<String,Object>> bookDelete(@PathVariable("id") Integer id){
-        bookRepository.deleteById(id);
+    public ResponseEntity<Map<String,Object>> bookDelete(@PathVariable("id") Integer id, HttpSession session){
+
+        /*先在删除记录表里记录*/
+        BookDelRecord bookDelRecord = new BookDelRecord();
+        Librarian librarian = (Librarian) session.getAttribute("librarian");
+        Integer bookid = bookRepository.findById(id).get().getBookId();
+        bookDelRecord.setBookId(bookid);
+        bookDelRecord.setLibId(librarian.getLibId());
+        bookDelRecord.setTime(new java.util.Date());
+        bookDelRecordRepository.save(bookDelRecord);
+        /*然后删除book表，这里用改变状态替代删除*/
+//        bookRepository.deleteById(id);
+        /*5: 已删除，但没从数据库删除记录*/
+        bookRepository.updateBookStatus(5, bookid);
+
         Map<String,Object> map = new HashMap<String,Object>();
-        map.put("msg", "success");
+        map.put("msg", ResultEnum.SUCCESS.getMsg());
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
 
     /**
-     * @Title: BookController.java
-     * @Params: isbn
-     * @Return: List<Book>
-     * @Author: 毛文杰
-     * @Description:
-     * @Date: 11:14 PM. 9/27/2018
-     * @ModifyTime 8:14 PM. 10/12/2018
+     * @title: BookController.java
+     * @param: isbn
+     * @return: List<Book>
+     * @author: 毛文杰
+     * @date: 11:14 PM. 9/27/2018
+     * @modifyTime 8:14 PM. 10/12/2018
      */
     @GetMapping("/book_sBybisbn")
     public String findBooksByIsbn(@RequestParam("isbn") String isbn, Model model){
@@ -136,14 +155,15 @@ public class BookController {
     }
 
     /**
+     * Test
      * get the price of a book，Throw the exception to the ExceptionHandler for processing
      * @param id
      */
-    @GetMapping("/books/getPrice/{id}")
-    @ResponseBody
-    public void getPrice(@PathVariable("id") Integer id) throws Exception {
-        bookService.getPrice(id);
-    }
+//    @GetMapping("/books/getPrice/{id}")
+//    @ResponseBody
+//    public void getPrice(@PathVariable("id") Integer id) throws Exception {
+//        bookService.getPrice(id);
+//    }
 
     /**
      * list all the books
@@ -341,31 +361,37 @@ public class BookController {
         Date date = Date.valueOf(bookaddtime);
         book.setRegisterTime(date);
         book.setBookDesc(booksummary);
+
+        /*获得新的文件名*/
+        String bookImg = FileNameUtil.getFileName(bookcover.getOriginalFilename());
+        book.setBookImg(bookImg);
         bookService.addBook(book);
 
 
-        // 要上传的目标文件存放路径
-        //String localPath = "E:/Develop/Files/Photos";
+        // 要上传的目标文件存放路径为 static/bookimages/
         File p = null;
         try {
             p = new File(ResourceUtils.getURL("classpath:").getPath());
-            logger.info(p.getAbsolutePath());
+            //logger.info(p.getAbsolutePath());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         File upload = new File(p.getAbsolutePath(),"static/bookimages/");
-        logger.info(upload.getAbsolutePath());
+        //logger.info(upload.getAbsolutePath());
         if(!upload.exists())
             upload.mkdirs();
         // 上传成功或者失败的提示
         String msg;
-        String ph = ClassUtils.getDefaultClassLoader().getResource("").getPath();
-        logger.info("path juedui={}",ph);
+
+        /*这是获取项目根目录*/
+//        String ph = ClassUtils.getDefaultClassLoader().getResource("").getPath();
+//        logger.info("path的绝对路径 = {}", ph);
+
         if (FileUtil.upload(bookcover, upload.getAbsolutePath(), bookcover.getOriginalFilename())){
             // 上传成功，给出页面提示
-            msg = "Add Book success!";
+            msg = ResultEnum.ADD_BOOK_SUCCESS.getMsg();
         }else {
-            msg = "Add Book failed!";
+            msg = ResultEnum.ADD_BOOK_FAILED.getMsg();
         }
 
         Map<String,Object> map = new HashMap<String,Object>();
@@ -376,13 +402,13 @@ public class BookController {
     }
 
     /**
-     * @Title: BookController.java
+     * @title: BookController.java
      * @param bookId
      * @param model
      * @return String -> view page
-     * @Author: 毛文杰
-     * @Description: show detail information of a book
-     * @Date: 6:24 PM. 10/7/2018
+     * @author 毛文杰
+     * @description show detail information of a book
+     * @date 6:24 PM. 10/7/2018
      */
     @GetMapping("/book_show/{id}")
     public String show_book(@PathVariable("id") String bookId, Model model){
@@ -396,38 +422,37 @@ public class BookController {
     }
 
     /**
-     *
      * @param isbn
      * @param time
      * @param position
      * @param status
      * @return String
-     * @Title: BookController.java
-     * @Author: 毛文杰
-     * @Description:
-     * @Date: 2:19 PM. 10/9/2018
+     * @title BookController.java
+     * @author 毛文杰
+     * @description add books by isbn
+     * @date 2:19 PM. 10/9/2018
      */
     @PostMapping("/book_isbn")
-    public ResponseEntity<Map<String,Object>> getInfoByDouBan(String isbn, String time, String position, String status){
+    public ResponseEntity<Map<String,Object>> getInfoByDouBan(String isbn, String time, String position, String status, String num){
 
         Map<String,Object> map = new HashMap<String,Object>();
-        //get the book and improve it's information
-        Book book = ScanerIsbn.getBookInfoByIsbn(isbn);
-        Date t = Date.valueOf(time);
-        Integer s = Integer.parseInt(status);
-        book.setRegisterTime(t);
-        book.setBookPosition(position);
-        book.setBookStatus(s);
+        Integer number = Integer.parseInt(num);
+        //get the books and improve their information
+        List<Book> books = ScanerIsbn.getBookInfoByIsbn(isbn, number, time, position, status);
+        StringBuilder bookids = new StringBuilder();
         try {
-            bookService.addBook(book);
+            for (Book b : books){
+                bookService.addBook(b);
+                bookids.append(b.getBookId() + ", ");
+            }
+
         }catch(Exception e){
             logger.error("添加书籍出错！error = {}", e.getMessage());
-            map.put("msg", "Add-book failed!");
+            map.put("msg", ResultEnum.ADD_BOOK_FAILED.getMsg());
             e.printStackTrace();
             return new ResponseEntity<Map<String,Object>>(map, HttpStatus.valueOf(500));
         }
-        map.put("msg", "Add-book successful! This bookid is: " + book.getBookId());
-        map.put("bookid", book.getBookId());
+        map.put("msg", ResultEnum.ADD_BOOK_SUCCESS.getMsg() + " bookid: " + bookids);
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
 }

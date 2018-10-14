@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>还书</title>
+    <script type="text/javascript" th:src="@{/static/hujs/jquery-2.1.4.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/hujs/bootstrap-3.1.1.min.js}"></script>
+    <link th:href="@{/static/hucss/bootstrap.css}" rel="stylesheet" type="text/css" media="all" />
+</head>
+<body>
+    <div class="container">
+        <form action="returnBook">
+            <input type="text" placeholder="书籍ID" name="bookId" id="bookId">
+            <input type="submit" value="还书">
+        </form>
+    </div>
+    <script language='javascript' th:inline="javascript">
+
+    </script>
+</body>
+</html>

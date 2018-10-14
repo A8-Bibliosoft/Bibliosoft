@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartException;
 
+import java.io.FileNotFoundException;
+
 /**
  * @Author: 毛文杰
  * @Description: Handle the Exception we threw out, Change the json output format of the thrown exception
@@ -32,8 +34,17 @@ public class ExceptionHandle {
         }else if(e instanceof MultipartException){//上传文件错误
             MultipartException m = (MultipartException) e;
             return ResultUtil.error(m.hashCode(), m.getMessage());
+        }else if(e instanceof FileNotFoundException){//豆瓣文件找不到错误
+            e.printStackTrace();
+            FileNotFoundException f = new FileNotFoundException();
+            return ResultUtil.error(f.hashCode(), f.getMessage());
+        }else if(e instanceof NumberFormatException){
+            e.printStackTrace();
+            NumberFormatException n = new NumberFormatException();
+            return ResultUtil.error(n.hashCode(), e.getMessage());
         }else{
-            logger.info("[系统异常]==={}", e);
+            logger.info("[系统异常]==={}", e.getMessage());
+            e.printStackTrace();
             //other Exception is -1, [未知错误]
             return ResultUtil.error(ResultEnum.UNKNOWN_ERROR.getCode(), ResultEnum.UNKNOWN_ERROR.getMsg());
         }

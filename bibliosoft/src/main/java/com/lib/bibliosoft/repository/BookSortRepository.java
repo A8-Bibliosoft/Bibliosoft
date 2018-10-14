@@ -24,5 +24,5 @@ public interface BookSortRepository extends JpaRepository<BookSort, Integer> {
     List<BookSort> findByBookAuthorLike(String bookAuthor);
 
     List<BookSort> findByTypeId(Integer typeId);
-}
+        }
 
