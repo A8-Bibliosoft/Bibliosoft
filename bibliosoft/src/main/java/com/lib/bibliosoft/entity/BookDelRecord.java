@@ -12,7 +12,7 @@ public class BookDelRecord {
 
     private Integer bookId;
 
-    private Integer libId;
+    private String libId;
 
     private Date time;
 
@@ -32,11 +32,7 @@ public class BookDelRecord {
         this.bookId = bookId;
     }
 
-    public Integer getLibId() {
-        return libId;
-    }
-
-    public void setLibId(Integer libId) {
+    public void setLibId(String libId) {
         this.libId = libId;
     }
 

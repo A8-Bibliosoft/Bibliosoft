@@ -14,12 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,8 +26,9 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @Author: 毛文杰
@@ -465,12 +462,12 @@ public class ReaderController {
 //    }
 
     /**
-     *@Title: ReaderController.java
-     *@Params: readerid
-     *@Return: String
-     *@Author: 毛文杰
-     *@Description:
-     *@Date: 4:01 PM. 10/12/2018
+     * @title: ReaderController.java
+     * @params: readerid
+     * @peturn: String
+     * @author: 毛文杰
+     * @description: go to the page where show which books the reader is currently borrowing
+     * @date: 4:01 PM. 10/12/2018
      */
     @GetMapping("/borrowbook")
     public String gotoBorrowBookList(@RequestParam("readerid") String readerid, Model model){

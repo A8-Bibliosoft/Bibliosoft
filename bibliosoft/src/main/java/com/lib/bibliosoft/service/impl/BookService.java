@@ -1,9 +1,6 @@
 package com.lib.bibliosoft.service.impl;
 
 import com.lib.bibliosoft.entity.Book;
-import com.lib.bibliosoft.entity.Reader;
-import com.lib.bibliosoft.enums.ResultEnum;
-import com.lib.bibliosoft.exception.BiblioException;
 import com.lib.bibliosoft.repository.BookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import java.sql.Date;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -33,20 +29,21 @@ public class BookService {
     private Logger logger = LoggerFactory.getLogger(BookService.class);
 
     /**
+     * Test
      * Throw an exception to the BookController for processing
      * @param id
      * @throws Exception
      */
-    public void getPrice(Integer id) throws Exception {
-        Book book = bookRepository.findById(id).get();
-        float price = book.getBookPrice();
-        if (price < 10){
-            throw new BiblioException(ResultEnum.TOO_SMALL);
-        }else if(price > 60){
-            throw new BiblioException(ResultEnum.TOO_LARGE);
-        }
-
-    }
+//    public void getPrice(Integer id) throws Exception {
+//        Book book = bookRepository.findById(id).get();
+//        float price = book.getBookPrice();
+//        if (price < 10){
+//            throw new BiblioException(ResultEnum.TOO_SMALL);
+//        }else if(price > 60){
+//            throw new BiblioException(ResultEnum.TOO_LARGE);
+//        }
+//
+//    }
 
     /**
      * find a book by it's ID
@@ -102,14 +99,38 @@ public class BookService {
     }
 
 
+    /**
+     * @title BookService.java
+     * @param [id, bookName, bookPosition, isbn, bookId, fprice, author, istatus]
+     * @return void
+     * @author 毛文杰
+     * @method name updateBook
+     * @date 3:13 PM. 10/14/2018
+     */
     public void updateBook(Integer id, String bookName, String bookPosition, String isbn, Integer bookId, float fprice, String author, Integer istatus) {
         bookRepository.updateBook(id, bookName, bookPosition, isbn, bookId, fprice, author, istatus);
     }
 
+    /**
+     * @title BookService.java
+     * @param [book]
+     * @return void
+     * @author 毛文杰
+     * @method name addBook
+     * @date 3:13 PM. 10/14/2018
+     */
     public void addBook(Book book) {
         bookRepository.save(book);
     }
 
+    /**
+     * @title BookService.java
+     * @param [bookid]
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name findsstatusByid
+     * @date 3:14 PM. 10/14/2018
+     */
     public String findsstatusByid(Integer bookid) {
         return bookRepository.getsstatusByid(bookid);
     }

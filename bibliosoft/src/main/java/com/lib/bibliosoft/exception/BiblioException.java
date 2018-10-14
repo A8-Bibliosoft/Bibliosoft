@@ -3,10 +3,9 @@ package com.lib.bibliosoft.exception;
 import com.lib.bibliosoft.enums.ResultEnum;
 
 /**
- * @Author: 毛文杰
- * @Description:
- * @Date: Created in 9:57 AM. 9/28/2018
- * @Modify By:
+ * @author: 毛文杰
+ * @date: Created in 9:57 AM. 9/28/2018
+ * @modify By: maowenjie
  */
 public class BiblioException extends RuntimeException{
 
