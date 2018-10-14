@@ -16,16 +16,16 @@
     <nav class="navbar" role="navigation">
         <div class="container-fluid">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="goHomePage">首页</a></li>
-                <li><a href="#">所有藏书</a></li>
+                <li class="active"><a href="goHomePage" th:text="#{bookdetail.homepage}">首页</a></li>
+                <li><a href="#" th:text="#{bookdetail.allbooks}">所有藏书</a></li>
             </ul>
             <ul class="nav navbar-nav" style="float: right" >
-                <li><a th:if="${session.loginname} eq null" href="goLogin" >登录</a></li>
+                <li><a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}">登录</a></li>
                 <li th:if="${session.loginname} ne null">
                     <a href="goReaderInfo"><span th:text="${session.loginname}"></span></a>
                 </li>
                 <li th:if="${session.loginname} ne null">
-                    <a href="goOut">退出登录</a>
+                    <a href="goOut" th:text="#{homepage.logout}">退出登录</a>
                 </li>
             </ul>
         </div>
@@ -37,25 +37,25 @@
         <div class="col-md-12">
             <div  class="col-md-6" style="text-align: center">
                 <ul class="nav">
-                    <li><span>书名:</span><p th:text="${book.bookName}"></p></li>
-                    <li><span>作者:</span><p th:text="${book.bookAuthor}"></p></li>
-                    <li><span>ISBN:</span><p th:text="${book.bookIsbn}"></p></li>
-                    <li><span>价格:</span><p th:text="${book.bookPrice}"></p></li>
-                    <li><span>描述:</span><p th:text="${book.bookDesc}"></p></li>
+                    <li><span th:text="#{bookdetail.name}">书名:</span><p th:text="${book.bookName}"></p></li>
+                    <li><span th:text="#{bookdetail.author}">作者:</span><p th:text="${book.bookAuthor}"></p></li>
+                    <li><span th:text="#{bookdetail.ISBN}">ISBN:</span><p th:text="${book.bookIsbn}"></p></li>
+                    <li><span th:text="#{bookdetail.price}">价格:</span><p th:text="${book.bookPrice}"></p></li>
+                    <li><span th:text="#{bookdetail.description}">描述:</span><p th:text="${book.bookDesc}"></p></li>
                 </ul>
             </div>
             <div class="col-md-6" style="text-align: center">
                 <ul class="nav">
-                    <li><span>位置:</span><p th:text="${book.bookPosition}"></p></li>
-                    <li><span>已借出:</span><p th:text="${bookStatus1}"></p></li>
-                    <li><span>已预约:</span><p th:text="${bookStatus4}"></p></li>
-                    <li><span>在架上:</span><p th:text="${bookStatus0}"></p></li>
+                    <li><span th:text="#{bookdetail.location}">位置:</span><p th:text="${book.bookPosition}"></p></li>
+                    <li><span th:text="#{bookdetail.borrowed}">已借出:</span><p th:text="${bookStatus1}"></p></li>
+                    <li><span th:text="#{bookdetail.ordered}">已预约:</span><p th:text="${bookStatus4}"></p></li>
+                    <li><span th:text="#{bookdetail.available}">在架上:</span><p th:text="${bookStatus0}"></p></li>
                 </ul>
             </div>
         </div>
         <br><br>
         <hr>
-        <p style="text-align: center;"><a onclick="bookresult()" class="flip-link btn btn-info" >预约</a></p>
+        <p style="text-align: center;"><a onclick="bookresult()" class="flip-link btn btn-info" th:text="#{bookdetail.order}">预约</a></p>
     </div>
     <script language='javascript' th:inline="javascript">
         function bookresult() {
