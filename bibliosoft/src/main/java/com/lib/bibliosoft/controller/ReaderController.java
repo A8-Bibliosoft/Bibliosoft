@@ -328,6 +328,7 @@ public class ReaderController {
             model.addAttribute("borrowlist",borrowRecordList);
             model.addAttribute("appointmentlist",appointmentRecordList);
             model.addAttribute("historylist",historyRecordList);
+            logger.info(borrowRecordList.get(0).getBook().getBookName());
             return "ReaderInfo";
         }
 

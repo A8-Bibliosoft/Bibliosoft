@@ -5,7 +5,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  *@Title: Book.java
@@ -15,12 +17,13 @@ import java.util.Date;
  */
 @Entity
 @Table(name="book")
-public class Book {
+public class Book  implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "book_id")
     private Integer bookId;
 
     private String bookName;
@@ -45,6 +48,9 @@ public class Book {
     private Date registerTime;
 
     private String bookPublisher;
+
+    @OneToMany(mappedBy = "book")
+    private List<BorrowRecord> borrowRecordList;
 
     public Book() {
 
@@ -144,5 +150,13 @@ public class Book {
 
     public void setBookPublisher(String bookPublisher) {
         this.bookPublisher = bookPublisher;
+    }
+
+    public List<BorrowRecord> getBorrowRecordList() {
+        return borrowRecordList;
+    }
+
+    public void setBorrowRecordList(List<BorrowRecord> borrowRecordList) {
+        this.borrowRecordList = borrowRecordList;
     }
 }

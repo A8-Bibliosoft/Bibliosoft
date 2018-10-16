@@ -1,7 +1,6 @@
 package com.lib.bibliosoft.repository;
 
 import com.lib.bibliosoft.entity.BorrowRecord;
-import com.lib.bibliosoft.entity.Reader;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
