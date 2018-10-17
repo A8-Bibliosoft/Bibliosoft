@@ -22,7 +22,6 @@ public class BookSort {
 
     private Integer typeId;
 
-
     @OneToMany(mappedBy = "bookSort",fetch = FetchType.EAGER)
     private List<Book> bookList;
 

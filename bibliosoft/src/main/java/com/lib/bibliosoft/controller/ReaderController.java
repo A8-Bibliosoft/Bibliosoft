@@ -473,6 +473,7 @@ public class ReaderController {
             bookRepository.updateBookStatus(0,bookId);
             //已考虑重复问题，查找为归还的书 returntime is null
             borrowRecordRepository.updateBorrow(new Date(),0,bookId);
+            logger.info(borrowRecordRepository.findByBookId(bookId).toString());
             return null;
         }
         return null;

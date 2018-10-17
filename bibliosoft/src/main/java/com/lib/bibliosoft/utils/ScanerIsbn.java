@@ -2,6 +2,7 @@ package com.lib.bibliosoft.utils;
 import com.alibaba.fastjson.JSONObject;
 import com.lib.bibliosoft.entity.Book;
 import com.lib.bibliosoft.entity.BookSort;
+import com.lib.bibliosoft.repository.BookRepository;
 import com.lib.bibliosoft.repository.BookSortRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,8 @@ public class ScanerIsbn {
 
     @Autowired
     private BookSortRepository bookSortRepository;
+    @Autowired
+    private BookRepository bookRepository;
 
     private static ScanerIsbn scanerIsbn;
 
@@ -38,6 +41,7 @@ public class ScanerIsbn {
     public void init() {
         scanerIsbn = this;
         scanerIsbn.bookSortRepository = this.bookSortRepository;
+        scanerIsbn.bookRepository = this.bookRepository;
         // 初使化时将已静态化的bookIdUtil实例化
     }
 
@@ -84,6 +88,7 @@ public class ScanerIsbn {
         /*what about bookId? 竟然同一个isbn号对应的bookid也相同...那就递增吧*/
         Integer bookid;
         /*如果之前不存在此isbn*/
+        //修改
         if (maxbookid == -1)
             bookid = Integer.parseInt(id);
         else//存在就在原来基础上加一
@@ -106,6 +111,7 @@ public class ScanerIsbn {
             book.setBookId(bookid++);
             books.add(book);
         }
+
         List<BookSort> bs = scanerIsbn.bookSortRepository.findByBookIsbn(isbn);
         if(bs.size() != 0){
             logger.info("BookSort表已有ISBN编号为==={}的书籍，故不插入", isbn);

@@ -470,10 +470,9 @@ public class BookController {
      * @description add books by isbn
      * @date 2:19 PM. 10/9/2018
      */
-    @Transactional
+
     @PostMapping("/book_isbn")
     public ResponseEntity<Map<String,Object>> getInfoByDouBan(String isbn, String time, String position, String status, String num, String typeid){
-
         Map<String,Object> map = new HashMap<String,Object>();
         Integer number = Integer.parseInt(num);
         //get the books and improve their information
@@ -483,6 +482,9 @@ public class BookController {
         try {
             for (Book b : books){
                 bookService.addBook(b);
+                logger.info(isbn);
+                logger.info(""+b.getBookId());
+                bookRepository.insertBookIsbn(isbn,b.getBookId());
                 //生成条形码
                 BarcodeUtil.generateFile(String.valueOf(b.getBookId()));
                 //提示语句

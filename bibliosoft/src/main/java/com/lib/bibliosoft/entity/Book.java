@@ -28,8 +28,7 @@ public class Book  implements Serializable{
 
     private String bookName;
 
-    //WHY？？？insertable = false
-    @Column(name = "book_isbn")
+    @Column(name = "book_isbn",insertable = false,updatable = false)
     private String bookIsbn;
 
     private float bookPrice;
@@ -55,8 +54,7 @@ public class Book  implements Serializable{
     private Set<BorrowRecord> borrowRecordSet;
     //查找
     @ManyToOne()
-    @JoinColumn(name = "booksort_isbn")
-//    @JoinColumn(name = "book_isbn",referencedColumnName = "book_isbn")
+    @JoinColumn(name = "book_isbn",referencedColumnName = "book_isbn")
     private  BookSort bookSort;
 
     public Book() {
@@ -174,4 +172,5 @@ public class Book  implements Serializable{
     public void setBookSort(BookSort bookSort) {
         this.bookSort = bookSort;
     }
+
 }
