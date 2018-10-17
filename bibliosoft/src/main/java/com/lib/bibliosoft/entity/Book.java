@@ -1,6 +1,4 @@
 package com.lib.bibliosoft.entity;
-
-import org.apache.ibatis.annotations.Many;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;

@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
@@ -24,8 +23,9 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: 毛文杰
@@ -81,17 +81,17 @@ public class ReaderController {
         model.addAttribute("totalpages", totalPages);
 
         //获得每页的数据
-        Iterator<Reader> readerIterator = iReaderService.getPage(currpage, pagesize).iterator();
+        List<Reader> readerList = iReaderService.getPage(currpage, pagesize).getContent();
 
         logger.info("currpage={}",currpage);
-        List<Reader> list = new ArrayList<>();
-        while(readerIterator.hasNext()) {
-            list.add(readerIterator.next());
-        }
-        logger.info("list.size = {}",list.size());
+//        List<Reader> list = new ArrayList<>();
+//        while(readerIterator.hasNext()) {
+//            list.add(readerIterator.next());
+//        }
+        logger.info("list.size = {}",readerList.size());
         //logger.info("list[0]={}", list.get(0));
         //放在model
-        model.addAttribute("readers", list);
+        model.addAttribute("readers", readerList);
         model.addAttribute("currpage",currpage);
         return "reader_list";
     }
@@ -215,17 +215,17 @@ public class ReaderController {
         if(currpage == totalPages+1)
             currpage = totalPages;
         //获得每页的数据
-        Iterator<Reader> readerIterator = iReaderService.getPage(currpage, pagesize).iterator();
+        List<Reader> readerList = iReaderService.getPage(currpage, pagesize).getContent();
 
         logger.info("currpage={}",currpage);
-        List<Reader> list = new ArrayList<>();
-        while(readerIterator.hasNext()) {
-            list.add(readerIterator.next());
-        }
-        logger.info("list.size = {}",list.size());
+//        List<Reader> list = new ArrayList<>();
+//        while(readerIterator.hasNext()) {
+//            list.add(readerIterator.next());
+//        }
+        logger.info("list.size = {}",readerList.size());
         //logger.info("list[0]={}", list.get(0));
         //放在model
-        model.addAttribute("readers", list);
+        model.addAttribute("readers", readerList);
         model.addAttribute("currpage",currpage);
         return "reader_list";
     }
