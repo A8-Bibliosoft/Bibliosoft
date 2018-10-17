@@ -7,6 +7,7 @@ import com.lib.bibliosoft.enums.ResultEnum;
 import com.lib.bibliosoft.repository.BookDelRecordRepository;
 import com.lib.bibliosoft.repository.BookRepository;
 import com.lib.bibliosoft.service.impl.BookService;
+import com.lib.bibliosoft.utils.BarcodeUtil;
 import com.lib.bibliosoft.utils.FileNameUtil;
 import com.lib.bibliosoft.utils.FileUtil;
 import com.lib.bibliosoft.utils.ScanerIsbn;
@@ -348,6 +349,8 @@ public class BookController {
     public ResponseEntity<Map<String,Object>> add_newbook(String booktitle, MultipartFile bookcover, String bookisbn, String bookauthor,
                                                           String bookposition, String bookprice, String bookid, String bookstatus, String bookaddtime,
                                                           String booksummary){
+        Map<String,Object> map = new HashMap<String,Object>();
+
         Book book = new Book();
         Integer Ibookstatus = Integer.parseInt(bookstatus);
         book.setBookStatus(Ibookstatus);
@@ -358,7 +361,14 @@ public class BookController {
         book.setBookPrice(Fbookprice);
         book.setBookIsbn(bookisbn);
         Integer Ibookid = Integer.parseInt(bookid);
-        book.setBookId(Ibookid);
+        if (bookRepository.findByBookId(Ibookid)!= null)
+            book.setBookId(Ibookid);
+        else{
+            //bookid不能重复，若已存在则返回错误信息！
+            map.put("msg", ResultEnum.ADD_BOOK_FAILED.getMsg());
+            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_ACCEPTABLE);
+        }
+
         //java.sql.Date
         Date date = Date.valueOf(bookaddtime);
         book.setRegisterTime(date);
@@ -396,7 +406,6 @@ public class BookController {
             msg = ResultEnum.ADD_BOOK_FAILED.getMsg();
         }
 
-        Map<String,Object> map = new HashMap<String,Object>();
         // 显示图片
         map.put("msg", msg);
         //map.put("fileName", file.getOriginalFilename());
@@ -445,6 +454,9 @@ public class BookController {
         try {
             for (Book b : books){
                 bookService.addBook(b);
+                //生成条形码
+                BarcodeUtil.generateFile(String.valueOf(b.getBookId()));
+                //提示语句
                 bookids.append(b.getBookId() + ", ");
             }
 

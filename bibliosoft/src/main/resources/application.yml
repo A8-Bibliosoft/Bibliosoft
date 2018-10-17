@@ -78,9 +78,9 @@ spring:
 #Thymeleaf End
 
 #Custom Configuration
-#reader:
-# readerName: maoge
-# sex: male
+barcode:
+  path:
+
 #Server Configuration
 server:
   port: 8080
