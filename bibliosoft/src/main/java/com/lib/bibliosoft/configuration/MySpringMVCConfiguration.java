@@ -14,13 +14,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
- * @Author: 毛文杰
- * @Description: interceptor、ddResourceHandlers and addViewControllers
- * @Date: Created in 8:03 PM. 9/29/2018
- * @Modify By: maowenjie
+ * @author 毛文杰
+ * @description interceptor、ddResourceHandlers and addViewControllers
+ * @date Created in 8:03 PM. 9/29/2018
+ * @modify By: maowenjie
  */
 @Configuration
 public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
@@ -28,12 +27,12 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
     private final Logger logger = LoggerFactory.getLogger(MySpringMVCConfiguration.class);
 
     /**
-     *@Title: MySpringMVCConfiguration.java
-     *@Params: registry
-     *@Return: void
-     *@Author: 毛文杰
-     *@Description: interceptor of custom
-     *@Date: 11:49 AM. 10/8/2018
+     *@title MySpringMVCConfiguration.java
+     *@param registry
+     *@return void 无
+     *@author 毛文杰
+     *@description interceptor of custom
+     *@date 11:49 AM. 10/8/2018
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -71,10 +70,10 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
     }
 
     /**
-     *@Title: MySpringMVCConfiguration.java
-     *@Author: 毛文杰
-     *@Description:
-     *@Date: 11:43 AM. 10/6/2018
+     *@title: MySpringMVCConfiguration.java
+     *@author: 毛文杰
+     *@description:
+     *@date: 11:43 AM. 10/6/2018
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -99,7 +98,7 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
 //        registry.addViewController("/librarian_info").setViewName("librarian_info");
         registry.addViewController("/system_setting").setViewName("system_setting");
         registry.addViewController("/book_add").setViewName("book_add");
-        registry.addViewController("/book_list").setViewName("book_list");
+        registry.addViewController("/book_position").setViewName("book_position");
         registry.addViewController("/book_addByIsbn").setViewName("book_addByIsbn");
         registry.addViewController("/book_category_add").setViewName("book_category_add");
         registry.addViewController("/bookadd_detail").setViewName("bookadd_detail");
@@ -116,3 +115,4 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
     }
 
 }
+

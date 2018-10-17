@@ -6,16 +6,24 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.nio.charset.Charset;
 
 @Configuration
 @SpringBootApplication
-@EnableScheduling
+@EnableScheduling//开启定时任务
+@EnableAsync//开启异步
 public class BibliosoftApplication {
 
-    //You can change the banner shape as you want, just add a text file named "banner.txt"
+    /**
+     * You can change the banner shape as you want, just add a text file named "banner.txt"
+     * @title BibliosoftApplication.java
+     * @author 毛文杰
+     * @method name main
+     * @date 7:17 PM. 9/25/2018
+     */
     public static void main(String[] args) {
 //        SpringApplication.run(BibliosoftApplication.class, args);
         SpringApplication springApplication = new SpringApplication(BibliosoftApplication.class);
@@ -29,10 +37,15 @@ public class BibliosoftApplication {
 //        springApplication.run(args);
 //    }
 
-    //Custom message converter for String to support Chinese characters
+    /**
+     * Custom message converter for String to support Chinese characters
+     * @title BibliosoftApplication.java
+     * @author 毛文杰
+     * @method name stringHttpMessageConverter
+     * @date 7:17 PM. 10/1/2018
+     */
     @Bean
     public StringHttpMessageConverter stringHttpMessageConverter(){
-        StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
-        return stringHttpMessageConverter;
+        return new StringHttpMessageConverter(Charset.forName("UTF-8"));
     }
 }

@@ -27,7 +27,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Date;
 import java.text.ParseException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *@Title: BookController.java
@@ -179,17 +181,17 @@ public class BookController {
         model.addAttribute("totalpages", totalPages);
 
         //获得每页的数据
-        Iterator<Book> bookIterator = bookService.getPage(currpage, pagesize).iterator();
+        List<Book> bookList = bookService.getPage(currpage, pagesize).getContent();
 
         logger.info("currpage={}",currpage);
-        List<Book> list = new ArrayList<>();
-        while(bookIterator.hasNext()) {
-            list.add(bookIterator.next());
-        }
+//        List<Book> list = new ArrayList<>();
+//        while(bookIterator.hasNext()) {
+//            list.add(bookIterator.next());
+//        }
 //        logger.info("list.size = {}",list.size());
 //        logger.info("list[0]={}", list.get(0));
         //放在model
-        model.addAttribute("books", list);
+        model.addAttribute("books", bookList);
         model.addAttribute("currpage",currpage);
         return "book_list";
     }
@@ -212,16 +214,16 @@ public class BookController {
         if(currpage == totalPages+1)
             currpage = totalPages;
         //获得每页的数据
-        Iterator<Book> bookIterator = bookService.getPage(currpage, pagesize).iterator();
+        List<Book> bookList = bookService.getPage(currpage, pagesize).getContent();
 
         logger.info("currpage={}",currpage);
-        List<Book> list = new ArrayList<>();
-        while(bookIterator.hasNext()) {
-            list.add(bookIterator.next());
-        }
-        logger.info("list.size = {}",list.size());
+//        List<Book> list = new ArrayList<>();
+//        while(bookIterator.hasNext()) {
+//            list.add(bookIterator.next());
+//        }
+//        logger.info("list.size = {}",list.size());
         //放在model
-        model.addAttribute("books", list);
+        model.addAttribute("books", bookList);
         model.addAttribute("currpage",currpage);
         return "book_list";
     }
