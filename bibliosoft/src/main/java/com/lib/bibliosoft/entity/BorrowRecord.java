@@ -14,7 +14,7 @@ public class BorrowRecord {
 
     private String readerId;
 
-    @Column(name = "book_id",insertable = false,updatable = false)
+    @Column(name = "book_id")
     private Integer bookId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -27,7 +27,7 @@ public class BorrowRecord {
 
     private Integer debt;
 
-    @JoinColumn(name = "book_id",referencedColumnName="book_id")
+    @JoinColumn(name = "tablebook_id")
     @ManyToOne()
     private Book book;
 

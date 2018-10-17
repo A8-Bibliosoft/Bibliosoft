@@ -28,7 +28,8 @@ public class Book  implements Serializable{
 
     private String bookName;
 
-    @Column(name = "book_isbn",insertable = false,updatable = false)
+    //WHY？？？insertable = false
+    @Column(name = "book_isbn")
     private String bookIsbn;
 
     private float bookPrice;
@@ -39,8 +40,8 @@ public class Book  implements Serializable{
 
     private String bookAuthor;
 
-    @Max(value=4, message = "书籍状态：0-4")
-    @Min(value=0, message = "书籍状态：0-4")
+    @Max(value=4, message = "书籍状态：0-5")
+    @Min(value=0, message = "书籍状态：0-5")
     private Integer bookStatus;
 
     private String bookPosition;
@@ -54,7 +55,8 @@ public class Book  implements Serializable{
     private Set<BorrowRecord> borrowRecordSet;
     //查找
     @ManyToOne()
-    @JoinColumn(name = "book_isbn",referencedColumnName = "book_isbn")
+    @JoinColumn(name = "booksort_isbn")
+//    @JoinColumn(name = "book_isbn",referencedColumnName = "book_isbn")
     private  BookSort bookSort;
 
     public Book() {

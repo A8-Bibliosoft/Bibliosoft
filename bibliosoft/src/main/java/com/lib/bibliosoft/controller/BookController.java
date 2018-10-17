@@ -2,10 +2,10 @@ package com.lib.bibliosoft.controller;
 
 import com.lib.bibliosoft.entity.Book;
 import com.lib.bibliosoft.entity.BookDelRecord;
+import com.lib.bibliosoft.entity.BookSort;
 import com.lib.bibliosoft.entity.Librarian;
 import com.lib.bibliosoft.enums.ResultEnum;
-import com.lib.bibliosoft.repository.BookDelRecordRepository;
-import com.lib.bibliosoft.repository.BookRepository;
+import com.lib.bibliosoft.repository.*;
 import com.lib.bibliosoft.service.impl.BookService;
 import com.lib.bibliosoft.utils.BarcodeUtil;
 import com.lib.bibliosoft.utils.FileNameUtil;
@@ -49,6 +49,15 @@ public class BookController {
 
     @Autowired
     private BookDelRecordRepository bookDelRecordRepository;
+
+    @Autowired
+    private BookSortRepository bookSortRepository;
+
+    @Autowired
+    private BookStatusRepository bookStatusRepository;
+
+    @Autowired
+    private BookTypeRepository bookTypeRepository;
 
     private final static Logger logger = LoggerFactory.getLogger(BookController.class);
 
@@ -345,12 +354,14 @@ public class BookController {
      * @Description: add a new book to the library
      * @Date: 10:07 PM. 10/6/2018
      */
+    @Transactional
     @RequestMapping("/book_addnewbook")
     public ResponseEntity<Map<String,Object>> add_newbook(String booktitle, MultipartFile bookcover, String bookisbn, String bookauthor,
                                                           String bookposition, String bookprice, String bookid, String bookstatus, String bookaddtime,
-                                                          String booksummary){
+                                                          String booksummary, String typeid){
         Map<String,Object> map = new HashMap<String,Object>();
 
+        /*书籍*/
         Book book = new Book();
         Integer Ibookstatus = Integer.parseInt(bookstatus);
         book.setBookStatus(Ibookstatus);
@@ -360,6 +371,7 @@ public class BookController {
         float Fbookprice = Float.parseFloat(bookprice);
         book.setBookPrice(Fbookprice);
         book.setBookIsbn(bookisbn);
+
         Integer Ibookid = Integer.parseInt(bookid);
         if (bookRepository.findByBookId(Ibookid)!= null)
             book.setBookId(Ibookid);
@@ -377,8 +389,23 @@ public class BookController {
         /*获得新的文件名*/
         String bookImg = FileNameUtil.getFileName(bookcover.getOriginalFilename());
         book.setBookImg(bookImg);
-        bookService.addBook(book);
 
+        if(bookSortRepository.findByBookIsbn(bookisbn) != null){
+            logger.info("已有ISBN编号为==={}的书籍，故不插入", bookisbn);
+        }else{
+            //书籍分类表
+            BookSort bookSort = new BookSort();
+            bookSort.setBookAuthor(bookauthor);
+            bookSort.setBookIsbn(bookisbn);
+            bookSort.setBookName(booktitle);
+            bookSort.setTypeId(Integer.parseInt(typeid));
+            //关联
+            bookSort.getBookList().add(book);
+            book.setBookSort(bookSort);
+        }
+
+        //保存
+        bookService.addBook(book);
 
         // 要上传的目标文件存放路径为 static/bookimages/
         File p = null;
@@ -443,13 +470,15 @@ public class BookController {
      * @description add books by isbn
      * @date 2:19 PM. 10/9/2018
      */
+    @Transactional
     @PostMapping("/book_isbn")
-    public ResponseEntity<Map<String,Object>> getInfoByDouBan(String isbn, String time, String position, String status, String num){
+    public ResponseEntity<Map<String,Object>> getInfoByDouBan(String isbn, String time, String position, String status, String num, String typeid){
 
         Map<String,Object> map = new HashMap<String,Object>();
         Integer number = Integer.parseInt(num);
         //get the books and improve their information
-        List<Book> books = ScanerIsbn.getBookInfoByIsbn(isbn, number, time, position, status);
+        List<Book> books = ScanerIsbn.getBookInfoByIsbn(isbn, number, time, position, status, typeid);
+
         StringBuilder bookids = new StringBuilder();
         try {
             for (Book b : books){
@@ -457,7 +486,7 @@ public class BookController {
                 //生成条形码
                 BarcodeUtil.generateFile(String.valueOf(b.getBookId()));
                 //提示语句
-                bookids.append(b.getBookId() + ", ");
+                bookids.append(b.getBookId() + ";");
             }
 
         }catch(Exception e){
@@ -468,6 +497,20 @@ public class BookController {
         }
         map.put("msg", ResultEnum.ADD_BOOK_SUCCESS.getMsg() + " bookid: " + bookids);
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+    }
+
+    @GetMapping("/book_addByIsbn")
+    public String goaddBookIsbnPage(Model model){
+        model.addAttribute("types", bookTypeRepository.findAll());
+        model.addAttribute("status", bookStatusRepository.findAll());
+        return "book_addByIsbn";
+    }
+
+    @GetMapping("bookadd_detail")
+    public String goAddBookpage(Model model){
+        model.addAttribute("types", bookTypeRepository.findAll());
+        model.addAttribute("status", bookStatusRepository.findAll());
+        return "bookadd_detail";
     }
 }
 
