@@ -1,8 +1,4 @@
 package com.lib.bibliosoft.entity;
-<<<<<<< HEAD
-
-=======
->>>>>>> f2133c1123d1cdbfb0b781f39f17141dbde4beee
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
