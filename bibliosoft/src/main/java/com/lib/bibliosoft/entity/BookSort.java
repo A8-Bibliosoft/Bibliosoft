@@ -22,7 +22,6 @@ public class BookSort {
 
     private Integer typeId;
 
-    private String bookImg;
 
     @OneToMany(mappedBy = "bookSort",fetch = FetchType.EAGER)
     private List<Book> bookList;
@@ -57,14 +56,6 @@ public class BookSort {
 
     public void setTypeId(Integer typeId) {
         this.typeId = typeId;
-    }
-
-    public String getBookImg() {
-        return bookImg;
-    }
-
-    public void setBookImg(String bookImg) {
-        this.bookImg = bookImg;
     }
 
     public List<Book> getBookList() {

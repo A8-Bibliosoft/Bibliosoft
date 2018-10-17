@@ -13,8 +13,8 @@ import javax.persistence.*;
 public class BookStatus {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer status;
+
     private String desc;
 
     public BookStatus() {

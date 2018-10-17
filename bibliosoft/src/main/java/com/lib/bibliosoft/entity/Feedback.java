@@ -22,6 +22,8 @@ public class Feedback {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private String date;
 
+    private String readerId;
+
     @ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
     @JoinColumn(name="id", insertable = false,updatable = false)
     private Reader reader;
@@ -71,4 +73,11 @@ public class Feedback {
         this.reader = reader;
     }
 
+    public String getReaderId() {
+        return readerId;
+    }
+
+    public void setReaderId(String readerId) {
+        this.readerId = readerId;
+    }
 }
