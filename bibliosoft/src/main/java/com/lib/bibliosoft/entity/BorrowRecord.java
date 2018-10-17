@@ -14,6 +14,7 @@ public class BorrowRecord {
 
     private String readerId;
 
+    @Column(name = "book_id",insertable = false,updatable = false)
     private Integer bookId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -25,6 +26,10 @@ public class BorrowRecord {
     private  Integer lastday;
 
     private Integer debt;
+
+    @JoinColumn(name = "book_id",referencedColumnName="book_id")
+    @ManyToOne()
+    private Book book;
 
     public Integer getId() {
         return id;
@@ -80,5 +85,13 @@ public class BorrowRecord {
 
     public void setDebt(Integer debt) {
         this.debt = debt;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
     }
 }

@@ -45,7 +45,7 @@
 			width: 85px;
 			height: 120px;
 		}
-		.imgsize a{
+		.imgsize li{
 			height: 150px;
 			width: 100%;
 		}
@@ -122,14 +122,16 @@
 	</form>
 	<div id="search_detail"  class="col-md-8">
 		<ul class="nav imgsize" >
-			<li th:each="book:${booklist}">
-				<a th:href="@{'goBookDetail?bookIsbn='+${book.bookIsbn}}">
-					<img th:src="${book.bookImg}" alt="bookImage" style="float: left">
-                    <div >
+			<li th:each="book:${booklist}" >
+                <div th:if="${book.getOneBook() ne null}">
+                    <a th:href="@{'goBookDetail?bookIsbn='+${book.bookIsbn}}">
+                        <img th:src="${book.getOneBook().bookImg}" alt="bookImage" style="float: left">
                         <h4 th:text="${book.bookName}"></h4>
                         <h4 th:text="${book.bookAuthor}"></h4>
-                    </div>
-				</a>
+                        <h4 th:text="${book.getOneBook().bookPrice}"></h4>
+                        <h4 th:text="${book.getOneBook().bookPosition}"></h4>
+                    </a>
+                </div>
 			</li>
 		</ul>
 	</div>

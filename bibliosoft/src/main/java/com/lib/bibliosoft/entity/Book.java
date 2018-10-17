@@ -1,11 +1,14 @@
 package com.lib.bibliosoft.entity;
 
+import org.apache.ibatis.annotations.Many;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  *@Title: Book.java
@@ -15,16 +18,19 @@ import java.util.Date;
  */
 @Entity
 @Table(name="book")
-public class Book {
+public class Book  implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id",insertable=false,updatable=false)
     private Integer id;
 
+    @Column(name = "book_id")
     private Integer bookId;
 
     private String bookName;
 
+    @Column(name = "book_isbn",insertable = false,updatable = false)
     private String bookIsbn;
 
     private float bookPrice;
@@ -45,6 +51,13 @@ public class Book {
     private Date registerTime;
 
     private String bookPublisher;
+    //借书
+    @OneToMany(mappedBy = "book",fetch = FetchType.EAGER)
+    private Set<BorrowRecord> borrowRecordSet;
+    //查找
+    @ManyToOne()
+    @JoinColumn(name = "book_isbn",referencedColumnName = "book_isbn")
+    private  BookSort bookSort;
 
     public Book() {
 
@@ -144,5 +157,21 @@ public class Book {
 
     public void setBookPublisher(String bookPublisher) {
         this.bookPublisher = bookPublisher;
+    }
+
+    public Set<BorrowRecord> getBorrowRecordSet() {
+        return borrowRecordSet;
+    }
+
+    public void setBorrowRecordSet(Set<BorrowRecord> borrowRecordSet) {
+        this.borrowRecordSet = borrowRecordSet;
+    }
+
+    public BookSort getBookSort() {
+        return bookSort;
+    }
+
+    public void setBookSort(BookSort bookSort) {
+        this.bookSort = bookSort;
     }
 }
