@@ -248,7 +248,6 @@ public class ReaderController {
     public String search_reader(Model model, @RequestParam("search_content") String search_content){
         logger.info("search_content==={}",search_content);
         List<Reader> searchReader = iReaderService.searchReaderByPhoneOrName(search_content);
-
         logger.info("查询结果===大小size={}",searchReader.size());
         model.addAttribute("readers",searchReader);
         //当前页写死了
@@ -320,11 +319,7 @@ public class ReaderController {
             for(int i=0;i<historyRecordList.size();i++){
                 historybooklist.add(bookRepository.findByBookId(historyRecordList.get(i).getBookId()));
             }
-
             model.addAttribute("reader",readerRepository.findReaderByReaderId(readerId));
-//            model.addAttribute("borrowlist",borrowbooklist);
-//            model.addAttribute("appointmentlist",appointmentbooklist);
-//            model.addAttribute("historylist",historybooklist);
             model.addAttribute("borrowlist",borrowRecordList);
             model.addAttribute("appointmentlist",appointmentRecordList);
             model.addAttribute("historylist",historyRecordList);
@@ -363,8 +358,6 @@ public class ReaderController {
             String newfilename=FileNameUtil.getFileName(imgFile.getOriginalFilename());
             FileUtil.upload(imgFile, upload.getAbsolutePath(), newfilename);
             String imgsrc="/static/readerimages/"+newfilename;
-            //logger.info(imgsrc);
-            //logger.info(upload.getAbsolutePath());
             readerRepository.updateReaderBasic(readerId,sex,readerName,imgsrc);
         }else{
             readerRepository.updateReaderBasic(readerId,sex,readerName);

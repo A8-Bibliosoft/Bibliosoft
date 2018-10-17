@@ -125,9 +125,8 @@
 			<li th:each="book:${booklist}">
 				<a th:href="@{'goBookDetail?bookIsbn='+${book.bookIsbn}}">
 					<img th:src="${book.bookImg}" alt="bookImage" style="float: left">
-                    <div >
-                        <h4 th:text="${book.bookName}"></h4>
-                        <h4 th:text="${book.bookAuthor}"></h4>
+                    <div th:if="${book.getOneBook() ne null}">
+						<h4 th:text="${book.getOneBook().bookPosition}"></h4>
                     </div>
 				</a>
 			</li>

@@ -2,6 +2,8 @@ package com.lib.bibliosoft.entity;
 
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 /**
  *@Title: BookSort.java
@@ -11,14 +13,10 @@ import javax.persistence.*;
 @Table(name="booksort")
 public class BookSort {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    private Integer bookId;
+    @Column(name = "book_isbn")
+    private String bookIsbn;
 
     private String bookName;
-
-    private String bookIsbn;
 
     private String bookAuthor;
 
@@ -26,21 +24,8 @@ public class BookSort {
 
     private String bookImg;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(Integer bookId) {
-        this.bookId = bookId;
-    }
+    @OneToMany(mappedBy = "bookSort",fetch = FetchType.EAGER)
+    private List<Book> bookList;
 
     public String getBookName() {
         return bookName;
@@ -80,5 +65,21 @@ public class BookSort {
 
     public void setBookImg(String bookImg) {
         this.bookImg = bookImg;
+    }
+
+    public List<Book> getBookList() {
+        return bookList;
+    }
+
+    public void setBookList(List<Book> bookList) {
+        this.bookList = bookList;
+    }
+
+    public Book getOneBook() {
+        if(bookList.size()>0){
+            return bookList.get(0);
+        }else{
+            return null;
+        }
     }
 }
