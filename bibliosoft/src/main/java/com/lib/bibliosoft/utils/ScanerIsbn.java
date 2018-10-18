@@ -1,9 +1,15 @@
 package com.lib.bibliosoft.utils;
 import com.alibaba.fastjson.JSONObject;
 import com.lib.bibliosoft.entity.Book;
+import com.lib.bibliosoft.entity.BookSort;
+import com.lib.bibliosoft.repository.BookRepository;
+import com.lib.bibliosoft.repository.BookSortRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,9 +25,25 @@ import java.util.List;
  * @date Created in 12:19 PM. 10/9/2018
  * @modify By maowenjie 2:05 PM. 10/14/2018
  */
+@Component
 public class ScanerIsbn {
 
+    @Autowired
+    private BookSortRepository bookSortRepository;
+    @Autowired
+    private BookRepository bookRepository;
+
+    private static ScanerIsbn scanerIsbn;
+
     private static Logger logger = LoggerFactory.getLogger(ScanerIsbn.class);
+
+    @PostConstruct
+    public void init() {
+        scanerIsbn = this;
+        scanerIsbn.bookSortRepository = this.bookSortRepository;
+        scanerIsbn.bookRepository = this.bookRepository;
+        // 初使化时将已静态化的bookIdUtil实例化
+    }
 
     /**
      * @title ScanerIsbn.java
@@ -33,7 +55,7 @@ public class ScanerIsbn {
      * @date 2:10 PM. 10/9/2018
      * @modify 2:05 PM. 10/14/2018
      */
-    public static List<Book> getBookInfoByIsbn(String isbn, Integer num, String time, String position, String status) {
+    public static List<Book> getBookInfoByIsbn(String isbn, Integer num, String time, String position, String status, String typeid) {
 
         /*解析豆瓣数据库返回的json数据*/
         String url = "https://api.douban.com/v2/book/isbn/:" + isbn;
@@ -66,6 +88,7 @@ public class ScanerIsbn {
         /*what about bookId? 竟然同一个isbn号对应的bookid也相同...那就递增吧*/
         Integer bookid;
         /*如果之前不存在此isbn*/
+        //修改
         if (maxbookid == -1)
             bookid = Integer.parseInt(id);
         else//存在就在原来基础上加一
@@ -87,6 +110,20 @@ public class ScanerIsbn {
             //每次都加一
             book.setBookId(bookid++);
             books.add(book);
+        }
+
+        List<BookSort> bs = scanerIsbn.bookSortRepository.findByBookIsbn(isbn);
+        if(bs.size() != 0){
+            logger.info("BookSort表已有ISBN编号为==={}的书籍，故不插入", isbn);
+        }else{
+            //书籍分类表
+            BookSort bookSort = new BookSort();
+            bookSort.setBookAuthor(author);
+            bookSort.setBookIsbn(isbn);
+            bookSort.setBookName(title);
+            bookSort.setTypeId(Integer.parseInt(typeid));
+            scanerIsbn.bookSortRepository.save(bookSort);
+            scanerIsbn.bookSortRepository.insertTypeId(Integer.parseInt(typeid),isbn);
         }
 
         logger.info("bookId={},bookAuthor={},bookPublisher={},bookImage={},bookPrice={},bookTitle={}",id,author,publisher,image,price,title);

@@ -66,6 +66,7 @@ spring:
   #设置国际化的基础名称
   messages:
     basename: i18n.message
+    fallback-to-system-locale: false
   #设置上传文件的配置
   servlet:
     multipart:
@@ -77,9 +78,9 @@ spring:
 #Thymeleaf End
 
 #Custom Configuration
-#reader:
-# readerName: maoge
-# sex: male
+barcode:
+  path:
+
 #Server Configuration
 server:
   port: 8080

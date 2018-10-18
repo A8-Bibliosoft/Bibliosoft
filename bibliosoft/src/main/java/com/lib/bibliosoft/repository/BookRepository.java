@@ -19,6 +19,13 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
     /**
+     * 插入isbn
+     */
+    @Transactional
+    @Modifying
+    @Query(value = "update book set book_isbn = ?1 where book_id=?2",nativeQuery = true)
+    void insertBookIsbn(String bookIsbn,Integer BookId);
+    /**
      * Expansion: find books by it's ISBN
      */
     List<Book> findBookByBookIsbn(String bookIsbn);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
@@ -84,16 +84,23 @@
                     <!--</label>-->
                     <div class="myinput">
                         <span class="select-box">
-                            <select class="form-control" title="Select status"  name="bookstatus" id="bookstatus">
-                                <option value="0">On the shelf</option>
-                                <option value="1">Borrowed</option>
-                                <option value="2">Damaged</option>
-                                <option value="3">Buying</option>
-                                <option value="4">Reserved</option>
+                            <select class="form-control" title="Select Status"  name="bookstatus" id="bookstatus">
+                                <option th:each="s : ${status}" th:value="${s.getStatus()}" th:text="${s.getDesc()}"></option>
                             </select>
                         </span>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <div class="myinput">
+                        <span class="select-box">
+                            <select class="form-control" title="Select Type"  name="booktype" id="booktype">
+                                <option th:each="t : ${types}" th:value="${t.getTypeId()}" th:text="${t.getTypeName()}"></option>
+                            </select>
+                        </span>
+                    </div>
+                </div>
+
                 <!--按钮操作-->
                 <div class="mybutton">
                     <button onclick="book_save_submit();" class="btn btn-primary radius" type="button">
@@ -125,10 +132,11 @@
         var bookposition = $("#bookposition").val();
         var bookisbn = $("#bookisbn").val();
         var booknum = $("#booknumber").val();
-        if(bookstatus == "" || bookaddtime == "" || bookposition == "" || bookisbn == ""){
+        var booktype = $("#booktype").val();
+        if(bookstatus == "" || booktype == "" || bookaddtime == "" || bookposition == "" || bookisbn == ""){
             layer.msg("Please complete the data form！");
         }else{
-            var data="isbn="+bookisbn+"&time="+bookaddtime+"&status="+bookstatus+"&position="+bookposition+"&num="+booknum;
+            var data="isbn="+bookisbn+"&time="+bookaddtime+"&status="+bookstatus+"&position="+bookposition+"&num="+booknum+"&typeid="+booktype;
             $.ajax({
                 type: "post",
                 url: "/book_isbn",

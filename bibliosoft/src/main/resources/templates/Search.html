@@ -45,7 +45,7 @@
 			width: 85px;
 			height: 120px;
 		}
-		.imgsize a{
+		.imgsize li{
 			height: 150px;
 			width: 100%;
 		}
@@ -122,14 +122,19 @@
 	</form>
 	<div id="search_detail"  class="col-md-8">
 		<ul class="nav imgsize" >
-			<li th:each="book:${booklist}">
-				<a th:href="@{'goBookDetail?bookIsbn='+${book.bookIsbn}}">
-					<img th:src="${book.bookImg}" alt="bookImage" style="float: left">
-                    <div >
-                        <h4 th:text="${book.bookName}"></h4>
-                        <h4 th:text="${book.bookAuthor}"></h4>
-                    </div>
-				</a>
+			<li th:each="book:${booklist}" >
+                <div th:if="${book.getOneBook() ne null}">
+                    <a th:href="@{'goBookDetail?bookIsbn='+${book.bookIsbn}}">
+                        <img th:src="${book.getOneBook().bookImg}" alt="bookImage" style="float: left">
+						<br>
+                        <div style="margin-left: 100px;">
+                            <h4>书名: <span th:text="${book.bookName}"></span></h4>
+                            <h4>作者: <span th:text="${book.bookAuthor}"></span></h4>
+                            <h4>价格: <span th:text="${book.getOneBook().bookPrice}"></span></h4>
+                            <h4>位置: <span th:text="${book.getOneBook().bookPosition}"></span></h4>
+                        </div>
+                    </a>
+                </div>
 			</li>
 		</ul>
 	</div>

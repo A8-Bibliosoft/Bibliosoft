@@ -28,7 +28,7 @@ public class BorrowRecord {
     private Integer debt;
 
     @JoinColumn(name = "book_id",referencedColumnName="book_id")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     private Book book;
 
     public Integer getId() {

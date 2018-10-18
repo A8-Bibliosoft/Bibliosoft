@@ -136,17 +136,33 @@
             <div class="Add_p_s">
                 <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.status}">Status：</label>
                 <div class="formControls col-2">
-                            <span class="select-box">
-                                <select class="select required" title="select status" name="bookstatus" id="bookstatus">
-                                    <option value="0">On the shelf</option>
-                                    <option value="1">Borrowed</option>
-                                    <option value="2">Damaged</option>
-                                    <option value="3">Buying</option>
-                                    <option value="4">Reserved</option>
-                                </select>
-				            </span>
+                        <span class="select-box">
+                            <select class="select required" title="select status" name="bookstatus" id="bookstatus">
+                                <option th:each="s : ${status}" th:text="${s.getDesc()}" th:value="${s.getStatus()}"></option>
+                            </select>
+                        </span>
                 </div>
             </div>
+            <div class="Add_p_s">
+                <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.type}">Type：</label>
+                <div class="formControls col-2">
+                        <span class="select-box">
+                            <select class="select required" title="select type" name="typeid" id="booktype">
+                                <option th:each="t : ${types}" th:text="${t.getTypeName()}" th:value="${t.getTypeId()}"></option>
+                            </select>
+                        </span>
+                </div>
+            </div>
+            <!--<div class="Add_p_s">-->
+                <!--<em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.status}">Status：</label>-->
+                <!--<div class="formControls col-2">-->
+                        <!--<span class="select-box">-->
+                            <!--<select class="select required" title="select status" name="bookstatus" id="bookstatus">-->
+                                <!--<option th:each="s : ${status}" th:text="${s.getDesc()}" th:value="${s.getStatus()}"></option>-->
+                            <!--</select>-->
+                        <!--</span>-->
+                <!--</div>-->
+            <!--</div>-->
             <!--<div class="Add_p_s">-->
             <!--<label class="form-label col-2">-->
             <!--展示价格：-->

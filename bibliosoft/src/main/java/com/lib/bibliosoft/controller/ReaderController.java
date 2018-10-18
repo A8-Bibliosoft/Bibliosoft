@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
@@ -24,8 +23,9 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: 毛文杰
@@ -81,17 +81,17 @@ public class ReaderController {
         model.addAttribute("totalpages", totalPages);
 
         //获得每页的数据
-        Iterator<Reader> readerIterator = iReaderService.getPage(currpage, pagesize).iterator();
+        List<Reader> readerList = iReaderService.getPage(currpage, pagesize).getContent();
 
         logger.info("currpage={}",currpage);
-        List<Reader> list = new ArrayList<>();
-        while(readerIterator.hasNext()) {
-            list.add(readerIterator.next());
-        }
-        logger.info("list.size = {}",list.size());
+//        List<Reader> list = new ArrayList<>();
+//        while(readerIterator.hasNext()) {
+//            list.add(readerIterator.next());
+//        }
+        logger.info("list.size = {}",readerList.size());
         //logger.info("list[0]={}", list.get(0));
         //放在model
-        model.addAttribute("readers", list);
+        model.addAttribute("readers", readerList);
         model.addAttribute("currpage",currpage);
         return "reader_list";
     }
@@ -215,17 +215,17 @@ public class ReaderController {
         if(currpage == totalPages+1)
             currpage = totalPages;
         //获得每页的数据
-        Iterator<Reader> readerIterator = iReaderService.getPage(currpage, pagesize).iterator();
+        List<Reader> readerList = iReaderService.getPage(currpage, pagesize).getContent();
 
         logger.info("currpage={}",currpage);
-        List<Reader> list = new ArrayList<>();
-        while(readerIterator.hasNext()) {
-            list.add(readerIterator.next());
-        }
-        logger.info("list.size = {}",list.size());
+//        List<Reader> list = new ArrayList<>();
+//        while(readerIterator.hasNext()) {
+//            list.add(readerIterator.next());
+//        }
+        logger.info("list.size = {}",readerList.size());
         //logger.info("list[0]={}", list.get(0));
         //放在model
-        model.addAttribute("readers", list);
+        model.addAttribute("readers", readerList);
         model.addAttribute("currpage",currpage);
         return "reader_list";
     }
@@ -248,7 +248,6 @@ public class ReaderController {
     public String search_reader(Model model, @RequestParam("search_content") String search_content){
         logger.info("search_content==={}",search_content);
         List<Reader> searchReader = iReaderService.searchReaderByPhoneOrName(search_content);
-
         logger.info("查询结果===大小size={}",searchReader.size());
         model.addAttribute("readers",searchReader);
         //当前页写死了
@@ -303,32 +302,15 @@ public class ReaderController {
         String readerId=null;
         if(session.getAttribute("readerId")!=null){
             readerId=session.getAttribute("readerId").toString();
-            List<Book> borrowbooklist=new ArrayList<Book>();
             List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNull(readerId);
-            for(int i=0;i<borrowRecordList.size();i++){
-                borrowbooklist.add(bookRepository.findByBookId(borrowRecordList.get(i).getBookId()));
-            }
-
-            List<Book> appointmentbooklist=new ArrayList<Book>();
             List<AppointmentRecord> appointmentRecordList=appointmentRecordRepository.findByReaderId(readerId);
-            for(int i=0;i<appointmentRecordList.size();i++){
-                appointmentbooklist.add(bookRepository.findByBookId(appointmentRecordList.get(i).getBookId()));
-            }
-
-            List<Book> historybooklist=new ArrayList<Book>();
             List<BorrowRecord> historyRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNotNull(readerId);
-            for(int i=0;i<historyRecordList.size();i++){
-                historybooklist.add(bookRepository.findByBookId(historyRecordList.get(i).getBookId()));
-            }
-
             model.addAttribute("reader",readerRepository.findReaderByReaderId(readerId));
-//            model.addAttribute("borrowlist",borrowbooklist);
-//            model.addAttribute("appointmentlist",appointmentbooklist);
-//            model.addAttribute("historylist",historybooklist);
             model.addAttribute("borrowlist",borrowRecordList);
             model.addAttribute("appointmentlist",appointmentRecordList);
             model.addAttribute("historylist",historyRecordList);
             logger.info(borrowRecordList.get(0).getBook().getBookName());
+            logger.info(appointmentRecordList.get(0).getBook().getBookPosition());
             return "ReaderInfo";
         }
 
@@ -363,8 +345,6 @@ public class ReaderController {
             String newfilename=FileNameUtil.getFileName(imgFile.getOriginalFilename());
             FileUtil.upload(imgFile, upload.getAbsolutePath(), newfilename);
             String imgsrc="/static/readerimages/"+newfilename;
-            //logger.info(imgsrc);
-            //logger.info(upload.getAbsolutePath());
             readerRepository.updateReaderBasic(readerId,sex,readerName,imgsrc);
         }else{
             readerRepository.updateReaderBasic(readerId,sex,readerName);
@@ -480,6 +460,7 @@ public class ReaderController {
             bookRepository.updateBookStatus(0,bookId);
             //已考虑重复问题，查找为归还的书 returntime is null
             borrowRecordRepository.updateBorrow(new Date(),0,bookId);
+            logger.info(borrowRecordRepository.findByBookId(bookId).toString());
             return null;
         }
         return null;
