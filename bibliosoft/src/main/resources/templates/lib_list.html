@@ -116,7 +116,7 @@
                         <!--<i class="icon-ok bigger-120"></i>-->
                         <!--</a>-->
 
-                        <a title="Edit" th:onclick="'javascript:member_edit('+ this +','+${lib.getLibId()}+')'"
+                        <a title="Edit" th:onclick="'javascript:member_edit('+ this +','+${lib.getLibId()}+',\''+${lib.getLibName()}+'\',\''+${lib.getEmail()}+'\',\''+${lib.getPhone()}+'\')'"
                            href="javascript:;"
                            class="btn btn-xs btn-info">
                             <i class="icon-edit bigger-120"></i>
@@ -190,14 +190,14 @@
                 <li>
                     <label class="label_name">Name：</label>
                     <span class="add_name">
-                        <input name="libName" type="text" class="text_add" id="book_name"/>
+                        <input name="libName" type="text" class="text_add" id="lib_name"/>
                     </span>
                     <div class="prompt r_f"></div>
                 </li>
                 <li>
                     <label class="label_name">Phone：</label>
                     <span class="add_name">
-                        <input name="phone" type="text" class="text_add" id="book_position"/>
+                        <input name="phone" type="text" class="text_add" id="phone"/>
                     </span>
                     <!--<span class="add_name">-->
                          <!--<label><input name="form-field-radio" type="radio" checked="checked" class="ace" value="male">-->
@@ -210,7 +210,7 @@
                     <div class="prompt l_f"></div>
                 </li>
                 <li><label class="label_name">Email：</label>
-                    <span class="add_name"><input name="email" type="text" class="text_add"/></span>
+                    <span class="add_name"><input name="email" type="text" class="text_add" id="email"/></span>
                     <div class="prompt r_f"></div>
                 </li>
                 <li><label class="label_name">Password：</label>
@@ -255,7 +255,7 @@
     </div>
 
     <!--编辑阈值图层-->
-    <div class="add_menber" id="edit_threshold_style" style="display:none">
+    <div class="edit_threshold" id="edit_threshold_style" style="display:none">
         <form action="/update_librarian" method="post" id="threshold_edit">
             <ul class=" page-content">
                 <li><label class="label_name">Fine Value:</label>
@@ -455,9 +455,12 @@
     }
 
     /*图书管理员-编辑*/
-    function member_edit(obj, id) {
+    function member_edit(obj, id, name,email, phone ) {
         // $('#id').val(id);
         $('#libId').val(id);
+        $('#lib_name').val(name);
+        $('#email').val(email);
+        $('#phone').val(phone);
         $('#flag').val('edit');
         $('#addbook').attr("action","/update_librarian");
         $('#libId').attr("readonly","readonly");
@@ -517,6 +520,9 @@
 
         $('#flag').val('edit');
         $('#libname').focus();
+        $('#lib_name').val("");
+        $('#email').val("");
+        $('#phone').val("");
         $('#libId').val("");
         $('#libId').removeAttr("readonly");
         $('#addbook').attr("action","/create_librarian");
@@ -525,7 +531,7 @@
             title: 'Add Librarian',
             maxmin: true,
             shadeClose: false, //点击遮罩关闭层
-            area: ['600px', '400px'],
+            area: ['800px', '400px'],
             content: $('#add_menber_style'),
             btn: ['Submit', 'Cancel'],
             yes: function (index, layero) {
@@ -583,7 +589,7 @@
             title: 'Edit threshold',
             maxmin: true,
             shadeClose: false, //点击遮罩关闭层
-            area: ['700px', '260px'],
+            area: ['800px', '260px'],
             content: $('#edit_threshold_style'),
             btn: ['Submit', 'Cancel'],
             yes: function (index, layero) {

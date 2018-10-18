@@ -44,9 +44,9 @@ public class AdminController {
     private final static Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     /**
-     * @Author :董杭
-     * @Date :2018.10.6
-     * @Description :登录主页地址
+     * @ Author :董杭
+     * @ Date :2018.10.6
+     * @ Description :登录主页地址
      */
 
     @RequestMapping("/goAdminLogin")
@@ -113,9 +113,9 @@ public class AdminController {
 
 
     /**
-     *@Title: AdminController.java
-     *@Params: libname
-     *@Return: lib_list
+     *@ Title: AdminController.java
+     *@ Params: libname
+     *@ Return: lib_list
      *@Author: 毛文杰
      *@Description: 现在是只能查询出来一个用户或者0个用户，因为不是模糊查询，所以对于某个要搜索的图书馆员的名字只能有零个或者一个
      *@Date: 10:34 PM. 10/7/2018
