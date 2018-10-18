@@ -11,9 +11,14 @@ public class AppointmentRecord {
 
     private String readerId;
 
+    @Column(name = "book_id",insertable = false,updatable = false)
     private Integer bookId;
 
     private  Integer lasttime;
+
+    @OneToOne
+    @JoinColumn(name = "book_id",referencedColumnName = "book_id")
+    private Book book;
 
     public Integer getId() {
         return id;
@@ -45,5 +50,13 @@ public class AppointmentRecord {
 
     public void setLasttime(Integer lasttime) {
         this.lasttime = lasttime;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
     }
 }

@@ -19,12 +19,15 @@ public class BookSort {
     private String bookName;
 
     private String bookAuthor;
-
+    @Column(name = "type_id",insertable = false,updatable = false)
     private Integer typeId;
-
 
     @OneToMany(mappedBy = "bookSort",fetch = FetchType.EAGER)
     private List<Book> bookList;
+
+    @ManyToOne()
+    @JoinColumn(name = "type_id")
+    private BookType bookType;
 
     public String getBookName() {
         return bookName;
@@ -72,5 +75,13 @@ public class BookSort {
         }else{
             return null;
         }
+    }
+
+    public BookType getBookType() {
+        return bookType;
+    }
+
+    public void setBookType(BookType bookType) {
+        this.bookType = bookType;
     }
 }

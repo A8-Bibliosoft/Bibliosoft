@@ -1,7 +1,11 @@
 package com.lib.bibliosoft.entity;
 
-import javax.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
+import java.util.Date;
+
+//获得周月年的收益支出
 @Entity
 @Table(name="readermoney")
 public class ReaderMoney {
@@ -10,10 +14,13 @@ public class ReaderMoney {
     private Integer id;
 
     private String readerId;
-
-    private Integer fine;
-
+    //一次还款增加的金额
+    private Integer oncedebt;
+    //首次添加为300，删除reader为-300，已存在为0
     private Integer deposit;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date adddate;
 
     public Integer getId() {
         return id;
@@ -31,12 +38,20 @@ public class ReaderMoney {
         this.readerId = readerId;
     }
 
-    public Integer getFine() {
-        return fine;
+    public Integer getOncedebt() {
+        return oncedebt;
     }
 
-    public void setFine(Integer fine) {
-        this.fine = fine;
+    public void setOncedebt(Integer oncedebt) {
+        this.oncedebt = oncedebt;
+    }
+
+    public Date getAdddate() {
+        return adddate;
+    }
+
+    public void setAdddate(Date adddate) {
+        this.adddate = adddate;
     }
 
     public Integer getDeposit() {
