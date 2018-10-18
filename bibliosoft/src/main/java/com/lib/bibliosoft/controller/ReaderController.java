@@ -302,28 +302,15 @@ public class ReaderController {
         String readerId=null;
         if(session.getAttribute("readerId")!=null){
             readerId=session.getAttribute("readerId").toString();
-//            List<Book> borrowbooklist=new ArrayList<Book>();
             List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNull(readerId);
-//            for(int i=0;i<borrowRecordList.size();i++){
-//                borrowbooklist.add(bookRepository.findByBookId(borrowRecordList.get(i).getBookId()));
-//            }
-
-            List<Book> appointmentbooklist=new ArrayList<Book>();
             List<AppointmentRecord> appointmentRecordList=appointmentRecordRepository.findByReaderId(readerId);
-            for(int i=0;i<appointmentRecordList.size();i++){
-                appointmentbooklist.add(bookRepository.findByBookId(appointmentRecordList.get(i).getBookId()));
-            }
-
-            //List<Book> historybooklist=new ArrayList<Book>();
             List<BorrowRecord> historyRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNotNull(readerId);
-//            for(int i=0;i<historyRecordList.size();i++){
-//                historybooklist.add(bookRepository.findByBookId(historyRecordList.get(i).getBookId()));
-//            }
             model.addAttribute("reader",readerRepository.findReaderByReaderId(readerId));
             model.addAttribute("borrowlist",borrowRecordList);
-            model.addAttribute("appointmentlist",appointmentbooklist);
+            model.addAttribute("appointmentlist",appointmentRecordList);
             model.addAttribute("historylist",historyRecordList);
             logger.info(borrowRecordList.get(0).getBook().getBookName());
+            logger.info(appointmentRecordList.get(0).getBook().getBookPosition());
             return "ReaderInfo";
         }
 

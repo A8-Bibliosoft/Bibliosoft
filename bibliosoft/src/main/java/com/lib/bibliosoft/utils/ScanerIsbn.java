@@ -123,6 +123,7 @@ public class ScanerIsbn {
             bookSort.setBookName(title);
             bookSort.setTypeId(Integer.parseInt(typeid));
             scanerIsbn.bookSortRepository.save(bookSort);
+            scanerIsbn.bookSortRepository.insertTypeId(Integer.parseInt(typeid),isbn);
         }
 
         logger.info("bookId={},bookAuthor={},bookPublisher={},bookImage={},bookPrice={},bookTitle={}",id,author,publisher,image,price,title);
