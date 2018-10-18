@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @author 董杭
- * @date $2018.10.6
+ * @ Author 董杭
+ * @ Date 2018.10.6
  */
 @Service
 public class AdminService implements IAdminService {

@@ -4,7 +4,7 @@ spring:
   datasource:
     type: com.mchange.v2.c3p0.ComboPooledDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/bibliosoft?characterEncoding=utf8
+    url: jdbc:mysql://localhost:3306/bibliosoft?characterEncoding=utf8&useSSL=false
     username: root
     password: 1234
 #    url: jdbc:mysql://109.238.6.149:3306/bibliosoft?characterEncoding=utf8&useSSL=false

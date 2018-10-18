@@ -57,11 +57,11 @@
         </div>
         <div class="border clearfix">
             <span class="l_f">
-                 <!--<a title="Edit" th:onclick="'javascript:member_add('+this+')'"-->
-                    <!--href="javascript:;"-->
-                    <!--class="btn btn-xs btn-info">-->
-                            <!--<i class="icon-edit bigger-120"></i>-->
-                 <!--</a>-->
+                 <a title="Edit" th:onclick="'javascript:threshold_edit('+this+')'"
+                    href="javascript:;"
+                    class="btn btn-xs btn-info">
+                            <i class="icon-edit bigger-120"></i>Edit threshold
+                 </a>
                 <a href="javascript:;" title="addlib" th:onclick="'javascript:member_add('+ this +')'"
                    class="btn btn-warning Order_form">
                     <i class="icon-plus"></i>Add Librarian
@@ -250,6 +250,37 @@
                 <li>
                     <input name="flag" id="flag" type="text" hidden="hidden"/>
                 </li>
+            </ul>
+        </form>
+    </div>
+
+    <!--编辑阈值图层-->
+    <div class="add_menber" id="edit_threshold_style" style="display:none">
+        <form action="/update_librarian" method="post" id="threshold_edit">
+            <ul class=" page-content">
+                <li><label class="label_name">Fine Value:</label>
+                    <span class="add_name">
+                        <input value="" name="fine" type="text" class="text_add" id="fine" />
+                    </span>
+                    <div class="prompt l_f"></div>
+                </li>
+                <li>
+                    <label class="label_name">Return Period:</label>
+                    <span class="add_name">
+                        <input name="return_period" type="text" class="text_add" id="return_period"/>
+                    </span>
+                    <div class="prompt r_f"></div>
+                </li>
+                <li>
+                    <label class="label_name">Deposit:</label>
+                    <span class="add_name">
+                        <input name="deposit" type="text" class="text_add" id="deposit"/>
+                    </span>
+                    <div class="prompt l_f"></div>
+                    <!--<li>-->
+                    <!--<input name="flag" id="flag" type="text" hidden="hidden"/>-->
+                    <!--</li>
+               -->
             </ul>
         </form>
     </div>
@@ -494,8 +525,66 @@
             title: 'Add Librarian',
             maxmin: true,
             shadeClose: false, //点击遮罩关闭层
-            area: ['800px', '400px'],
+            area: ['600px', '400px'],
             content: $('#add_menber_style'),
+            btn: ['Submit', 'Cancel'],
+            yes: function (index, layero) {
+                var num = 0;
+                var str = "";
+                $(".add_menber input[type$='text']").each(function (n) {
+                    if ($(this).val() == "") {
+
+                        layer.alert(str += "" + $(this).attr("name") + " Can not be empty！\r\n", {
+                            title: 'Info',
+                            icon: 0,
+                        });
+                        num++;
+                        return false;
+                    }
+                });
+                $(".add_menber input[type$='password']").each(function (n) {
+                    if($(this).val()==""){
+                        layer.alert(str += "" + $(this).attr("name") + " Can not be empty！\r\n", {
+                            title: 'Info',
+                            icon: 0,
+                        });
+                        num++;
+                        return false;
+                    }
+
+                })
+                if (num > 0) {
+                    return false;
+                }
+                else {
+                    layer.alert('Added successfully！', {
+                        title: 'Info',
+                        icon: 1,
+                    });
+                    layer.close(index);
+                    $('#addbook').submit();
+                    $('#book_id').val('');
+                    $('#reader_id').removeAttr("readonly");
+                }
+            }
+        });
+    }
+
+    /*修改阈值*/
+    function threshold_edit(obj) {
+
+        // $('#flag').val('edit');
+        // $('#libname').focus();
+        // $('#libId').val("");
+        // $('#libId').removeAttr("readonly");
+        // $('#addbook').attr("action","/create_librarian");
+        layer.open({
+            type: 1,
+            title: 'Edit threshold',
+            maxmin: true,
+            shadeClose: false, //点击遮罩关闭层
+            area: ['700px', '260px'],
+            content: $('#edit_threshold_style'),
             btn: ['Submit', 'Cancel'],
             yes: function (index, layero) {
                 var num = 0;

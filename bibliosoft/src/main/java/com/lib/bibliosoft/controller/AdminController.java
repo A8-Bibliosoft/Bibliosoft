@@ -1,8 +1,10 @@
 package com.lib.bibliosoft.controller;
 
 import com.lib.bibliosoft.entity.Admin;
+import com.lib.bibliosoft.entity.DefSetting;
 import com.lib.bibliosoft.entity.Librarian;
 import com.lib.bibliosoft.repository.AdminRepository;
+import com.lib.bibliosoft.repository.DefSettingRepository;
 import com.lib.bibliosoft.repository.LibrarianRepository;
 import com.lib.bibliosoft.service.impl.AdminService;
 import org.slf4j.Logger;
@@ -20,15 +22,16 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author 董杭
- * @date 2018.10.6
+ * @ Author: 董杭
+ * @ Date :2018.10.6
  */
 @Controller
 public class AdminController {
 
     @Autowired
     private AdminRepository adminRepository;
-
+    @Autowired
+    private DefSettingRepository defSettingRepository;
     @Autowired
     private LibrarianRepository librarianRepository;
     @Autowired
@@ -40,10 +43,10 @@ public class AdminController {
 
     private final static Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    /*
-     * @author 董杭
-     * @date 2018.10.6
-     * @description 登录主页地址
+    /**
+     * @Author :董杭
+     * @Date :2018.10.6
+     * @Description :登录主页地址
      */
 
     @RequestMapping("/goAdminLogin")
@@ -51,10 +54,10 @@ public class AdminController {
         return "admin_login";
     }
 
-    /*
-     * @Author 董杭
-     * @Date  2018.10.6
-     * @Description 登录验证
+    /**
+     * @ Author :董杭
+     * @ Date  :2018.10.6
+     * @ Description :登录验证
      */
 
     @PostMapping("/admin_login")
@@ -191,5 +194,18 @@ public class AdminController {
         model.addAttribute("libs", list);
         model.addAttribute("currpage",currpage);
         return "lib_list";
+    }
+
+    @ResponseBody
+    @GetMapping("/get_threshold")
+    public  DefSetting getThreahole(@RequestParam("id") String a){
+       DefSetting defSetting = defSettingRepository.findDefSettingById(Integer.parseInt(a));
+       return defSetting;
+    }
+
+    @ResponseBody
+    @PostMapping("/change_threshold")
+    public DefSetting changeThreshold(DefSetting defSetting){
+        return defSettingRepository.save(defSetting);
     }
 }
