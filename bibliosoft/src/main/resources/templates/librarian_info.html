@@ -39,44 +39,49 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="libname">Name：</label>
                     <div class="col-sm-9">
-                        <input type="text" name="libname" id="libname" value="" class="col-xs-7 text_info" disabled="disabled">
+                        <input type="text" name="libname" id="libname" th:value="${lib.getLibName()}" class="col-xs-7 text_info" disabled="disabled">
                         &nbsp;&nbsp;&nbsp;
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="sex">Sex： </label>
-                    <div class="col-sm-9">
-                        <span class="sex" value=""></span>
-                        <div class="add_sex" id="sex">
-                            <label>
-                                <input name="form-field-radio" type="radio" value="secret" class="ace" checked="checked">
-                                <span class="lbl">Secret</span></label>&nbsp;&nbsp;
-                            <label>
-                                <input name="form-field-radio" type="radio" value="male" class="ace">
-                                <span class="lbl">Male</span></label>&nbsp;&nbsp;
-                            <label>
-                                <input name="form-field-radio" type="radio" value="female" class="ace">
-                                <span class="lbl">Female</span></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="age">Age： </label>
-                    <div class="col-sm-9">
-                        <input type="text" name="age" id="age" value="" class="col-xs-7 text_info" disabled="disabled">
-                    </div>
-                </div>
+                <!-- 性别 -->
+                <!--<div class="form-group">-->
+                    <!--<label class="col-sm-3 control-label no-padding-right" for="sex">Sex： </label>-->
+                    <!--<div class="col-sm-9">-->
+                        <!--<span class="sex" value=""></span>-->
+                        <!--<div class="add_sex" id="sex">-->
+                            <!--<label>-->
+                                <!--<input name="form-field-radio" th:if="${lib.getSex()} eq 'male'" type="radio" value="secret" class="ace" checked="checked">-->
+                                <!--<span class="lbl">Secret</span>-->
+                            <!--</label>&nbsp;&nbsp;-->
+                            <!--<label>-->
+                                <!--<input name="form-field-radio" type="radio" value="male" class="ace">-->
+                                <!--<span class="lbl">Male</span>-->
+                            <!--</label>&nbsp;&nbsp;-->
+                            <!--<label>-->
+                                <!--<input name="form-field-radio" type="radio" value="female" class="ace">-->
+                                <!--<span class="lbl">Female</span>-->
+                            <!--</label>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!-- 年龄 -->
+                <!--<div class="form-group">-->
+                    <!--<label class="col-sm-3 control-label no-padding-right" for="age">Age： </label>-->
+                    <!--<div class="col-sm-9">-->
+                        <!--<input type="text" name="age" id="age" value="" class="col-xs-7 text_info" disabled="disabled">-->
+                    <!--</div>-->
+                <!--</div>-->
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="phone">Phone： </label>
                     <div class="col-sm-9">
-                        <input type="text" name="phone" id="phone" value="" class="col-xs-7 text_info" disabled="disabled">
+                        <input type="text" name="phone" id="phone" th:value="${lib.getPhone()}" class="col-xs-7 text_info" disabled="disabled">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="email">Email： </label>
                     <div class="col-sm-9">
-                        <input type="text" name="email" id="email" value="" class="col-xs-7 text_info" disabled="disabled">
+                        <input type="text" name="email" id="email" th:value="${lib.getEmail()}" class="col-xs-7 text_info" disabled="disabled">
                     </div>
                 </div>
                 <!--<div class="form-group">-->
@@ -85,12 +90,13 @@
                         <!--<input type="text" name="qq" id="qq" value="" class="col-xs-7 text_info" disabled="disabled">-->
                     <!--</div>-->
                 <!--</div>-->
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="status">Status： </label>
-                    <div class="col-sm-9">
-                        <span name="status" id="status">status</span>
-                    </div>
-                </div>
+                <!--<div class="form-group">-->
+                    <!--<label class="col-sm-3 control-label no-padding-right" for="status">Status： </label>-->
+                    <!--<div class="col-sm-9">-->
+                        <!--<span name="status" id="status">status</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!-- 注册时间 -->
                 <!--<div class="form-group">-->
                     <!--<label class="col-sm-3 control-label no-padding-right" for="registertime">Register Time： </label>-->
                     <!--<div class="col-sm-9">-->

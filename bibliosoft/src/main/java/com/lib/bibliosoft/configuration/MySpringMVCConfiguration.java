@@ -95,14 +95,11 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
         registry.addViewController("/book_grading").setViewName("book_grading");
         registry.addViewController("/reader_feedback").setViewName("reader_feedback");
         registry.addViewController("/reader_comment").setViewName("reader_comment");
-//        registry.addViewController("/librarian_info").setViewName("librarian_info");
         registry.addViewController("/system_setting").setViewName("system_setting");
         registry.addViewController("/book_add").setViewName("book_add");
         registry.addViewController("/book_position").setViewName("book_position");
-//        registry.addViewController("/book_addByIsbn").setViewName("book_addByIsbn");
         registry.addViewController("/book_category_add").setViewName("book_category_add");
-//        registry.addViewController("/bookadd_detail").setViewName("bookadd_detail");
-        registry.addViewController("/book_bulletin").setViewName("book_bulletin");
+
         super.addViewControllers(registry);
     }
 

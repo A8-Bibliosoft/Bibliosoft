@@ -111,8 +111,7 @@
                     <td th:text="${book.getId()}"></td>
                     <td th:text="${book.getBookId()}"></td>
                     <td>
-                        <u style="cursor:pointer" class="text-primary" th:text="${book.getBookName()}"
-                           th:onclick="'javascript:member_show('+${book.getId()}+')'">
+                        <u style="cursor:pointer" class="text-primary" th:text="${book.getBookName()}" th:onclick="'javascript:member_show('+${book.getId()}+')'">
                             <!-- 两个参数的话，一直传不成功，它竟然把thymeleaf取回的值转变成了js变量名，而不是字符串 -->
                         </u>
                     </td>
@@ -227,32 +226,35 @@
                 <li>
                     <label class="label_name">Status：</label>
                     <span class="add_name">
-                        <label>
-                            <input name="form-field-radio1" type="radio" checked="checked" class="ace" value="0">
-                            <span class="lbl">在架上</span>
-                        </label>
-                        <label>
-                            <input name="form-field-radio1" type="radio" class="ace" value="1">
-                            <span class="lbl">已被借走</span>
-                        </label>
-                        <label>
-                            <input name="form-field-radio1" type="radio" class="ace" value="2">
-                            <span class="lbl">已损坏</span>
-                        </label>
-                        <label>
-                            <input name="form-field-radio1" type="radio" class="ace" value="3">
-                            <span class="lbl">正在购买</span>
-                        </label>
-                        <label>
-                            <input name="form-field-radio1" type="radio" class="ace" value="4">
-                            <span class="lbl">已被预约</span>
-                        </label>
+                        <!--<label th:each="s : ${status}">-->
+                            <!--<input name="form-field-radio1" type="radio" class="ace" th:value="${s.getStatus()}">-->
+                            <!--<span th:text="${s.getDesc()}" class="lbl"></span>-->
+                        <!--</label>-->
+                        <select style="margin-left: 10px;width: 166px;" class="text_add" title="select status" name="bookstatus">
+                                <option th:each="s : ${status}" th:text="${s.getDesc()}" th:value="${s.getStatus()}"></option>
+                        </select>
+                        <!--<label>-->
+                            <!--<input name="form-field-radio1" type="radio" class="ace" value="1">-->
+                            <!--<span class="lbl">已被借走</span>-->
+                        <!--</label>-->
+                        <!--<label>-->
+                            <!--<input name="form-field-radio1" type="radio" class="ace" value="2">-->
+                            <!--<span class="lbl">已损坏</span>-->
+                        <!--</label>-->
+                        <!--<label>-->
+                            <!--<input name="form-field-radio1" type="radio" class="ace" value="3">-->
+                            <!--<span class="lbl">正在购买</span>-->
+                        <!--</label>-->
+                        <!--<label>-->
+                            <!--<input name="form-field-radio1" type="radio" class="ace" value="4">-->
+                            <!--<span class="lbl">已被预约</span>-->
+                        <!--</label>-->
                     </span>
                     <div class="prompt l_f"></div>
                 </li>
-                <li>
-                    <input name="flag" id="flag" type="text" hidden="hidden"/>
-                </li>
+                <!--<li>-->
+                    <!--<input name="flag" id="flag" type="text" hidden="hidden"/>-->
+                <!--</li>-->
             </ul>
         </form>
     </div>
@@ -314,31 +316,31 @@
         });
 
 
-        $('table th input:checkbox').on('click', function () {
-            var that = this;
-            $(this).closest('table').find('tr > td:first-child input:checkbox')
-                .each(function () {
-                    this.checked = that.checked;
-                    $(this).closest('tr').toggleClass('selected');
-                });
+        // $('table th input:checkbox').on('click', function () {
+        //     var that = this;
+        //     $(this).closest('table').find('tr > td:first-child input:checkbox')
+        //         .each(function () {
+        //             this.checked = that.checked;
+        //             $(this).closest('tr').toggleClass('selected');
+        //         });
+        //
+        // });
 
-        });
 
+        // $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
 
-        $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
-
-        function tooltip_placement(context, source) {
-            var $source = $(source);
-            var $parent = $source.closest('table')
-            var off1 = $parent.offset();
-            var w1 = $parent.width();
-
-            var off2 = $source.offset();
-            var w2 = $source.width();
-
-            if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
-            return 'left';
-        }
+        // function tooltip_placement(context, source) {
+        //     var $source = $(source);
+        //     var $parent = $source.closest('table')
+        //     var off1 = $parent.offset();
+        //     var w1 = $parent.width();
+        //
+        //     var off2 = $source.offset();
+        //     var w2 = $source.width();
+        //
+        //     if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
+        //     return 'left';
+        // }
     });
     $(function () {
         $("#products_style").fix({
@@ -364,7 +366,7 @@
     /*书籍-编辑*/
     function member_edit(obj, id) {
         $('#book_id').val(id);
-        $('#flag').val('edit');
+        // $('#flag').val('edit');
         $('#book_id').attr("readonly", "readonly");
         $('#book_name').focus();
         layer.open({
@@ -381,7 +383,7 @@
                 $(".add_menber input[type$='text']").each(function (n) {
                     if ($(this).val() == "") {
 
-                        layer.alert(str += "" + $(this).attr("name") + "Can not be empty！\r\n", {
+                        layer.alert(str += "" + $(this).attr("name") + " can not be empty！\r\n", {
                             title: 'Info',
                             icon: 0,
                         });
@@ -393,7 +395,7 @@
                     return false;
                 }
                 else {
-                    layer.alert('Added successfully！', {
+                    layer.alert('successfully saved!', {
                         title: 'Info',
                         icon: 1,
                     });

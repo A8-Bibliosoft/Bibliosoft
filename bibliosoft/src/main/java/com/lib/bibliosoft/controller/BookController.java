@@ -1,9 +1,6 @@
 package com.lib.bibliosoft.controller;
 
-import com.lib.bibliosoft.entity.Book;
-import com.lib.bibliosoft.entity.BookDelRecord;
-import com.lib.bibliosoft.entity.BookSort;
-import com.lib.bibliosoft.entity.Librarian;
+import com.lib.bibliosoft.entity.*;
 import com.lib.bibliosoft.enums.ResultEnum;
 import com.lib.bibliosoft.repository.*;
 import com.lib.bibliosoft.service.impl.BookService;
@@ -58,6 +55,8 @@ public class BookController {
 
     @Autowired
     private BookTypeRepository bookTypeRepository;
+
+    private List<BookStatus> status;
 
     private final static Logger logger = LoggerFactory.getLogger(BookController.class);
 
@@ -186,6 +185,8 @@ public class BookController {
     public String list_book(Model model){
         Integer currpage = 1;
         totalcount = bookService.findAll().size();
+        if(totalcount == 0)
+            currpage = 0;
         model.addAttribute("totalcount", totalcount);
         Integer totalPages = (totalcount + pagesize - 1)/pagesize;
         model.addAttribute("totalpages", totalPages);
@@ -203,6 +204,8 @@ public class BookController {
         //放在model
         model.addAttribute("books", bookList);
         model.addAttribute("currpage",currpage);
+        status = bookStatusRepository.findAll();
+        model.addAttribute("status", status);
         return "book_list";
     }
 
@@ -235,6 +238,7 @@ public class BookController {
         //放在model
         model.addAttribute("books", bookList);
         model.addAttribute("currpage",currpage);
+        model.addAttribute("status", status);
         return "book_list";
     }
 
@@ -269,6 +273,7 @@ public class BookController {
 
         //logger.info("查询结果===大小size={}",searchBook.size());
         model.addAttribute("books",searchBook);
+        model.addAttribute("status", status);
         return "book_list";
     }
 
@@ -296,6 +301,7 @@ public class BookController {
             model.addAttribute("currpage",0);
         }
         model.addAttribute("books",books);
+        model.addAttribute("status", status);
         return "book_list";
     }
 
@@ -316,24 +322,24 @@ public class BookController {
     @PostMapping("/edit_book")
     public String book_edit(Integer bookId,String bookName,String bookPosition,
                              String isbn, String price, String author,
-                             @RequestParam("form-field-radio1") String status, String flag){
+                             @RequestParam("bookstatus") String status){
         float fprice = Float.parseFloat(price);
         Integer istatus = Integer.parseInt(status);
-        if (flag.equals("edit")){
+//        if (flag.equals("edit")){
             Integer id = bookRepository.findBookByBookId(bookId).getId();
             bookService.updateBook(id, bookName, bookPosition, isbn, bookId, fprice, author, istatus);
-        }else if(flag.equals("add")){
-            Book book = new Book();
-            book.setBookId(bookId);
-            book.setBookIsbn(isbn);
-            book.setBookPrice(fprice);
-            book.setBookName(bookName);
-            book.setBookPosition(bookPosition);
-            book.setBookAuthor(author);
-            book.setBookStatus(istatus);
-            bookService.addBook(book);
-            logger.info("Add book={}",book.toString());
-        }
+//        }else if(flag.equals("add")){
+//            Book book = new Book();
+//            book.setBookId(bookId);
+//            book.setBookIsbn(isbn);
+//            book.setBookPrice(fprice);
+//            book.setBookName(bookName);
+//            book.setBookPosition(bookPosition);
+//            book.setBookAuthor(author);
+//            book.setBookStatus(istatus);
+//            bookService.addBook(book);
+//            logger.info("Add book={}",book.toString());
+//        }
         return "redirect:/book_list";
     }
 
@@ -504,14 +510,15 @@ public class BookController {
     @GetMapping("/book_addByIsbn")
     public String goaddBookIsbnPage(Model model){
         model.addAttribute("types", bookTypeRepository.findAll());
-        model.addAttribute("status", bookStatusRepository.findAll());
+        status = bookStatusRepository.findAll();
+        model.addAttribute("status", status);
         return "book_addByIsbn";
     }
 
     @GetMapping("bookadd_detail")
     public String goAddBookpage(Model model){
         model.addAttribute("types", bookTypeRepository.findAll());
-        model.addAttribute("status", bookStatusRepository.findAll());
+        model.addAttribute("status", status);
         return "bookadd_detail";
     }
 }

@@ -120,10 +120,12 @@
     </script>
     <div class="navbar-container" id="navbar-container">
         <div class="navbar-header pull-left">
-            <a href="#" class="navbar-brand">
+            <a href="" class="navbar-brand">
+                <!--这里放logo图片-->
                 <small>
-                    <img src="/static/images/logo.png">
+                    <!--<img src="/static/images/logo.png">-->
                 </small>
+                <strong style="font-size: 28px;position: absolute;left: 30px;top: 24px;">Bibliosoft</strong>
             </a><!-- /.brand -->
         </div><!-- /.navbar-header -->
         <div class="navbar-header pull-right" role="navigation">
@@ -132,6 +134,8 @@
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                         <!--<span  class="time"><em id="time"></em></span>-->
                         <span th:if="${session.librarian} ne null" th:text="'Welcome: '+ ${session.librarian.getLibName()}">
+                        </span>
+                        <span th:if="${session.librarian} eq null" th:text="'Hello, Visitor'">
                         </span>
                         <i class="icon-caret-down"></i>
                     </a>
@@ -306,7 +310,7 @@
                             </a>
                         </li>
                         <li class="home">
-                            <a href="javascript:;" name="/book_bulletin" title="managebulletin"
+                            <a href="javascript:;" name="/bulletin_list" title="managebulletin"
                                class="iframeurl">
                                 <i class="icon-double-angle-right"></i>Bulletin Manage
                             </a>

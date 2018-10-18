@@ -16,6 +16,15 @@ public class Notices {
 
     private Date time;
 
+    public Notices() {
+    }
+
+    public Notices(String title, String content, Date time) {
+        this.title = title;
+        this.content = content;
+        this.time = time;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -46,5 +55,15 @@ public class Notices {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    @Override
+    public String toString() {
+        return "Notices{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", time=" + time +
+                '}';
     }
 }
