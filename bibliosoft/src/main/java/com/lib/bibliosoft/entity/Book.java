@@ -9,10 +9,10 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- *@Title: Book.java
- *@Author: 毛文杰
- *@Description:
- *@Date: 3:58 PM. 9/26/2018
+ *@title: Book.java
+ *@author: 毛文杰
+ *@description:
+ *@date: 3:58 PM. 9/26/2018
  */
 @Entity
 @Table(name="book")
