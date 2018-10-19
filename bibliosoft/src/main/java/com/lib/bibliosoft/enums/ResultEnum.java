@@ -7,8 +7,8 @@ package com.lib.bibliosoft.enums;
  * @Modify By:
  */
 public enum ResultEnum {
-    UNKNOWN_ERROR(-1, "未知错误"),
-    SUCCESS(0, "成功"),
+    UNKNOWN_ERROR(-1, "unknown error"),
+    SUCCESS(0, "success"),
 //    TOO_SMALL(100, "价格太低"),
 //    TOO_LARGE(101, "价格太高"),
     ADD_BOOK_FAILED(102, "Add-book failed!"),
