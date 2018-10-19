@@ -125,10 +125,10 @@
                         <span class="label label-success radius" th:text="${book.getBookStatus()}"></span>
                     </td>
                     <td class="td-manage">
-                        <a title="Edit" th:onclick="'javascript:member_edit('+ this +','+${book.getBookId()}+')'"
-                           href="javascript:;"
-                           class="btn btn-xs btn-info">
-                            <i class="icon-edit bigger-120"></i>
+                        <!-- th:onclick="'javascript:member_edit('+${book.getBookId()}+','+${book.getBookPosition()}+','+${book.getBookPrice()}+','+${book.getBookName()}+','+${book.getBookAuthor()}+','+${book.getBookIsbn()}+')'"  -->
+                        <a title="Edit" href="javascript:;"
+                           th:onclick="'javascript:member_edit('+${book.getBookId()}+','+'\''+${book.getBookPosition()}+'\''+','+${book.getBookPrice()}+','+'\''+${book.getBookName()}+'\''+','+'\''+${book.getBookAuthor()}+'\''+','+'\''+${book.getBookIsbn()}+'\''+')'"
+                           class="btn btn-xs btn-info"> <i class="icon-edit bigger-120"></i>
                         </a>
                         <a title="Delete" href="javascript:;"
                            th:onclick="'javascript:member_del(' + this + ',' +${book.getId()}+')'"
@@ -210,16 +210,20 @@
                     <div class="prompt l_f"></div>
                 </li>
                 <li><label class="label_name">ISBN：</label>
-                    <span class="add_name"><input name="isbn" type="text" class="text_add"/></span>
+                    <span class="add_name">
+                        <input name="isbn" type="text" class="text_add" id="book_isbn"/>
+                    </span>
                     <div class="prompt r_f"></div>
                 </li>
                 <li><label class="label_name">Price：</label>
-                    <span class="add_name"><input name="price" type="text" class="text_add"/></span>
+                    <span class="add_name">
+                        <input name="price" type="text" class="text_add" id="book_price"/>
+                    </span>
                     <div class="prompt l_f"></div>
                 </li>
                 <li><label class="label_name">Author：</label>
                     <span class="add_name">
-                        <input name="author" type="text" class="text_add"/>
+                        <input name="author" type="text" class="text_add" id="book_author"/>
                     </span>
                     <div class="prompt r_f"></div>
                 </li>
@@ -230,7 +234,7 @@
                             <!--<input name="form-field-radio1" type="radio" class="ace" th:value="${s.getStatus()}">-->
                             <!--<span th:text="${s.getDesc()}" class="lbl"></span>-->
                         <!--</label>-->
-                        <select style="margin-left: 10px;width: 166px;" class="text_add" title="select status" name="bookstatus">
+                        <select style="margin-left: 10px;width: 166px;" class="text_add" title="select status" name="bookstatus" id="book_status">
                                 <option th:each="s : ${status}" th:text="${s.getDesc()}" th:value="${s.getStatus()}"></option>
                         </select>
                         <!--<label>-->
@@ -306,14 +310,14 @@
     }
 
     jQuery(function ($) {
-        var oTable1 = $('#sample-table').dataTable({
-            "aaSorting": [CDATA[1, "desc"]],//默认第几个排序
-            "bStateSave": true,//状态保存
-            "aoColumnDefs": [
-                //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 2, 3, 4, 5, 8, 9]}// 制定列不参与排序
-            ]
-        });
+        // var oTable1 = $('#sample-table').dataTable({
+        //     "aaSorting": [CDATA[1, "desc"]],//默认第几个排序
+        //     "bStateSave": true,//状态保存
+        //     "aoColumnDefs": [
+        //         //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+        //         {"orderable": false, "aTargets": [0, 2, 3, 4, 5, 8, 9]}// 制定列不参与排序
+        //     ]
+        // });
 
 
         // $('table th input:checkbox').on('click', function () {
@@ -364,10 +368,18 @@
     }
 
     /*书籍-编辑*/
-    function member_edit(obj, id) {
+    function member_edit(id, position, price, name, author, isbn) {
         $('#book_id').val(id);
         // $('#flag').val('edit');
         $('#book_id').attr("readonly", "readonly");
+        $('#book_position').val(position);
+        $('#book_status').val(status);
+        $('#book_price').val(price);
+        $('#book_name').val(name);
+        $('#book_author').val(author);
+        $('#book_author').attr("readonly", "readonly");
+        $('#book_isbn').val(isbn);
+        $('#book_isbn').attr("readonly", "readonly");
         $('#book_name').focus();
         layer.open({
             type: 1,
