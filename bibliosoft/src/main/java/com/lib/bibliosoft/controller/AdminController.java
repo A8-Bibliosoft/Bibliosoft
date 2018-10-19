@@ -10,7 +10,6 @@ import com.lib.bibliosoft.service.impl.AdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,8 +66,8 @@ public class AdminController {
     public String loginAdmin(String name, String password,
                               HttpServletRequest request, HttpServletResponse response) throws IOException {
         Admin admin =null;
+        HttpSession session = request.getSession();
         if((admin= adminRepository.findByAdminName(name))!=null){
-            HttpSession session = request.getSession();
             response.setContentType("text/plain;charset=UTF-8");
             if(password.equals(admin.getPassword())){
                 logger.info("login success");
@@ -103,7 +102,11 @@ public class AdminController {
     @PostMapping("/update_librarian")
     public String update(Librarian librarian){
         String id=librarianRepository.findByLibId(librarian.getLibId()).getLibId();
-        librarianRepository.updateLibrarian(librarian.getLibId(),librarian.getPassword(),librarian.getLibName(),librarian.getEmail(),librarian.getPhone());
+        if(librarian.getPassword()!="") {
+            librarianRepository.updateLibrarianWithPass(librarian.getLibId(), librarian.getPassword(), librarian.getLibName(), librarian.getEmail(), librarian.getPhone());
+        }else {
+            librarianRepository.updateLibrarianWithoutPass(librarian.getLibId(), librarian.getLibName(), librarian.getEmail(), librarian.getPhone());
+        }
         return "redirect:/lib_list";
     }
 
@@ -163,8 +166,8 @@ public class AdminController {
         while(librarianIterator.hasNext()) {
             list.add(librarianIterator.next());
         }
-        logger.info("list.size = {}",list.size());
-        logger.info("list[0]={}", list.get(0));
+//        logger.info("list.size = {}",list.size());
+//        logger.info("list[0]={}", list.get(0));
         //放在model
         model.addAttribute("libs", list);
         model.addAttribute("currpage",currpage);
@@ -266,6 +269,7 @@ public class AdminController {
         setting3.setDefnumber(def.lastday);
 
         adminService.saveSetting(setting1,setting2,setting3);
+        logger.info("阈值修改成功");
 
         return "redirect:/lib_list";
     }

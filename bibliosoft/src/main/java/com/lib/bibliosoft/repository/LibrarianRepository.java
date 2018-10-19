@@ -23,10 +23,16 @@ public interface LibrarianRepository extends JpaRepository<Librarian, Integer> {
     Librarian findByLibName(String name);
 
     Librarian findByLibId(String id);
+
     @Transactional
     @Modifying
     @Query(value = "update librarian lib set lib.password=?2, lib.lib_name=?3, lib.email=?4, lib.phone=?5 where lib.lib_id=?1", nativeQuery = true)
-    void updateLibrarian(String id, String password, String name, String email, String phone);
+    void updateLibrarianWithPass(String id, String password, String name, String email, String phone);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update librarian lib set lib.lib_name=?2, lib.email=?3, lib.phone=?4 where lib.lib_id=?1", nativeQuery = true)
+    void updateLibrarianWithoutPass(String id, String name, String email, String phone);
 
     @Override
     List<Librarian> findAll();
