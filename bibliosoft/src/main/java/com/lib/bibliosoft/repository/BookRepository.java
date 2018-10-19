@@ -83,6 +83,8 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     List<Book> findByBookStatusAndBookIsbn(Integer bookStatus,String bookIsbn);
 
+    List<Book> findByBookStatus(Integer status);
+
     @Transactional
     @Modifying
     @Query(value = "update book set book_status = ?1 where book_id = ?2",nativeQuery = true)

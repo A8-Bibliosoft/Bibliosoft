@@ -320,14 +320,15 @@ public class BookController {
      * @return
      */
     @PostMapping("/edit_book")
-    public String book_edit(Integer bookId,String bookName,String bookPosition,
+    public String book_edit(String bookId, String bookName, String bookPosition,
                              String isbn, String price, String author,
                              @RequestParam("bookstatus") String status){
         float fprice = Float.parseFloat(price);
+        Integer bid = Integer.parseInt(bookId);
         Integer istatus = Integer.parseInt(status);
 //        if (flag.equals("edit")){
-            Integer id = bookRepository.findBookByBookId(bookId).getId();
-            bookService.updateBook(id, bookName, bookPosition, isbn, bookId, fprice, author, istatus);
+            Integer id = bookRepository.findBookByBookId(bid).getId();
+            bookService.updateBook(id, bookName, bookPosition, isbn, bid, fprice, author, istatus);
 //        }else if(flag.equals("add")){
 //            Book book = new Book();
 //            book.setBookId(bookId);
@@ -507,6 +508,15 @@ public class BookController {
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
 
+    /**
+     * go to add book by isbn page
+     * @title BookController.java
+     * @param [model]
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name goaddBookIsbnPage
+     * @date 9:24 PM. 10/18/2018
+     */
     @GetMapping("/book_addByIsbn")
     public String goaddBookIsbnPage(Model model){
         model.addAttribute("types", bookTypeRepository.findAll());
@@ -515,11 +525,100 @@ public class BookController {
         return "book_addByIsbn";
     }
 
-    @GetMapping("bookadd_detail")
+    /**
+     * go to add book details manually
+     * @title BookController.java
+     * @param [model]
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name goAddBookpage
+     * @date 9:24 PM. 10/19/2018
+     */
+    @GetMapping("/bookadd_detail")
     public String goAddBookpage(Model model){
         model.addAttribute("types", bookTypeRepository.findAll());
         model.addAttribute("status", status);
         return "bookadd_detail";
     }
+
+    /**
+     * go to book type management page
+     * @title BookController.java
+     * @param [model]
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name gotoAddCategory
+     * @date 10:12 PM. 10/19/2018
+     */
+    @GetMapping("/book_category_add")
+    public String gotoAddCategory(Model model){
+        model.addAttribute("types", bookTypeRepository.findAll());
+        return "book_category_add";
+    }
+
+    /**
+     * delete a book type in database by id
+     * @title BookController.java
+     * @param [id]
+     * @return org.springframework.http.ResponseEntity<java.util.Map<java.lang.String,java.lang.Object>>
+     * @author 毛文杰
+     * @method name deleteCategpory
+     * @date 10:12 PM. 10/19/2018
+     */
+    @PostMapping("/bookcategory/{id}")
+    public ResponseEntity<Map<String,Object>> deleteCategpory(@PathVariable("id") Integer id) {
+        Map<String,Object> map = new HashMap<String,Object>();
+        if(bookRepository.findByBookStatus(5).size() > 0) {
+            map.put("msg", ResultEnum.FAILED.getMsg());
+        }else{
+            bookTypeRepository.deleteById(id);
+            map.put("msg", ResultEnum.SUCCESS.getMsg());
+        }
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+    }
+
+    /**
+     * edit the category's name by id
+     * @title BookController.java
+     * @param [typeid, typename]
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name editCategory
+     * @date 10:21 PM. 10/19/2018
+     */
+    @PostMapping("/edit_category")
+    public String editCategory(String typeid, String typename){
+        Integer Id = Integer.parseInt(typeid);
+//        BookType bookType = bookTypeRepository.getOne(Id);
+//        // !!!!!不能使用save方式修改——no session error
+//        bookType.setTypeName(typename);
+//        bookTypeRepository.save(bookType);
+        bookTypeRepository.updateTypeById(typename, Id);
+        return "redirect:/book_category_add";
+    }
+
+    /**
+     * add a new category
+     * @title BookController.java
+     * @param [categoryname]
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name addCategory
+     * @date 10:24 PM. 10/19/2018
+     */
+    @PostMapping("/add_category")
+    public ResponseEntity<Map<String,Object>> addCategory(String categoryname){
+        Map<String,Object> map = new HashMap<String,Object>();
+        if(bookTypeRepository.findByTypeName(categoryname).size()>0){
+            map.put("msg", ResultEnum.ALSO_HAS_TYPE_ERROR.getMsg());
+        }else {
+            BookType bookType = new BookType();
+            bookType.setTypeName(categoryname);
+            bookTypeRepository.save(bookType);
+            map.put("msg", ResultEnum.SUCCESS.getMsg());
+        }
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+    }
+
 }
 
