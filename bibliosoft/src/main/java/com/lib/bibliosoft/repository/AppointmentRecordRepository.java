@@ -27,5 +27,9 @@ public interface AppointmentRecordRepository extends JpaRepository<AppointmentRe
     @Modifying
     @Query(value = "delete from appointmentrecord where lasttime=0",nativeQuery = true)
     void clearLasttime();
+
+    @Transactional
+    @Query(value = "select * from appointmentrecord where lasttime=0",nativeQuery = true)
+    List<AppointmentRecord> findAllEnd();
 }
 
