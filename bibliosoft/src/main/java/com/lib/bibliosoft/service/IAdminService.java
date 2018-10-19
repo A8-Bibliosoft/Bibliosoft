@@ -1,8 +1,10 @@
 package com.lib.bibliosoft.service;
 
+import com.lib.bibliosoft.entity.DefSetting;
 import com.lib.bibliosoft.entity.Librarian;
 import com.lib.bibliosoft.entity.Result;
 import org.springframework.data.domain.Page;
+
 
 import java.util.List;
 
@@ -18,4 +20,6 @@ public interface IAdminService {
     void deleteByLibId(String id);
 
     Page<Librarian> getPage(Integer currpage, Integer pagesize);
+
+    public void saveSetting (DefSetting defSetting1,DefSetting defSetting2,DefSetting defSetting3);
 }

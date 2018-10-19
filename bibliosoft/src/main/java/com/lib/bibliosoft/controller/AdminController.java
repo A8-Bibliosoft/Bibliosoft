@@ -10,6 +10,8 @@ import com.lib.bibliosoft.service.impl.AdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -195,17 +197,76 @@ public class AdminController {
         model.addAttribute("currpage",currpage);
         return "lib_list";
     }
+    @Component
+    class Def{
+        int fine;
+        int deposit;
+        int lastday;
 
-    @ResponseBody
-    @GetMapping("/get_threshold")
-    public  DefSetting getThreahole(@RequestParam("id") String a){
-       DefSetting defSetting = defSettingRepository.findDefSettingById(Integer.parseInt(a));
-       return defSetting;
+        public Def(){}
+        public int getFine() {
+            return fine;
+        }
+
+        public void setFine(int fine) {
+            this.fine = fine;
+        }
+
+        public int getDeposit() {
+            return deposit;
+        }
+
+        public void setDeposit(int deposit) {
+            this.deposit = deposit;
+        }
+
+        public int getLastday() {
+            return lastday;
+        }
+
+        public void setLastday(int lastday) {
+            this.lastday = lastday;
+        }
+
+        @Override
+        public String toString() {
+            return "Def{" +
+                    "fine=" + fine +
+                    ", deposit=" + deposit +
+                    ", lastday=" + lastday +
+                    '}';
+        }
     }
 
     @ResponseBody
-    @PostMapping("/change_threshold")
-    public DefSetting changeThreshold(DefSetting defSetting){
-        return defSettingRepository.save(defSetting);
+    @GetMapping("/get_threshold")
+    public  Def getThreahole(){
+       Def def=new Def();
+       def.fine= defSettingRepository.findDefSettingById(1).getDefnumber();
+       def.deposit=defSettingRepository.findDefSettingById(2).getDefnumber();
+       def.lastday=defSettingRepository.findDefSettingById(3).getDefnumber();
+       return def;
+    }
+
+
+    @PostMapping("/update_threshold")
+    public String  changeThreshold(Def def){
+        DefSetting setting1=new DefSetting();
+        DefSetting setting2=new DefSetting();
+        DefSetting setting3=new DefSetting();
+        setting1.setId(1);
+        setting1.setDeftype("fine");
+        setting2.setId(2);
+        setting2.setDeftype("deposit");
+        setting3.setId(3);
+        setting3.setDeftype("lastday");
+
+        setting1.setDefnumber(def.fine);
+        setting2.setDefnumber(def.deposit);
+        setting3.setDefnumber(def.lastday);
+
+        adminService.saveSetting(setting1,setting2,setting3);
+
+        return "redirect:/lib_list";
     }
 }
