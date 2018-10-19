@@ -92,5 +92,9 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     @Query(value = "select MAX(book_id) from book where book_isbn = ?1", nativeQuery = true)
     Integer getMaxBookIdNow(String isbn);
+
+    //获取书籍状态
+    @Query(value = "select book_status from book where book_id = ?1", nativeQuery = true)
+    Integer getBookStatusByBookId(Integer bookId);
 }
 
