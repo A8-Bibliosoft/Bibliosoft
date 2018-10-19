@@ -52,15 +52,14 @@ $(document).ready(function() {
 </dl>
 <script type="text/javascript">
     function adminLoginCheck(){
-var gcode = $("#J_codetext").val();
-      if(gcode !== code){
+      var gcode = $("#J_codetext").val();
+        if(gcode.toLowerCase() !== code.toLowerCase()){
           alert("failed");
-      }
-      else{
+        } else{
           var name = $("#name").val();
           var password = $("#password").val();
           var mycode = "name="+name+"&password="+password;
-      $.ajax({
+        $.ajax({
           type:"POST",
           url:'/admin_login',
           data : mycode ,
@@ -97,7 +96,7 @@ var gcode = $("#J_codetext").val();
               alert(data);
           }
 
-          }
+        }
 
       );}
 

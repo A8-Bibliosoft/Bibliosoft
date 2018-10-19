@@ -57,11 +57,11 @@
         </div>
         <div class="border clearfix">
             <span class="l_f">
-                 <!--<a title="Edit" th:onclick="'javascript:member_add('+this+')'"-->
-                    <!--href="javascript:;"-->
-                    <!--class="btn btn-xs btn-info">-->
-                            <!--<i class="icon-edit bigger-120"></i>-->
-                 <!--</a>-->
+                 <a title="Edit" th:onclick="'javascript:threshold_edit('+this+')'"
+                    href="javascript:;"
+                    class="btn btn-xs btn-info">
+                            <i class="icon-edit bigger-120"></i>Edit threshold
+                 </a>
                 <a href="javascript:;" title="addlib" th:onclick="'javascript:member_add('+ this +')'"
                    class="btn btn-warning Order_form">
                     <i class="icon-plus"></i>Add Librarian
@@ -116,7 +116,7 @@
                         <!--<i class="icon-ok bigger-120"></i>-->
                         <!--</a>-->
 
-                        <a title="Edit" th:onclick="'javascript:member_edit('+ this +','+${lib.getLibId()}+')'"
+                        <a title="Edit" th:onclick="'javascript:member_edit('+ this +','+${lib.getLibId()}+',\''+${lib.getLibName()}+'\',\''+${lib.getEmail()}+'\',\''+${lib.getPhone()}+'\')'"
                            href="javascript:;"
                            class="btn btn-xs btn-info">
                             <i class="icon-edit bigger-120"></i>
@@ -190,14 +190,14 @@
                 <li>
                     <label class="label_name">Name：</label>
                     <span class="add_name">
-                        <input name="libName" type="text" class="text_add" id="book_name"/>
+                        <input name="libName" type="text" class="text_add" id="lib_name"/>
                     </span>
                     <div class="prompt r_f"></div>
                 </li>
                 <li>
                     <label class="label_name">Phone：</label>
                     <span class="add_name">
-                        <input name="phone" type="text" class="text_add" id="book_position"/>
+                        <input name="phone" type="text" class="text_add" id="phone"/>
                     </span>
                     <!--<span class="add_name">-->
                          <!--<label><input name="form-field-radio" type="radio" checked="checked" class="ace" value="male">-->
@@ -210,7 +210,7 @@
                     <div class="prompt l_f"></div>
                 </li>
                 <li><label class="label_name">Email：</label>
-                    <span class="add_name"><input name="email" type="text" class="text_add"/></span>
+                    <span class="add_name"><input name="email" type="text" class="text_add" id="email"/></span>
                     <div class="prompt r_f"></div>
                 </li>
                 <li><label class="label_name">Password：</label>
@@ -250,6 +250,37 @@
                 <li>
                     <input name="flag" id="flag" type="text" hidden="hidden"/>
                 </li>
+            </ul>
+        </form>
+    </div>
+
+    <!--编辑阈值图层-->
+    <div class="edit_threshold" id="edit_threshold_style" style="display:none">
+        <form action="/update_threshold" method="post" id="threshold_edit">
+            <ul class=" page-content">
+                <li><label class="label_name">Fine Value:</label>
+                    <span class="add_name">
+                        <input value="" name="fine" type="text" class="text_add" id="fine" />
+                    </span>
+                    <div class="prompt l_f"></div>
+                </li>
+                <li>
+                    <label class="label_name">Return Period:</label>
+                    <span class="add_name">
+                        <input name="lastday" type="text" class="text_add" id="lastday"/>
+                    </span>
+                    <div class="prompt r_f"></div>
+                </li>
+                <li>
+                    <label class="label_name">Deposit:</label>
+                    <span class="add_name">
+                        <input name="deposit" type="text" class="text_add" id="deposit"/>
+                    </span>
+                    <div class="prompt l_f"></div>
+                    <!--<li>-->
+                    <!--<input name="flag" id="flag" type="text" hidden="hidden"/>-->
+                    <!--</li>
+               -->
             </ul>
         </form>
     </div>
@@ -403,30 +434,33 @@
         zTree.selectNode(zTree.getNodeByParam("id", '11'));
     });
 
-    /*产品-停用*/
-    function member_stop(obj, id) {
-        layer.confirm('确认要停用吗？', function (index) {
-            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs " onClick="member_start(this,id)" href="javascript:;" title="启用"><i class="icon-ok bigger-120"></i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已停用</span>');
-            $(obj).remove();
-            layer.msg('已停用!', {icon: 5, time: 1000});
-        });
-    }
-
-    /*产品-启用*/
-    function member_start(obj, id) {
-        layer.confirm('确认要启用吗？', function (index) {
-            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs btn-success" onClick="member_stop(this,id)" href="javascript:;" title="停用"><i class="icon-ok bigger-120"></i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
-            $(obj).remove();
-            layer.msg('已启用!', {icon: 6, time: 1000});
-        });
-    }
+    // /*产品-停用*/
+    // function member_stop(obj, id) {
+    //     layer.confirm('确认要停用吗？', function (index) {
+    //         $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs " onClick="member_start(this,id)" href="javascript:;" title="启用"><i class="icon-ok bigger-120"></i></a>');
+    //         $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已停用</span>');
+    //         $(obj).remove();
+    //         layer.msg('已停用!', {icon: 5, time: 1000});
+    //     });
+    // }
+    //
+    // /*产品-启用*/
+    // function member_start(obj, id) {
+    //     layer.confirm('确认要启用吗？', function (index) {
+    //         $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs btn-success" onClick="member_stop(this,id)" href="javascript:;" title="停用"><i class="icon-ok bigger-120"></i></a>');
+    //         $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
+    //         $(obj).remove();
+    //         layer.msg('已启用!', {icon: 6, time: 1000});
+    //     });
+    // }
 
     /*图书管理员-编辑*/
-    function member_edit(obj, id) {
+    function member_edit(obj, id, name,email, phone ) {
         // $('#id').val(id);
         $('#libId').val(id);
+        $('#lib_name').val(name);
+        $('#email').val(email);
+        $('#phone').val(phone);
         $('#flag').val('edit');
         $('#addbook').attr("action","/update_librarian");
         $('#libId').attr("readonly","readonly");
@@ -453,17 +487,17 @@
                         return false;
                     }
                 });
-                $(".add_menber input[type$='password']").each(function (n) {
-                    if($(this).val()==""){
-                        layer.alert(str += "" + $(this).attr("name") + " Can not be empty！\r\n", {
-                            title: 'Info',
-                            icon: 0,
-                        });
-                        num++;
-                        return false;
-                    }
-
-                })
+                // $(".add_menber input[type$='password']").each(function (n) {
+                //     if($(this).val()==""){
+                //         layer.alert(str += "" + $(this).attr("name") + " Can not be empty！\r\n", {
+                //             title: 'Info',
+                //             icon: 0,
+                //         });
+                //         num++;
+                //         return false;
+                //     }
+                //
+                // })
                 if (num > 0) {
                     return false;
                 }
@@ -472,7 +506,7 @@
                         title: 'Info',
                         icon: 1,
                     });
-                    layer.close(index);
+                    // layer.close(index);
                     $('#addbook').submit();
                     $('#book_id').val('');
                     $('#reader_id').removeAttr("readonly");
@@ -486,6 +520,9 @@
 
         $('#flag').val('edit');
         $('#libname').focus();
+        $('#lib_name').val("");
+        $('#email').val("");
+        $('#phone').val("");
         $('#libId').val("");
         $('#libId').removeAttr("readonly");
         $('#addbook').attr("action","/create_librarian");
@@ -511,8 +548,74 @@
                         return false;
                     }
                 });
-                $(".add_menber input[type$='password']").each(function (n) {
-                    if($(this).val()==""){
+                // $(".add_menber input[type$='password']").each(function (n) {
+                //     if($(this).val()==""){
+                //         layer.alert(str += "" + $(this).attr("name") + " Can not be empty！\r\n", {
+                //             title: 'Info',
+                //             icon: 0,
+                //         });
+                //         num++;
+                //         return false;
+                //     }
+                //
+                // })
+                if (num > 0) {
+                    return false;
+                }
+                else {
+                    // layer.alert('Added successfully！', {
+                    //     title: 'Info',
+                    //     icon: 1,
+                    // });
+                    // layer.close(index);
+                    $('#addbook').submit();
+                    $('#book_id').val('');
+                    $('#reader_id').removeAttr("readonly");
+                }
+            }
+        });
+    }
+
+    /*修改阈值*/
+    function threshold_edit(obj) {
+
+        // $('#flag').val('edit');
+        // $('#libname').focus();
+        // $('#libId').val("");
+        // $('#libId').removeAttr("readonly");
+        // $('#addbook').attr("action","/create_librarian");
+        $.ajax({
+            type: "GET",
+            url: '/get_threshold',
+            data: null,
+            dataType: "json",
+            async: false,
+            cache: false,
+            success: function (result) {
+                var fine=result.fine;
+                var lastday=result.lastday;
+                var deposit=result.deposit;
+                $('#fine').val(fine);
+                $('#lastday').val(lastday);
+                $('#deposit').val(deposit);
+
+            },
+        });
+
+        layer.open({
+            type: 1,
+            title: 'Edit threshold',
+            maxmin: true,
+            shadeClose: false, //点击遮罩关闭层
+            area: ['800px', '260px'],
+            content: $('#edit_threshold_style'),
+            btn: ['Submit', 'Cancel'],
+            yes: function (index, layero) {
+                var num = 0;
+                var str = "";
+                $(".edit_threshold input[type$='text']").each(function (n) {
+                    if ($(this).val() == "") {
+
                         layer.alert(str += "" + $(this).attr("name") + " Can not be empty！\r\n", {
                             title: 'Info',
                             icon: 0,
@@ -520,20 +623,20 @@
                         num++;
                         return false;
                     }
+                });
 
-                })
                 if (num > 0) {
                     return false;
                 }
                 else {
-                    layer.alert('Added successfully！', {
-                        title: 'Info',
-                        icon: 1,
-                    });
-                    layer.close(index);
-                    $('#addbook').submit();
-                    $('#book_id').val('');
-                    $('#reader_id').removeAttr("readonly");
+                    // layer.alert('Added successfully！', {
+                    //     title: 'Info',
+                    //     icon: 1,
+                    // });
+                    // layer.close(index);
+
+                    $('#threshold_edit').submit();
+
                 }
             }
         });

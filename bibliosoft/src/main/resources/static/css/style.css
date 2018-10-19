@@ -582,9 +582,11 @@ body
 .xinxi-xs span{ margin-right:30px; color:#438EB9}
 /*****************************添加用户样式属性************************/
 .add_menber{}
-.add_menber li{ margin:10px 0px; height:40px; line-height:40px; float:left; width:50%}
+.add_menber li,
+.edit_threshold li{ margin:10px 0px; height:40px; line-height:40px; float:left; width:50%}
 .add_menber li.adderss{ width:100%}
 .add_menber li .label_name,
+.edit_threshold li .label_name,
 .member_content li .label_name { width:100px; text-align:right; float:left; line-height:30px;}
 .add_menber li .add_name{ float:left; margin-left:10px; line-height:30px;}
 .add_menber li .add_name .lbl{ top:-5px; left:10px;}

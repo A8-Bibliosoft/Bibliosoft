@@ -1,13 +1,16 @@
 package com.lib.bibliosoft.controller;
 
 import com.lib.bibliosoft.entity.Admin;
+import com.lib.bibliosoft.entity.DefSetting;
 import com.lib.bibliosoft.entity.Librarian;
 import com.lib.bibliosoft.repository.AdminRepository;
+import com.lib.bibliosoft.repository.DefSettingRepository;
 import com.lib.bibliosoft.repository.LibrarianRepository;
 import com.lib.bibliosoft.service.impl.AdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +23,16 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author 董杭
- * @date 2018.10.6
+ * @ Author: 董杭
+ * @ Date :2018.10.6
  */
 @Controller
 public class AdminController {
 
     @Autowired
     private AdminRepository adminRepository;
-
+    @Autowired
+    private DefSettingRepository defSettingRepository;
     @Autowired
     private LibrarianRepository librarianRepository;
     @Autowired
@@ -40,10 +44,10 @@ public class AdminController {
 
     private final static Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    /*
-     * @author 董杭
-     * @date 2018.10.6
-     * @description 登录主页地址
+    /**
+     * @ Author :董杭
+     * @ Date :2018.10.6
+     * @ Description :登录主页地址
      */
 
     @RequestMapping("/goAdminLogin")
@@ -51,10 +55,10 @@ public class AdminController {
         return "admin_login";
     }
 
-    /*
-     * @Author 董杭
-     * @Date  2018.10.6
-     * @Description 登录验证
+    /**
+     * @ Author :董杭
+     * @ Date  :2018.10.6
+     * @ Description :登录验证
      */
 
     @PostMapping("/admin_login")
@@ -62,8 +66,8 @@ public class AdminController {
     public String loginAdmin(String name, String password,
                               HttpServletRequest request, HttpServletResponse response) throws IOException {
         Admin admin =null;
+        HttpSession session = request.getSession();
         if((admin= adminRepository.findByAdminName(name))!=null){
-            HttpSession session = request.getSession();
             response.setContentType("text/plain;charset=UTF-8");
             if(password.equals(admin.getPassword())){
                 logger.info("login success");
@@ -98,7 +102,11 @@ public class AdminController {
     @PostMapping("/update_librarian")
     public String update(Librarian librarian){
         String id=librarianRepository.findByLibId(librarian.getLibId()).getLibId();
-        librarianRepository.updateLibrarian(librarian.getLibId(),librarian.getPassword(),librarian.getLibName(),librarian.getEmail(),librarian.getPhone());
+        if(librarian.getPassword()!="") {
+            librarianRepository.updateLibrarianWithPass(librarian.getLibId(), librarian.getPassword(), librarian.getLibName(), librarian.getEmail(), librarian.getPhone());
+        }else {
+            librarianRepository.updateLibrarianWithoutPass(librarian.getLibId(), librarian.getLibName(), librarian.getEmail(), librarian.getPhone());
+        }
         return "redirect:/lib_list";
     }
 
@@ -110,9 +118,9 @@ public class AdminController {
 
 
     /**
-     *@Title: AdminController.java
-     *@Params: libname
-     *@Return: lib_list
+     *@ Title: AdminController.java
+     *@ Params: libname
+     *@ Return: lib_list
      *@Author: 毛文杰
      *@Description: 现在是只能查询出来一个用户或者0个用户，因为不是模糊查询，所以对于某个要搜索的图书馆员的名字只能有零个或者一个
      *@Date: 10:34 PM. 10/7/2018
@@ -158,8 +166,8 @@ public class AdminController {
         while(librarianIterator.hasNext()) {
             list.add(librarianIterator.next());
         }
-        logger.info("list.size = {}",list.size());
-        logger.info("list[0]={}", list.get(0));
+//        logger.info("list.size = {}",list.size());
+//        logger.info("list[0]={}", list.get(0));
         //放在model
         model.addAttribute("libs", list);
         model.addAttribute("currpage",currpage);
@@ -191,5 +199,78 @@ public class AdminController {
         model.addAttribute("libs", list);
         model.addAttribute("currpage",currpage);
         return "lib_list";
+    }
+    @Component
+    class Def{
+        int fine;
+        int deposit;
+        int lastday;
+
+        public Def(){}
+        public int getFine() {
+            return fine;
+        }
+
+        public void setFine(int fine) {
+            this.fine = fine;
+        }
+
+        public int getDeposit() {
+            return deposit;
+        }
+
+        public void setDeposit(int deposit) {
+            this.deposit = deposit;
+        }
+
+        public int getLastday() {
+            return lastday;
+        }
+
+        public void setLastday(int lastday) {
+            this.lastday = lastday;
+        }
+
+        @Override
+        public String toString() {
+            return "Def{" +
+                    "fine=" + fine +
+                    ", deposit=" + deposit +
+                    ", lastday=" + lastday +
+                    '}';
+        }
+    }
+
+    @ResponseBody
+    @GetMapping("/get_threshold")
+    public  Def getThreahole(){
+       Def def=new Def();
+       def.fine= defSettingRepository.findDefSettingById(1).getDefnumber();
+       def.deposit=defSettingRepository.findDefSettingById(2).getDefnumber();
+       def.lastday=defSettingRepository.findDefSettingById(3).getDefnumber();
+       return def;
+    }
+
+
+    @PostMapping("/update_threshold")
+    public String  changeThreshold(Def def){
+        DefSetting setting1=new DefSetting();
+        DefSetting setting2=new DefSetting();
+        DefSetting setting3=new DefSetting();
+        setting1.setId(1);
+        setting1.setDeftype("fine");
+        setting2.setId(2);
+        setting2.setDeftype("deposit");
+        setting3.setId(3);
+        setting3.setDeftype("lastday");
+
+        setting1.setDefnumber(def.fine);
+        setting2.setDefnumber(def.deposit);
+        setting3.setDefnumber(def.lastday);
+
+        adminService.saveSetting(setting1,setting2,setting3);
+        logger.info("阈值修改成功");
+
+        return "redirect:/lib_list";
     }
 }
