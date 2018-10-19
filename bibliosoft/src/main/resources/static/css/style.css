@@ -18,6 +18,7 @@ blockquote, q { quotes: none; }
 blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; }
 a{ color: #333}
 div {display: block;}
+div.right{float:right;padding-right: 12px}
 a:hover{ color:#F90}
 .clearfix:after{
 	display: block;
