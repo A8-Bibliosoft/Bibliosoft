@@ -43,10 +43,9 @@ public class Book  implements Serializable{
     @Min(value=0, message = "书籍状态：0-5")
     private Integer bookStatus;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "bookposition_id")
     private BookPosition bookPosition;
-//    private String bookPosition;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date registerTime;

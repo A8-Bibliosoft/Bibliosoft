@@ -28,10 +28,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author: 毛文杰
@@ -371,14 +368,30 @@ public class ReaderController {
 
     @RequestMapping("/goHomePage")
     public String goHomePage() throws Exception{
-        logger.info(bookSortService.PageBook(0,5,1).getContent().toString());
+        //logger.info(bookSortService.PageBook(0,5,1).getContent().toString());
         return "HomePage";
     }
 
     @RequestMapping("/goSearch")
-    public String goSearch(Model model,Integer booktypeid) throws Exception{
-        model.addAttribute("booktypelist",bookTypeRepository.findAll());
-        model.addAttribute("booklist",bookSortRepository.findByTypeId(booktypeid));
+    public String goSearch(Model model,Integer booktypeid,Integer currpage) throws Exception{
+        if(booktypeid!=null){
+            Integer totalPages =  bookSortService.PageBook(0,pagesize,booktypeid).getTotalPages();
+            model.addAttribute("totalpages", totalPages);
+            //获得每页的数据
+            if(currpage == 1)
+                currpage = 0;
+            if(currpage == totalPages)
+                currpage = totalPages-1;
+            List<BookSort> bookSortList=bookSortService.PageBook(currpage,pagesize,booktypeid).getContent();
+            model.addAttribute("currpage",currpage+1);
+            model.addAttribute("booklist",bookSortList);
+            model.addAttribute("booktypeid",booktypeid);
+            model.addAttribute("booktypelist",bookTypeRepository.findAll());
+        }else{
+            model.addAttribute("currpage",0);
+            model.addAttribute("booktypelist",bookTypeRepository.findAll());
+        }
+        //logger.info(bookSortRepository.findByTypeId(1).get(0).getOneBook().getBookPosition().getPlace());
         return "Search";
     }
     @RequestMapping("/search")
@@ -505,7 +518,7 @@ public class ReaderController {
         if(borrowRecordList.size()>0){
             logger.info("发邮件啦!!");
         }
-        logger.info("还书日期减一天");
+        //logger.info("还书日期减一天");
     }
 
     //预约时间
@@ -523,7 +536,7 @@ public class ReaderController {
         }
         //清除记录
         appointmentRecordRepository.clearLasttime();
-        logger.info("预约时间减一小时");
+        //logger.info("预约时间减一小时");
     }
 
 
