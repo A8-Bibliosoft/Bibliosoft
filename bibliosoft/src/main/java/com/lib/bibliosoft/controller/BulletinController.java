@@ -11,9 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.HashMap;
@@ -113,7 +115,7 @@ public class BulletinController {
      */
     @Transactional
     @PostMapping("/bulletin/{id}")
-    public ResponseEntity<Map<String,Object>> bulletinDelete(@PathVariable("id") Integer id, HttpSession session){
+    public ResponseEntity<Map<String,Object>> bulletinDelete(@PathVariable("id") Integer id){
         /*删除bulletin的notices表*/
         bulletinRepository.deleteById(id);
 

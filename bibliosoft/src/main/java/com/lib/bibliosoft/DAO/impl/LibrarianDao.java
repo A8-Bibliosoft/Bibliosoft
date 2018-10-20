@@ -51,9 +51,17 @@ public class LibrarianDao implements ILibrarianDao {
         return commentRepository.findAll(sort);
     }
 
+    /**
+     * find all feedback which are unviewed
+     * @title LibrarianDao.java
+     * @return java.util.List<com.lib.bibliosoft.entity.Feedback>
+     * @author 毛文杰
+     * @method name findAllFeedbackForLibrarian
+     * @date 2:02 PM. 10/20/2018
+     */
     @Override
     public List<Feedback> findAllFeedbackForLibrarian() {
-        Sort sort = new Sort(Sort.Direction.DESC,"date");
-        return feedbackRepository.findAll(sort);
+        //Sort sort = new Sort(Sort.Direction.DESC,"date");
+        return feedbackRepository.findFeedbacksByIsView("no");
     }
 }

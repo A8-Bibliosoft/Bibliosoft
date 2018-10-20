@@ -2,6 +2,7 @@ package com.lib.bibliosoft.controller;
 
 import com.lib.bibliosoft.DAO.IReaderDao;
 import com.lib.bibliosoft.entity.*;
+import com.lib.bibliosoft.enums.ResultEnum;
 import com.lib.bibliosoft.repository.*;
 import com.lib.bibliosoft.service.IReaderService;
 import com.lib.bibliosoft.utils.FileNameUtil;
@@ -11,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,9 +27,10 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: 毛文杰
@@ -39,10 +43,8 @@ public class ReaderController {
 
     @Autowired
     private IReaderService iReaderService;
-
     @Autowired
     private IReaderDao iReaderDao;
-
     @Autowired
     private BookRepository bookRepository;
     @Autowired
@@ -57,14 +59,18 @@ public class ReaderController {
     private BorrowRecordRepository borrowRecordRepository;
     @Autowired
     private DefSettingRepository defSettingRepository;
+    @Autowired
+    private FeedbackRepository feedbackRepository;
 
     /**
      * logger
      */
     private static Logger logger = LoggerFactory.getLogger(ReaderController.class);
 
+    /*page*/
     private Integer pagesize = 6;
 
+    /**/
     private Integer totalCount;
 
     /**
@@ -532,5 +538,84 @@ public class ReaderController {
         List<BorrowRecord> bookRecords = borrowRecordRepository.findAllByReaderId(readerid);
         model.addAttribute("borrowRecords", bookRecords);
         return "borrowBookList";
+    }
+
+
+
+    /*---------------------reader feedback module---------------------------*/
+
+    /**
+     * @title ReaderController.java
+     * @param model 页面模型
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name gotoFeedbackPage
+     * @date 12:18 PM. 10/20/2018
+     */
+    @GetMapping("/reader_feedback")
+    public String gotoFeedbackPage(Model model){
+        model.addAttribute("feedback", feedbackRepository.findAll());
+        return "reader_feedback";
+    }
+
+    /**
+     * delete the feedback from reader
+     * @title ReaderController.java
+     * @param id identification
+     * @return org.springframework.http.ResponseEntity<java.util.Map<java.lang.String,java.lang.Object>>
+     * @author 毛文杰
+     * @method name deleteFeedback
+     * @date 12:26 PM. 10/20/2018
+     */
+    @PostMapping("/feedback/{id}")
+    public ResponseEntity<Map<String,Object>> deleteFeedback(@PathVariable("id") Integer id){
+        feedbackRepository.deleteById(id);
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("msg", ResultEnum.SUCCESS.getMsg());
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+    }
+
+    /**
+     * @title ReaderController.java
+     * @description set the status to viewed: yes
+     * @return org.springframework.http.ResponseEntity<java.util.Map<java.lang.String,java.lang.Object>>
+     * @author 毛文杰
+     * @method name viewFeedback
+     * @date 2:17 PM. 10/20/2018
+     */
+    @PostMapping("/setviewfeedback/{id}")
+    public ResponseEntity<Map<String,Object>> viewFeedback(@PathVariable("id") Integer id){
+        feedbackRepository.updateStatusById(id);
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("msg", ResultEnum.SUCCESS.getMsg());
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+    }
+
+    /***
+     * find all feedbacks that had viewed
+     * @title ReaderController.java
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name showViewedFeedbacks
+     * @date 2:22 PM. 10/20/2018
+     */
+    @GetMapping("/viewed_feedback")
+    public String showViewedFeedbacks(Model model){
+        model.addAttribute("feedback", feedbackRepository.findFeedbacksByIsView("yes"));
+        return "reader_feedback";
+    }
+
+    /**
+     * find all unviewed feedbacks
+     * @title ReaderController.java
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name showViewedFeedbacks
+     * @date 2:23 PM. 10/20/2018
+     */
+    @GetMapping("/unviewed_feedback")
+    public String showUnviewedFeedbacks(Model model){
+        model.addAttribute("feedback", feedbackRepository.findFeedbacksByIsView("no"));
+        return "reader_feedback";
     }
 }

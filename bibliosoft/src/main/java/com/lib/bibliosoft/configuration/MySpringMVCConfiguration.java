@@ -93,7 +93,7 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
         registry.addViewController("/lib_login").setViewName("lib_login");
         registry.addViewController("/home").setViewName("home");
         registry.addViewController("/book_grading").setViewName("book_grading");
-        registry.addViewController("/reader_feedback").setViewName("reader_feedback");
+//        registry.addViewController("/reader_feedback").setViewName("reader_feedback");
         registry.addViewController("/reader_comment").setViewName("reader_comment");
         registry.addViewController("/system_setting").setViewName("system_setting");
 //        registry.addViewController("/book_add").setViewName("book_add");暂时不用

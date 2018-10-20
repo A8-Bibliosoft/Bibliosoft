@@ -24,7 +24,7 @@ public class Feedback {
 
     private String readerId;
 
-    @ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+    @ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
     @JoinColumn(name="id", insertable = false,updatable = false)
     private Reader reader;
 

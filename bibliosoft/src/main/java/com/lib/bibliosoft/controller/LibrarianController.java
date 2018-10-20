@@ -46,10 +46,12 @@ public class LibrarianController {
     @ResponseBody
     public ModelAndView gotoIndex(){
         ModelAndView mv = new ModelAndView("lib_index");
+        //find unseen
         List<Comment> commentList = iLibrarianSerivce.findAllMessageForLibrarian();
         mv.addObject("commentList", commentList);
         mv.addObject("commentNum",commentList.size());
 
+        //find unseen
         List<Feedback> feedbackList = iLibrarianSerivce.findAllFeedbackForLibrarian();
         mv.addObject("feedbackList", feedbackList);
         mv.addObject("feedbackNum",feedbackList.size());
