@@ -208,6 +208,7 @@ public class AdminController {
         model.addAttribute("currpage",currpage);
         return "lib_list";
     }
+
     @Component
     class Def{
         int fine;
