@@ -118,7 +118,7 @@
                     <td th:text="${book.getBookIsbn()}"></td>
                     <td th:text="${book.getBookAuthor()}"></td>
                     <td th:text="${book.getBookPrice()}"></td>
-                    <td th:text="${book.getBookPosition()}"></td>
+                    <td th:text="${book.getBookPosition().place}"></td>
                     <td th:text="${book.getRegisterTime()}"></td>
 
                     <td class="td-status">
@@ -127,7 +127,7 @@
                     <td class="td-manage">
                         <!-- th:onclick="'javascript:member_edit('+${book.getBookId()}+','+${book.getBookPosition()}+','+${book.getBookPrice()}+','+${book.getBookName()}+','+${book.getBookAuthor()}+','+${book.getBookIsbn()}+')'"  -->
                         <a title="Edit" href="javascript:;"
-                           th:onclick="'javascript:member_edit('+${book.getBookId()}+','+'\''+${book.getBookPosition()}+'\''+','+${book.getBookPrice()}+','+'\''+${book.getBookName()}+'\''+','+'\''+${book.getBookAuthor()}+'\''+','+'\''+${book.getBookIsbn()}+'\''+')'"
+                           th:onclick="'javascript:member_edit('+${book.getBookId()}+','+${book.getBookPrice()}+','+'\''+${book.getBookName()}+'\''+','+'\''+${book.getBookAuthor()}+'\''+','+'\''+${book.getBookIsbn()}+'\''+')'"
                            class="btn btn-xs btn-info"> <i class="icon-edit bigger-120"></i>
                         </a>
                         <a title="Delete" href="javascript:;"
@@ -205,7 +205,10 @@
                 <li>
                     <label class="label_name">Position：</label>
                     <span class="add_name">
-                        <input name="bookPosition" type="text" class="text_add" id="book_position"/>
+                        <!--<input name="bookPosition" type="text" class="text_add" id="book_position"/>-->
+                        <select style="margin-left: 10px;width: 166px;" class="text_add" title="select status" name="bookposition" id="book_position">
+                                <option th:each="p : ${place}" th:text="${p.place}" th:value="${p.id}"></option>
+                        </select>
                     </span>
                     <div class="prompt l_f"></div>
                 </li>
@@ -368,11 +371,11 @@
     }
 
     /*书籍-编辑*/
-    function member_edit(id, position, price, name, author, isbn) {
+    function member_edit(id, price, name, author, isbn) {
         $('#book_id').val(id);
         // $('#flag').val('edit');
         $('#book_id').attr("readonly", "readonly");
-        $('#book_position').val(position);
+        // $('#book_position').val(position);
         $('#book_status').val(status);
         $('#book_price').val(price);
         $('#book_name').val(name);

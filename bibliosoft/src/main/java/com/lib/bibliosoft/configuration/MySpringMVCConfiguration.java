@@ -97,7 +97,7 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
         registry.addViewController("/reader_comment").setViewName("reader_comment");
         registry.addViewController("/system_setting").setViewName("system_setting");
 //        registry.addViewController("/book_add").setViewName("book_add");暂时不用
-        registry.addViewController("/book_position").setViewName("book_position");
+//        registry.addViewController("/book_position").setViewName("book_position");
         registry.addViewController("/book_category_add").setViewName("book_category_add");
 
         super.addViewControllers(registry);

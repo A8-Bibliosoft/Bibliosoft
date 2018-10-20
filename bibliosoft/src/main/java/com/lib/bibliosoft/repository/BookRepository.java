@@ -96,5 +96,8 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     //获取书籍状态
     @Query(value = "select book_status from book where book_id = ?1", nativeQuery = true)
     Integer getBookStatusByBookId(Integer bookId);
+
+    @Query(value = "select * from book where bookposition_id=?1", nativeQuery = true)
+    List<Book> findByBookPosition(Integer id);
 }
 
