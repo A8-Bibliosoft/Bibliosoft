@@ -84,4 +84,15 @@ public class BookSort {
     public void setBookType(BookType bookType) {
         this.bookType = bookType;
     }
+
+    @Override
+    public String toString() {
+        return "BookSort{" +
+                "bookIsbn='" + bookIsbn + '\'' +
+                ", bookName='" + bookName + '\'' +
+                ", bookAuthor='" + bookAuthor + '\'' +
+                ", typeId=" + typeId +
+                ", bookType=" + bookType +
+                '}';
+    }
 }

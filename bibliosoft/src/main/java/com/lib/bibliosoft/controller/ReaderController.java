@@ -5,6 +5,7 @@ import com.lib.bibliosoft.entity.*;
 import com.lib.bibliosoft.enums.ResultEnum;
 import com.lib.bibliosoft.repository.*;
 import com.lib.bibliosoft.service.IReaderService;
+import com.lib.bibliosoft.service.impl.BookSortService;
 import com.lib.bibliosoft.utils.FileNameUtil;
 import com.lib.bibliosoft.utils.FileUtil;
 import com.lib.bibliosoft.utils.VerifyCode;
@@ -61,7 +62,8 @@ public class ReaderController {
     private DefSettingRepository defSettingRepository;
     @Autowired
     private FeedbackRepository feedbackRepository;
-
+    @Autowired
+    private BookSortService bookSortService;
     /**
      * logger
      */
@@ -369,6 +371,7 @@ public class ReaderController {
 
     @RequestMapping("/goHomePage")
     public String goHomePage() throws Exception{
+        logger.info(bookSortService.PageBook(0,5,1).getContent().toString());
         return "HomePage";
     }
 
