@@ -23,58 +23,193 @@
 </head>
 <body>
 <div class="type_style">
-    <div class="type_title">产品类型信息</div>
+    <div class="type_title">书籍类型管理</div>
     <div class="type_content">
-        <div class="Operate_btn">
-            <a href="javascript:void(0)" class="btn  btn-warning"><i class="icon-edit align-top bigger-125"></i>新增子类型</a>
-            <a href="javascript:void(0)" class="btn  btn-success"><i class="icon-ok align-top bigger-125"></i>禁用该类型</a>
-            <a href="javascript:void(0)" class="btn  btn-danger"><i
-                    class="icon-trash   align-top bigger-125"></i>删除该类型</a>
+        <div class="Operate_btn" style="border: 0px;padding-bottom: 0px;">
+            <ul id="pro-info" class="nav nav-tabs">
+                <li class="active">
+                    <a href="#info-1" data-toggle="tab">
+                        <i class="icon-edit align-top bigger-125"></i>新增子类型
+                    </a>
+                </li>
+                <li>
+                    <a href="#info-2" data-toggle="tab">
+                        <i class="icon-ok align-top bigger-125"></i>查看所有类型
+                    </a>
+                </li>
+            </ul>
         </div>
-        <form action="" method="post" class="form form-horizontal" id="form-user-add">
-            <div class="Operate_cont clearfix">
-                <label class="form-label"><span class="c-red">*</span>分类名称：</label>
-                <div class="formControls ">
-                    <input type="text" class="input-text" value="" placeholder="" id="user-name"
-                           name="product-category-name">
+
+        <div id="pro-info-content" class="tab-content" style="border-left: 1px solid lightgrey;border-right: 1px solid lightgrey;border-bottom: 1px solid lightgrey;">
+            <div class="tab-pane fade in active" id="info-1" >
+                <form class="form form-horizontal" id="addtypeform">
+                    <div class="Operate_cont clearfix">
+                        <label class="form-label">
+                            <span style="color: red">*</span>分类名称：
+                        </label>
+                        <div class="formControls ">
+                            <input type="text" class="input-text" value="" placeholder="" id="categoryname"
+                                   name="categoryname">
+                        </div>
+                    </div>
+                    <!--<div class="Operate_cont clearfix">-->
+                        <!--<label class="form-label">备注：</label>-->
+                        <!--<div class="formControls">-->
+                        <!--<textarea style="width: 380px" class="textarea" placeholder="说点什么...最少输入10个字符" datatype="*10-100"-->
+                                  <!--dragonfly="true" nullmsg="备注不能为空！" onKeyUp="textarealength(this,100)"></textarea>-->
+                            <!--<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="">
+                        <div class="" style=" text-align:center">
+                            <input class="btn btn-primary radius" onclick="submitform()" type="button" value="submit">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="info-2">
+                <!--类型列表-->
+                <div class="bulletin_list">
+                    <table class="table table-striped table-bordered table-hover" id="sample-table">
+                        <thead>
+                        <tr>
+                            <th width="80">ID</th>
+                            <th width="150px">Type Name</th>
+                            <th width="300">Operation</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="t : ${types}">
+                            <td th:text="${t.typeId}"></td>
+                            <td th:text="${t.typeName}"></td>
+
+                            <td class="td-manage">
+                                <a th:onclick="'javascript:type_edit('+this+','+${t.typeId}+')'" title="edit" href="javascript:;"
+                                   class="btn btn-xs btn-info">
+                                    <i class="icon-edit bigger-120"></i>
+                                </a>
+                                <a href="javascript:;" th:onclick="'javascript:type_del('+this+','+${t.typeId}+')'" title="delete" class="btn btn-xs btn-warning">
+                                    <i class="icon-trash  bigger-120"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <!--<div class="Operate_cont clearfix">-->
-                <!--<label class="form-label"><span class="c-red">*</span>排序：</label>-->
-                <!--<div class="formControls ">-->
-                    <!--<input type="text" class="input-text" value="" placeholder="" id="user-name"-->
-                           <!--name="product-category-name">-->
-                <!--</div>-->
-            <!--</div>-->
-            <div class="Operate_cont clearfix">
-                <label class="form-label">备注：</label>
-                <div class="formControls">
-                    <textarea name="" rows="" class="textarea" placeholder="说点什么...最少输入10个字符" datatype="*10-100"
-                              dragonfly="true" nullmsg="备注不能为空！" onKeyUp="textarealength(this,100)"></textarea>
-                    <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
-                </div>
-            </div>
-            <div class="">
-                <div class="" style=" text-align:center">
-                    <input class="btn btn-primary radius" type="submit" value="提交">
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 </div>
-<script type="text/javascript" src="/static/Widget/icheck/jquery.icheck.min.js"></script>
+
+<!-- 编辑书籍类型图层-->
+<div class="add_menber" id="add_menber_style" style="display:none">
+    <form action="/edit_category" method="post" id="edittype">
+        <ul class=" page-content">
+            <li><label class="label_name">ID：</label>
+                <span class="add_name">
+                        <input value="" name="typeid" type="text" class="text_add" id="typeid"/>
+                </span>
+                <div class="prompt l_f"></div>
+            </li>
+            <li><label class="label_name">Name：</label>
+                <span class="add_name">
+                        <input value="" name="typename" type="text" class="text_add" id="typename"/>
+                </span>
+                <div class="prompt l_f"></div>
+            </li>
+        </ul>
+    </form>
+</div>
 <script type="text/javascript" src="/static/assets/layer/layer.js"></script>
 <script type="text/javascript" src="/static/js/H-ui.js"></script>
 <script type="text/javascript" src="/static/js/H-ui.admin.js"></script>
 <script type="text/javascript">
-    $(function () {
-        $('.skin-minimal input').iCheck({
-            checkboxClass: 'icheckbox-blue',
-            radioClass: 'iradio-blue',
-            increaseArea: '20%'
+
+    /*目前的不足之处：提交之后切换回第二个面板不会立即刷新类型列表*/
+    /*增加-书籍类型*/
+    function submitform(){
+        var catename = $("#categoryname").val();
+        if(catename == ""){
+            layer.msg("please enter the category name!");
+        }else{
+            var data="categoryname="+catename;
+            $.ajax({
+                type: "post",
+                url: "/add_category",
+                data: data,
+                success: function(data){
+                    layer.alert(data.msg, {
+                        title: 'Info',
+                        icon: 1
+                    });
+                    //reset表格,清空内容以便下次添加
+                    setTimeout(function(){$("#addtypeform")[0].reset()},1000);
+                }
+            });
+        }
+    }
+
+    /*书籍类型-删除*/
+    function type_del(obj, id) {
+        layer.confirm('are you sure to delete？', function (index) {
+            $(obj).parents("tr").remove();
+            $.post("/bookcategory/" + id, {}, function (data) {
+                if (data.msg == "success") {
+                    layer.msg('delete successful!', {icon: 1, time: 700});
+                } else {
+                    layer.msg('delete failed!', {icon: 2, time: 700});
+                }
+            });
+
         });
-    });
+    }
+
+    /*书籍类型-编辑*/
+    function type_edit(obj, id) {
+        $('#typeid').val(id);
+        $('#typeid').attr("readonly", "readonly");
+        $('#typename').focus();
+        layer.open({
+            type: 1,
+            title: 'Modify Category',
+            maxmin: true,
+            shadeClose: false, //点击遮罩关闭层
+            area: ['800px', '200px'],
+            content: $('#add_menber_style'),
+            btn: ['Submit', 'Cancel'],
+            yes: function (index, layero) {
+                var num = 0;
+                var str = "";
+                $(".add_menber input[type$='text']").each(function (n) {
+                    if ($(this).val() == "") {
+                        layer.alert(str += "" + $(this).attr("name") + " can not be empty！\r\n", {
+                            title: 'Info',
+                            icon: 0,
+                        });
+                        num++;
+                        return false;
+                    }
+                });
+                if (num > 0) {
+                    return false;
+                }
+                else {
+                    layer.alert('successful！', {
+                        title: 'Info',
+                        icon: 1,
+                    });
+                    layer.close(index);
+                    setTimeout(afterOneminute,1000);
+                }
+            }
+        });
+    }
+    function afterOneminute(){
+        $('#edittype').submit();
+        $('#typeid').val('');
+        $('#typeid').removeAttr("readonly");
+    }
 </script>
 </body>
 </html>

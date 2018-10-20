@@ -43,7 +43,10 @@ public class Book  implements Serializable{
     @Min(value=0, message = "书籍状态：0-5")
     private Integer bookStatus;
 
-    private String bookPosition;
+    @ManyToOne
+    @JoinColumn(name = "bookposition_id")
+    private BookPosition bookPosition;
+//    private String bookPosition;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date registerTime;
@@ -109,11 +112,11 @@ public class Book  implements Serializable{
         this.bookStatus = bookStatus;
     }
 
-    public String getBookPosition() {
+    public BookPosition getBookPosition() {
         return bookPosition;
     }
 
-    public void setBookPosition(String bookPosition) {
+    public void setBookPosition(BookPosition bookPosition) {
         this.bookPosition = bookPosition;
     }
 

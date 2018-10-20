@@ -2,6 +2,7 @@ package com.lib.bibliosoft.repository;
 
 import com.lib.bibliosoft.entity.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,7 +18,7 @@ import java.util.List;
  *@Date: 5:52 PM. 9/26/2018
  */
 @Repository
-public interface BookRepository extends JpaRepository<Book, Integer> {
+public interface BookRepository extends JpaRepository<Book, Integer>,JpaSpecificationExecutor<Book> {
     /**
      * 插入isbn
      */
@@ -83,6 +84,8 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     List<Book> findByBookStatusAndBookIsbn(Integer bookStatus,String bookIsbn);
 
+    List<Book> findByBookStatus(Integer status);
+
     @Transactional
     @Modifying
     @Query(value = "update book set book_status = ?1 where book_id = ?2",nativeQuery = true)
@@ -90,5 +93,12 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     @Query(value = "select MAX(book_id) from book where book_isbn = ?1", nativeQuery = true)
     Integer getMaxBookIdNow(String isbn);
+
+    //获取书籍状态
+    @Query(value = "select book_status from book where book_id = ?1", nativeQuery = true)
+    Integer getBookStatusByBookId(Integer bookId);
+
+    @Query(value = "select * from book where bookposition_id=?1", nativeQuery = true)
+    List<Book> findByBookPosition(Integer id);
 }
 

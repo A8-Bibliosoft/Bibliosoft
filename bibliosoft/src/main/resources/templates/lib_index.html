@@ -156,9 +156,9 @@
                     <!--  -->
                     <ul class="pull-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
                         <li class="dropdown-header">
-                            <i th:if="${commentNum} + ${feedbackNum} eq 0" class="icon-warning-sign">&nbsp;no </i>
-                            &nbsp;<i th:if="${commentNum} + ${feedbackNum} gt 0" class="icon-warning-sign" th:text="${commentNum} + ${feedbackNum}"></i>
-                            <!--  -->
+                            <i th:if="${commentNum} + ${feedbackNum} eq 0" class="icon-warning-sign">&nbsp;0</i>
+                            &nbsp;
+                            <i th:if="${commentNum} + ${feedbackNum} gt 0" class="icon-warning-sign" th:text="${commentNum} + ${feedbackNum}"></i>
                             notifications
                         </li>
                         <li>
@@ -250,13 +250,25 @@
                             </a>
                         </li>
                         <li class="home">
+                            <a href="javascript:void(0)" name="/goBorrowBook" title="borrowbook"
+                               class="iframeurl">
+                                <i class="icon-double-angle-right"></i>Borrow Book
+                            </a>
+                        </li>
+                        <li class="home">
+                            <a href="javascript:void(0)" name="/goReturnBook" title="returnbook"
+                               class="iframeurl">
+                                <i class="icon-double-angle-right"></i>Return Book
+                            </a>
+                        </li>
+                        <li class="home">
                             <a href="javascript:void(0)" name="/book_position" title="manageposition"
                                class="iframeurl">
                                 <i class="icon-double-angle-right"></i>Position Manage
                             </a>
                         </li>
                         <li class="home">
-                            <a href="javascript:void(0)" name="/book_add" title="addbookcategory"
+                            <a href="javascript:void(0)" name="/book_category_add" title="addbookcategory"
                                             class="iframeurl">
                                 <i class="icon-double-angle-right"></i>Category Manage
                             </a>

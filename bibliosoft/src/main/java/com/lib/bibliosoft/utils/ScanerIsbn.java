@@ -1,7 +1,9 @@
 package com.lib.bibliosoft.utils;
 import com.alibaba.fastjson.JSONObject;
 import com.lib.bibliosoft.entity.Book;
+import com.lib.bibliosoft.entity.BookPosition;
 import com.lib.bibliosoft.entity.BookSort;
+import com.lib.bibliosoft.repository.BookPositionRepository;
 import com.lib.bibliosoft.repository.BookRepository;
 import com.lib.bibliosoft.repository.BookSortRepository;
 import org.slf4j.Logger;
@@ -32,6 +34,8 @@ public class ScanerIsbn {
     private BookSortRepository bookSortRepository;
     @Autowired
     private BookRepository bookRepository;
+    @Autowired
+    private BookPositionRepository bookPositionRepository;
 
     private static ScanerIsbn scanerIsbn;
 
@@ -42,9 +46,11 @@ public class ScanerIsbn {
         scanerIsbn = this;
         scanerIsbn.bookSortRepository = this.bookSortRepository;
         scanerIsbn.bookRepository = this.bookRepository;
+        scanerIsbn.bookPositionRepository = this.bookPositionRepository;
         // 初使化时将已静态化的bookIdUtil实例化
     }
 
+    //TODO
     /**
      * @title ScanerIsbn.java
      * @param isbn the book's identifier, but not unique
@@ -55,7 +61,7 @@ public class ScanerIsbn {
      * @date 2:10 PM. 10/9/2018
      * @modify 2:05 PM. 10/14/2018
      */
-    public static List<Book> getBookInfoByIsbn(String isbn, Integer num, String time, String position, String status, String typeid) {
+    public static List<Book> getBookInfoByIsbn(String isbn, Integer num, String time, Integer position, String status, String typeid) {
 
         /*解析豆瓣数据库返回的json数据*/
         String url = "https://api.douban.com/v2/book/isbn/:" + isbn;
@@ -98,7 +104,11 @@ public class ScanerIsbn {
             //Create a new book, add some attributes
             Book book = new Book();
             book.setRegisterTime(t);
-            book.setBookPosition(position);
+            //Book和BookPosition关联
+            BookPosition bookPosition = scanerIsbn.bookPositionRepository.findById(position).orElse(null);
+            bookPosition.getBooks().add(book);
+            book.setBookPosition(bookPosition);
+
             book.setBookStatus(s);
             book.setBookAuthor(author);
             book.setBookDesc(desc);

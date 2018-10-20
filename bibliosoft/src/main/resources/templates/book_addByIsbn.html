@@ -60,7 +60,12 @@
                 </div>
                 <div class="form-group">
                     <div class="myinput">
-                        <input type="text" placeholder="book Position" name="bookposition" id="bookposition" class="form-control">
+                        <!--<input type="text" placeholder="book Position" name="bookposition" id="bookposition" class="form-control">-->
+                        <span class="select-box">
+                            <select class="form-control" title="Select Position" name="bookposition" id="bookposition">
+                                <option th:each="p : ${place}" th:value="${p.id}" th:text="${p.place}"></option>
+                            </select>
+                        </span>
                     </div>
                 </div>
                 <div class="form-group">

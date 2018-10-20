@@ -21,10 +21,15 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
     //个人未还记录
     List<BorrowRecord> findByReaderIdAndReturntimeIsNull(String readerId);
 
-    //个人欠款记录
+    //个人所有欠款记录
     @Transactional
     @Query(value = "select * from borrowrecord where reader_id=?1 and borrowrecord.debt>0",nativeQuery = true)
-    List<BorrowRecord> findByReaderIdAndDebt();
+    List<BorrowRecord> findAllDebtByReaderId(String readerId);
+
+    //个人当前欠款总额,不包括已还的书籍
+    @Transactional
+    @Query(value = "select * from borrowrecord where reader_id=?1 and borrowrecord.debt>0 and returntime is null",nativeQuery = true)
+    List<BorrowRecord> findNowDebtByReaderId(String readerId);
 
     /**
      *@Author: 毛文杰
@@ -89,6 +94,5 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
     @Modifying
     @Query(value = "update borrowrecord set lastday=?2 where book_id=?1",nativeQuery = true)
     void renew(Integer bookId,Integer lastday);
-
 }
 

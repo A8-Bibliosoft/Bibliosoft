@@ -1,7 +1,9 @@
 package com.lib.bibliosoft.repository;
 
+import com.lib.bibliosoft.entity.Book;
 import com.lib.bibliosoft.entity.BookSort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,7 +18,7 @@ import java.util.List;
  *@Date: 5:52 PM. 9/26/2018
  */
 @Repository
-public interface BookSortRepository extends JpaRepository<BookSort, Integer> {
+public interface BookSortRepository extends JpaRepository<BookSort, Integer>,JpaSpecificationExecutor<BookSort> {
     /**
      * 插入typeid
      */
