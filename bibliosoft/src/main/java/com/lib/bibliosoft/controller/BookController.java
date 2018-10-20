@@ -672,7 +672,7 @@ public class BookController {
     /**
      * edit the position from layer
      * @title BookController.java
-     * @param [placeid, placename]
+     * @param placeid, placename
      * @return java.lang.String
      * @author 毛文杰
      * @method name editPosition

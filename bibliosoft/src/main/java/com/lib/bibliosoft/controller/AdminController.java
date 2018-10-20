@@ -84,6 +84,14 @@ public class AdminController {
             return "usererror";
         }
     }
+
+    @GetMapping("/adminLogout")
+    public String logout(HttpServletRequest request, HttpServletResponse response){
+        HttpSession session=request.getSession();
+        session.setAttribute("islogin",false);
+        return "redirect:/goAdminLogin";
+    }
+
     @ResponseBody
     @GetMapping("/find_all_librarian")
     public List<Librarian> findAll(Model model){
@@ -200,6 +208,7 @@ public class AdminController {
         model.addAttribute("currpage",currpage);
         return "lib_list";
     }
+
     @Component
     class Def{
         int fine;
