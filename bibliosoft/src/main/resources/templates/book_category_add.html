@@ -26,14 +26,6 @@
     <div class="type_title">书籍类型管理</div>
     <div class="type_content">
         <div class="Operate_btn" style="border: 0px;padding-bottom: 0px;">
-            <!--<a href="#" class="btn  btn-warning">-->
-                <!--<i class="icon-edit align-top bigger-125"></i>新增子类型-->
-            <!--</a>-->
-            <!--<a href="#" class="btn  btn-success">-->
-                <!--<i class="icon-ok align-top bigger-125"></i>禁用该类型</a>-->
-            <!--<a href="#deletecategory" class="btn  btn-danger">-->
-                <!--<i class="icon-trash   align-top bigger-125"></i>删除该类型-->
-            <!--</a>-->
             <ul id="pro-info" class="nav nav-tabs">
                 <li class="active">
                     <a href="#info-1" data-toggle="tab">
@@ -42,11 +34,12 @@
                 </li>
                 <li>
                     <a href="#info-2" data-toggle="tab">
-                        <i class="icon-trash   align-top bigger-125"></i>查看所有类型
+                        <i class="icon-ok align-top bigger-125"></i>查看所有类型
                     </a>
                 </li>
             </ul>
         </div>
+
         <div id="pro-info-content" class="tab-content" style="border-left: 1px solid lightgrey;border-right: 1px solid lightgrey;border-bottom: 1px solid lightgrey;">
             <div class="tab-pane fade in active" id="info-1" >
                 <form class="form form-horizontal" id="addtypeform">
@@ -182,7 +175,7 @@
             title: 'Modify Category',
             maxmin: true,
             shadeClose: false, //点击遮罩关闭层
-            area: ['800px', '400px'],
+            area: ['800px', '200px'],
             content: $('#add_menber_style'),
             btn: ['Submit', 'Cancel'],
             yes: function (index, layero) {

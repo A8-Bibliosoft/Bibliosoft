@@ -40,6 +40,9 @@
         <!--</div>-->
         <div class="border clearfix">
            <span class="l_f">
+                <a href="/reader_feedback" class="btn btn-sm btn-green">
+                    &nbsp;显示全部
+                </a>
                 <a href="/viewed_feedback" class="btn btn-sm btn-primary">
                     <i class="fa fa-check"></i>&nbsp;已浏览
                 </a>
@@ -130,7 +133,7 @@
 
     //设置已查看
     function feedback_view(obj, id){
-        if(obj.title='viewed'){
+        if(obj.title=='viewed'){
             layer.msg('you have reviewed this information!', {icon: 4, time: 800});
         }else{
             //设置title保证最多执行一次此操作

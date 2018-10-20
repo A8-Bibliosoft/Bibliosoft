@@ -56,6 +56,9 @@ public class BookController {
     @Autowired
     private BookTypeRepository bookTypeRepository;
 
+    @Autowired
+    private BookPositionRepository bookPositionRepository;
+
     private List<BookStatus> status;
 
     private final static Logger logger = LoggerFactory.getLogger(BookController.class);
@@ -105,9 +108,11 @@ public class BookController {
     @PutMapping("/books/{id}")
     @ResponseBody
     public Book updateBook(@PathVariable("id") Integer id,
-                           @RequestParam("bookPosition") String position){
+                           @RequestParam("bookPosition") Integer position){
         Book book = bookRepository.findById(id).get();
-        book.setBookPosition(position);
+        BookPosition bookPosition = bookPositionRepository.findById(position).orElse(null);
+        bookPosition.getBooks().add(book);
+        book.setBookPosition(bookPosition);
         return bookRepository.save(book);
     }
 
@@ -162,6 +167,7 @@ public class BookController {
             model.addAttribute("currpage",0);
         else
             model.addAttribute("currpage",1);
+        model.addAttribute("place", bookPositionRepository.findAll());
         return "book_list";
     }
 
@@ -206,6 +212,7 @@ public class BookController {
         model.addAttribute("currpage",currpage);
         status = bookStatusRepository.findAll();
         model.addAttribute("status", status);
+        model.addAttribute("place", bookPositionRepository.findAll());
         return "book_list";
     }
 
@@ -343,7 +350,7 @@ public class BookController {
 //        }
         return "redirect:/book_list";
     }
-
+//TODO
     /**
      * @Title: BookController.java
      * @param booktitle
@@ -364,7 +371,7 @@ public class BookController {
     @Transactional
     @RequestMapping("/book_addnewbook")
     public ResponseEntity<Map<String,Object>> add_newbook(String booktitle, MultipartFile bookcover, String bookisbn, String bookauthor,
-                                                          String bookposition, String bookprice, String bookid, String bookstatus, String bookaddtime,
+                                                          Integer positionid, String bookprice, String bookid, String bookstatus, String bookaddtime,
                                                           String booksummary, String typeid){
         Map<String,Object> map = new HashMap<String,Object>();
 
@@ -373,7 +380,10 @@ public class BookController {
         Integer Ibookstatus = Integer.parseInt(bookstatus);
         book.setBookStatus(Ibookstatus);
         book.setBookAuthor(bookauthor);
-        book.setBookPosition(bookposition);
+        //通过用户选择的位置找到位置实体
+        BookPosition bookPosition = bookPositionRepository.findById(positionid).orElse(null);
+        bookPosition.getBooks().add(book);
+        book.setBookPosition(bookPosition);
         book.setBookName(booktitle);
         float Fbookprice = Float.parseFloat(bookprice);
         book.setBookPrice(Fbookprice);
@@ -466,6 +476,7 @@ public class BookController {
         return "book_show";
     }
 
+    //TODO
     /**
      * @param isbn
      * @param time
@@ -479,7 +490,7 @@ public class BookController {
      */
 
     @PostMapping("/book_isbn")
-    public ResponseEntity<Map<String,Object>> getInfoByDouBan(String isbn, String time, String position, String status, String num, String typeid){
+    public ResponseEntity<Map<String,Object>> getInfoByDouBan(String isbn, String time, Integer position, String status, String num, String typeid){
         Map<String,Object> map = new HashMap<String,Object>();
         Integer number = Integer.parseInt(num);
         //get the books and improve their information
@@ -522,6 +533,7 @@ public class BookController {
         model.addAttribute("types", bookTypeRepository.findAll());
         status = bookStatusRepository.findAll();
         model.addAttribute("status", status);
+        model.addAttribute("place", bookPositionRepository.findAll());
         return "book_addByIsbn";
     }
 
@@ -538,8 +550,11 @@ public class BookController {
     public String goAddBookpage(Model model){
         model.addAttribute("types", bookTypeRepository.findAll());
         model.addAttribute("status", status);
+        model.addAttribute("place", bookPositionRepository.findAll());
         return "bookadd_detail";
     }
+
+    /*-------------------------------Category管理-------------------------------*/
 
     /**
      * go to book type management page
@@ -620,5 +635,77 @@ public class BookController {
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
 
+    /*--------------------------------目录管理结束----------------------------------------*/
+
+
+    /*--------------------------------图书位置管理----------------------------------------*/
+
+    @GetMapping("/book_position")
+    public String gotoBookPositionManage(Model model){
+        model.addAttribute("place", bookPositionRepository.findAll());
+        return "book_position";
+    }
+
+    /**
+     * add a book position to database
+     * @title BookController.java
+     * @param [placename]
+     * @return org.springframework.http.ResponseEntity<java.util.Map<java.lang.String,java.lang.Object>>
+     * @author 毛文杰
+     * @method name addPosition
+     * @date 6:12 PM. 10/20/2018
+     */
+    @PostMapping("/add_position")
+    public ResponseEntity<Map<String,Object>> addPosition(String placename){
+        Map<String,Object> map = new HashMap<String,Object>();
+        if(bookPositionRepository.findByPlace(placename).size()>0){
+            map.put("msg", ResultEnum.ALSO_HAS_TYPE_ERROR.getMsg());
+        }else{
+            BookPosition bookPosition = new BookPosition();
+            bookPosition.setPlace(placename);
+            bookPositionRepository.save(bookPosition);
+            map.put("msg", ResultEnum.SUCCESS.getMsg());
+        }
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+    }
+
+    /**
+     * edit the position from layer
+     * @title BookController.java
+     * @param [placeid, placename]
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name editPosition
+     * @date 6:15 PM. 10/20/2018
+     */
+    @PostMapping("/edit_position")
+    public String editPosition(String placeid, String placename){
+        Integer Id = Integer.parseInt(placeid);
+        bookPositionRepository.updatePositionById(placename, Id);
+        return "redirect:/book_position";
+    }
+
+    /**
+     * delete a position
+     * @title BookController.java
+     * @return org.springframework.http.ResponseEntity<java.util.Map<java.lang.String,java.lang.Object>>
+     * @author 毛文杰
+     * @method name deletePosition
+     * @date 7:36 PM. 10/20/2018
+     */
+    @PostMapping("/bookposition/{id}")
+    public ResponseEntity<Map<String,Object>> deletePosition(@PathVariable("id") Integer id) {
+        Map<String,Object> map = new HashMap<String,Object>();
+        //查看是否有其他书籍有此位置
+        if(bookRepository.findByBookPosition(id).size()>0) {
+            map.put("msg", ResultEnum.FAILED.getMsg());
+        }else{
+            bookPositionRepository.deleteById(id);
+            map.put("msg", ResultEnum.SUCCESS.getMsg());
+        }
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+    }
+
+    /*------------------------------图书位置管理结束--------------------------------------*/
 }
 

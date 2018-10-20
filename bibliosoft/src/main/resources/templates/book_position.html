@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
@@ -24,32 +24,105 @@
 <body>
 <div class="type_style">
     <div class="type_title">Book Location Management</div>
-    <div class="type_content">
-        <div class="Operate_btn">
-            <a href="javascript:void(0);" class="btn  btn-warning">
-                <i class="icon-edit align-top bigger-125">
-
-                </i>增加位置信息</a>
-            <a href="javascript:void(0);" class="btn  btn-success">
-                <i class="icon-ok align-top bigger-125">
-
-                </i>查看位置信息</a>
-            <a href="javascript:void(0);" class="btn  btn-danger">
-                <i class="icon-trash   align-top bigger-125">
-
-                </i>删除位置信息</a>
+    <div class="type_content" style="width: 50%;">
+        <div class="Operate_btn" style="border: 0px;padding-bottom: 0px;">
+            <ul id="pro-info" class="nav nav-tabs">
+                <li class="active">
+                    <a href="#info-1" data-toggle="tab">
+                        <i class="icon-edit align-top bigger-125"></i>
+                        新增位置信息
+                    </a>
+                </li>
+                <li>
+                    <a href="#info-2" data-toggle="tab">
+                        <i class="icon-ok align-top bigger-125"></i>
+                        查看位置信息
+                    </a>
+                </li>
+            </ul>
         </div>
 
-        <ul class="nav nav-tabs nav-justified">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#">SVN</a></li>
-            <li><a href="#">iOS</a></li>
-            <li><a href="#">VB.Net</a></li>
-            <li><a href="#">Java</a></li>
-            <li><a href="#">PHP</a></li>
-        </ul>
+        <!-- 两个切换的面板 -->
+        <div id="pro-info-content" class="tab-content" style="border-left: 1px solid lightgrey;border-right: 1px solid lightgrey;border-bottom: 1px solid lightgrey;">
+            <!-- 面板1 -->
+            <div class="tab-pane fade in active" id="info-1" >
+                <form class="form form-horizontal" id="addpositionform">
+                    <div class="Operate_cont clearfix">
+                        <label class="form-label">
+                            <span style="color: red">*</span>位置名称：
+                        </label>
+                        <div class="formControls ">
+                            <input type="text" class="input-text" id="positionname" name="positionname">
+                        </div>
+                    </div>
+                    <!--<div class="Operate_cont clearfix">-->
+                    <!--<label class="form-label">备注：</label>-->
+                    <!--<div class="formControls">-->
+                    <!--<textarea style="width: 380px" class="textarea" placeholder="说点什么...最少输入10个字符" datatype="*10-100"-->
+                    <!--dragonfly="true" nullmsg="备注不能为空！" onKeyUp="textarealength(this,100)"></textarea>-->
+                    <!--<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <div class="">
+                        <div style="text-align:center">
+                            <input class="btn btn-primary radius" onclick="submitform()" type="button" value="submit">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- 面板2 -->
+            <div class="tab-pane fade" id="info-2">
+                <!--位置信息列表-->
+                <div class="bulletin_list">
+                    <table class="table table-striped table-bordered table-hover" id="sample-table">
+                        <thead>
+                        <tr>
+                            <th width="80">ID</th>
+                            <th width="300px">Place Name</th>
+                            <th width="200">Operation</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p : ${place}">
+                            <td th:text="${p.id}"></td>
+                            <td th:text="${p.place}"></td>
+
+                            <td class="td-manage">
+                                <a th:onclick="'javascript:place_edit('+this+','+${p.id}+')'" title="edit" href="javascript:;"
+                                   class="btn btn-xs btn-info">
+                                    <i class="icon-edit bigger-120"></i>
+                                </a>
+                                <a href="javascript:;" th:onclick="'javascript:place_del('+this+','+${p.id}+')'" title="delete" class="btn btn-xs btn-warning">
+                                    <i class="icon-trash  bigger-120"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- 编辑书籍位置图层-->
+<div class="add_menber" id="add_menber_style" style="display:none">
+    <form action="/edit_position" method="post" id="editplace">
+        <ul class=" page-content">
+            <li><label class="label_name">ID：</label>
+                <span class="add_name">
+                        <input value="" name="placeid" type="text" class="text_add" id="placeid"/>
+                </span>
+                <div class="prompt l_f"></div>
+            </li>
+            <li><label class="label_name">Place：</label>
+                <span class="add_name">
+                        <input value="" name="placename" type="text" class="text_add" id="placename"/>
+                </span>
+                <div class="prompt l_f"></div>
+            </li>
+        </ul>
+    </form>
 </div>
 <script type="text/javascript" src="/static/Widget/icheck/jquery.icheck.min.js"></script>
 <script type="text/javascript" src="/static/assets/layer/layer.js"></script>
@@ -57,6 +130,90 @@
 <script type="text/javascript" src="/static/js/H-ui.admin.js"></script>
 
 <script type="text/javascript">
+
+    /*增加-书籍位置信息*/
+    function submitform(){
+        var placename = $("#positionname").val();
+        if(placename == ""){
+            layer.msg("please enter a position to add!");
+        }else{
+            var data="placename="+placename;
+            $.ajax({
+                type: "post",
+                url: "/add_position",
+                data: data,
+                success: function(data){
+                    layer.alert(data.msg, {
+                        title: 'Info',
+                        icon: 1
+                    });
+                    //reset表格,清空内容以便下次添加
+                    setTimeout(function(){$("#addpositionform")[0].reset()},1000);
+                }
+            });
+        }
+    }
+
+    /*书籍位置信息-删除*/
+    function place_del(obj, id) {
+        layer.confirm('are you sure to delete？', function (index) {
+            $(obj).parents("tr").remove();
+            $.post("/bookposition/" + id, {}, function (data) {
+                if (data.msg == "success") {
+                    layer.msg('delete successful!', {icon: 1, time: 700});
+                } else {
+                    layer.msg('delete failed!', {icon: 2, time: 700});
+                }
+            });
+
+        });
+    }
+
+    /*书籍类型-编辑*/
+    function place_edit(obj, id) {
+        $('#placeid').val(id);
+        $('#placeid').attr("readonly", "readonly");
+        $('#placename').focus();
+        layer.open({
+            type: 1,
+            title: 'Modify Position',
+            maxmin: true,
+            shadeClose: false, //点击遮罩关闭层
+            area: ['800px', '200px'],
+            content: $('#add_menber_style'),
+            btn: ['Submit', 'Cancel'],
+            yes: function (index, layero) {
+                var num = 0;
+                var str = "";
+                $(".add_menber input[type$='text']").each(function (n) {
+                    if ($(this).val() == "") {
+                        layer.alert(str += "" + $(this).attr("name") + " can not be empty！\r\n", {
+                            title: 'Info',
+                            icon: 0,
+                        });
+                        num++;
+                        return false;
+                    }
+                });
+                if (num > 0) {
+                    return false;
+                }
+                else {
+                    layer.alert('successful！', {
+                        title: 'Info',
+                        icon: 1,
+                    });
+                    layer.close(index);
+                    setTimeout(afterOneminute,1000);
+                }
+            }
+        });
+    }
+    function afterOneminute(){
+        $('#editplace').submit();
+        $('#placeid').val('');
+        $('#placeid').removeAttr("readonly");
+    }
 
 </script>
 </body>

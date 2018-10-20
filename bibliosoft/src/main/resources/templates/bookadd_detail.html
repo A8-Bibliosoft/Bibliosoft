@@ -118,7 +118,12 @@
             <div class="Add_p_s">
                 <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.position}">Position：</label>
                 <div class="formControls col-2">
-                    <input type="text" class="input-text required" value="" th:placeholder="#{book.position}" name="bookposition" id="bookposition">
+                    <!--<input type="text" class="input-text required" value="" th:placeholder="#{book.position}" name="bookposition" id="bookposition">-->
+                    <span class="select-box">
+                        <select class="select required" title="select position" name="bookposition" id="bookposition">
+                            <option th:each="p : ${place}" th:text="${p.place}" th:value="${p.id}"></option>
+                        </select>
+                    </span>
                 </div>
             </div>
             <div class="Add_p_s">
