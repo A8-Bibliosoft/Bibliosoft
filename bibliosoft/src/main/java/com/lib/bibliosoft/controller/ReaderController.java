@@ -13,6 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,6 +26,10 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -549,7 +557,7 @@ public class ReaderController {
 
     /**
      * @title ReaderController.java
-     * @param model 页面模型
+     * @param model 默认进入的页面模型展示所有未读的反馈荐购，分页paging
      * @return java.lang.String
      * @author 毛文杰
      * @method name gotoFeedbackPage
@@ -557,9 +565,73 @@ public class ReaderController {
      */
     @GetMapping("/reader_feedback")
     public String gotoFeedbackPage(Model model){
-        model.addAttribute("feedback", feedbackRepository.findAll());
+        Integer currpage = 1;
+        totalCount = feedbackRepository.findFeedbacksByIsView("no").size();
+        if(totalCount == 0)
+            model.addAttribute("currpage",0);
+        model.addAttribute("totalcount", totalCount);
+        Integer totalPages = (totalCount + pagesize - 1)/pagesize;
+        model.addAttribute("totalpages", totalPages);
+        List<Feedback> feedbacks = iReaderService.findFeedbackCriteria(currpage-1, pagesize, "no").getContent();
+        model.addAttribute("feedback", feedbacks);
+        model.addAttribute("flag","yes");
+        if(feedbacks.size()==0)
+            model.addAttribute("currpage",0);
+        else{
+            model.addAttribute("currpage",currpage);
+        }
         return "reader_feedback";
     }
+
+    /**
+     * 动态分页查询接受参数
+     * @title ReaderController.java
+     * @param currpage, model
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name page_feedback
+     * @date 10:44 PM. 10/20/2018
+     */
+    @GetMapping("/feedback_page")
+    public String page_feedback(@RequestParam(value = "currpage") Integer currpage,
+                                @RequestParam(value = "flag") String flag, Model model){
+        List<Feedback> feedbacks = null;
+        if("yes".equals(flag)){
+            totalCount = feedbackRepository.findFeedbacksByIsView("yes").size();
+            model.addAttribute("totalcount", totalCount);
+            Integer totalPages = (totalCount + pagesize - 1)/pagesize;
+            model.addAttribute("totalpages", totalPages);
+            if(currpage == 0)
+                currpage = 1;
+            if(currpage == totalPages+1)
+                currpage = totalPages;
+            feedbacks = iReaderService.findFeedbackCriteria(currpage-1, pagesize, "yes").getContent();
+        }else if ("no".equals(flag)){
+            totalCount = feedbackRepository.findFeedbacksByIsView("no").size();
+            model.addAttribute("totalcount", totalCount);
+            Integer totalPages = (totalCount + pagesize - 1)/pagesize;
+            model.addAttribute("totalpages", totalPages);
+            if(currpage == 0)
+                currpage = 1;
+            if(currpage == totalPages+1)
+                currpage = totalPages;
+            feedbacks = iReaderService.findFeedbackCriteria(currpage-1, pagesize, "no").getContent();
+        }
+
+        //获得每页的数据
+//        Sort sort = new Sort(Sort.Direction.DESC,"date");
+//        Pageable pageable = PageRequest.of(currpage - 1, pagesize, sort);
+//        List<Feedback> feedbacks = feedbackRepository.findAll(pageable).getContent();
+
+        logger.info("currpage={}",currpage);
+        logger.info("list.size = {}",feedbacks.size());
+        //放在model
+        model.addAttribute("feedback", feedbacks);
+        model.addAttribute("currpage",currpage);
+        model.addAttribute("flag", flag);
+        return "reader_feedback";
+    }
+
 
     /**
      * delete the feedback from reader
@@ -604,7 +676,19 @@ public class ReaderController {
      */
     @GetMapping("/viewed_feedback")
     public String showViewedFeedbacks(Model model){
-        model.addAttribute("feedback", feedbackRepository.findFeedbacksByIsView("yes"));
+        Integer currpage = 1;
+        totalCount = feedbackRepository.findFeedbacksByIsView("yes").size();
+        model.addAttribute("totalcount", totalCount);
+        Integer totalPages = (totalCount + pagesize - 1)/pagesize;
+        model.addAttribute("totalpages", totalPages);
+        List<Feedback> feedbacks = iReaderService.findFeedbackCriteria(currpage-1, pagesize, "yes").getContent();
+        model.addAttribute("feedback", feedbacks);
+        model.addAttribute("flag","yes");
+        if(feedbacks.size()==0)
+            model.addAttribute("currpage",0);
+        else{
+            model.addAttribute("currpage",currpage);
+        }
         return "reader_feedback";
     }
 
@@ -618,7 +702,20 @@ public class ReaderController {
      */
     @GetMapping("/unviewed_feedback")
     public String showUnviewedFeedbacks(Model model){
-        model.addAttribute("feedback", feedbackRepository.findFeedbacksByIsView("no"));
+        Integer currpage = 1;
+        totalCount = feedbackRepository.findFeedbacksByIsView("no").size();
+        model.addAttribute("totalcount", totalCount);
+        Integer totalPages = (totalCount + pagesize - 1)/pagesize;
+        model.addAttribute("totalpages", totalPages);
+        List<Feedback> feedbacks = iReaderService.findFeedbackCriteria(currpage-1, pagesize, "no").getContent();
+        model.addAttribute("feedback", feedbacks);
+        model.addAttribute("flag","no");
+        if(feedbacks.size()==0)
+            model.addAttribute("currpage",0);
+        else{
+            model.addAttribute("currpage",currpage);
+        }
         return "reader_feedback";
     }
+    /*-----------------------------结束---------------------------------*/
 }

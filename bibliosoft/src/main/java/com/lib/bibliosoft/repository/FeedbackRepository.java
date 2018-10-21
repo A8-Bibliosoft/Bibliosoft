@@ -2,12 +2,18 @@ package com.lib.bibliosoft.repository;
 
 
 import com.lib.bibliosoft.entity.Feedback;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 /**
@@ -17,12 +23,14 @@ import java.util.List;
  * @Modify By:
  */
 @Repository
-public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
+public interface FeedbackRepository extends JpaRepository<Feedback, Integer>, JpaSpecificationExecutor {
 
     @Transactional
     @Modifying
     @Query(value = "update feedback set is_view='yes' where id=?", nativeQuery = true)
     void updateStatusById(Integer id);
 
-    List<Feedback> findFeedbacksByIsView(String yes);
+    List<Feedback> findFeedbacksByIsView(String yesorno);
+
 }
+

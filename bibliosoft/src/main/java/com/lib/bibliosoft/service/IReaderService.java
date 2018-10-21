@@ -1,5 +1,6 @@
 package com.lib.bibliosoft.service;
 
+import com.lib.bibliosoft.entity.Feedback;
 import com.lib.bibliosoft.entity.Reader;
 import org.springframework.data.domain.Page;
 
@@ -21,4 +22,6 @@ public interface IReaderService {
     List<Reader> searchReaderByPhoneOrName(String string);
 
     Integer findBorrowCountByReaderId(String readerId);
+
+    Page<Feedback> findFeedbackCriteria(Integer page, Integer size, String status);
 }

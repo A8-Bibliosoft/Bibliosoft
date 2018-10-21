@@ -40,9 +40,10 @@
         <!--</div>-->
         <div class="border clearfix">
            <span class="l_f">
-                <a href="/reader_feedback" class="btn btn-sm btn-green">
-                    &nbsp;显示全部
-                </a>
+                <!-- 不需要，默认进入就是未读消息 -->
+                <!--<a href="/reader_feedback" class="btn btn-sm btn-green">-->
+                    <!--&nbsp;显示全部-->
+                <!--</a>-->
                 <a href="/viewed_feedback" class="btn btn-sm btn-primary">
                     <i class="fa fa-check"></i>&nbsp;已浏览
                 </a>
@@ -52,7 +53,7 @@
                 <!--<a href="javascript:void()" class="btn btn-success"><i class="fa fa-feed"></i>&nbsp;建议</a>-->
                 <!--<a href="javascript:void()" class="btn btn-success"><i class="fa fa-feed"></i>&nbsp;投诉</a>-->
            </span>
-           <span class="r_f">共：<em>2334</em>条</span>
+           <span class="r_f">total：<em th:text="${totalcount}"></em>items</span>
         </div>
         <div class="feedback">
             <table class="table table-striped table-bordered table-hover" id="sample-table">
@@ -80,13 +81,61 @@
                     </td>
                     <td class="td-manage">
                         <a href="javascript:;" th:onclick="'javascript:feedback_delete('+this+','+${f.id}+')'" title="delete" class="btn btn-xs btn-warning">
-                            <i class="fa fa-trash  bigger-120"></i></a>
+                            &nbsp;<i class="fa fa-trash  bigger-120"></i>&nbsp;
+                        </a>
                         <a href="javascript:;" th:onclick="'javascript:feedback_view('+this+','+${f.id}+')'" title="view" class="btn btn-xs btn-pink" id="toview">
-                            <i class="fa fa-envelope-o  bigger-120"></i></a>
+                            &nbsp;<i class="fa fa-envelope-o  bigger-120"></i>&nbsp;
+                        </a>
                     </td>
                 </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div id="fenye" style="width: 100%;margin: 0 auto;">
+            <!--页码-->
+            <ul class="pager">
+
+                <li th:if="${currpage eq 1 or currpage eq 0}" style="margin: 0 5px;" class="disabled">
+                    <a href="javascript:return false;">
+                        index
+                    </a>
+                </li>
+                <!--<a th:href="@{'/book_page?currpage=1'}">-->
+                <li th:if="${currpage ne 1 and currpage ne 0}" style="margin: 0 5px;">
+                    <a th:href="@{/book_page(currpage=1,flag=${flag})}">
+                        index
+                    </a>
+                </li>
+                <li th:if="${currpage ne 1 and currpage ne 0}" style="margin: 0 5px;">
+                    <a th:href="@{/feedback_page(currpage=${currpage}-1,flag=${flag})}">&larr; Older</a>
+                </li>
+                <li th:if="${currpage eq 1 or currpage eq 0}" style="margin: 0 5px;" class="disabled">
+                    <a href="javascript:return false;">&larr; Older</a>
+                </li>
+                <li style="margin: 0 5px;">
+                    the&nbsp;<em style="color: mediumvioletred;" th:text="${currpage}"></em>&nbsp;page
+                </li>
+                <li style="margin: 0 5px;">
+                    total:&nbsp;<em style="color: mediumvioletred;" th:text="${totalpages}"></em>&nbsp;pages
+                </li>
+                <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
+                    <a href="javascript:return false;">Newer &rarr;</a>
+                </li>
+                <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
+                    <a th:href="@{/feedback_page(currpage=${currpage}+1,flag=${flag})}">Newer &rarr;</a>
+                </li>
+                <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
+                    <a href="javascript:return false;">
+                        index
+                    </a>
+                </li>
+                <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
+                    <a th:href="@{/feedback_page(currpage=${totalpages},flag=${flag})}">
+                        &nbsp;last&nbsp;
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
