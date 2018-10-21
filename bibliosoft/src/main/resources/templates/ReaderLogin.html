@@ -136,6 +136,7 @@
 						</div>
 						<span class="pull-right"><a onclick="severCheck();" class="flip-link btn btn-info" th:id="to-recover" th:text="#{readerlogin.signin}">登录</a></span>
 						<span class="pull-right"><a href="goHomePage" class="flip-link btn btn-info" th:text="#{readerlogin.back}">返回主页</a></span>
+						<span class="pull-right"><a href="#" onclick="forgetPassword()" class="flip-link btn btn-info">忘记密码</a></span>
 					</div>
 				</div>
 			</form>
@@ -324,12 +325,39 @@
 			}
 		});
 	
-	//邮箱格式校验
-	function ismail(mail){
-		return(new RegExp(/^(?:[a-zA-Z0-9]+[_\-\+\.]?)*[a-zA-Z0-9]+@(?:([a-zA-Z0-9]+[_\-]?)*[a-zA-Z0-9]+\.)+([a-zA-Z]{2,})+$/).test(mail));
-	}
-	//js  日期格式
-	</script>
+        //邮箱格式校验
+        function ismail(mail){
+            return(new RegExp(/^(?:[a-zA-Z0-9]+[_\-\+\.]?)*[a-zA-Z0-9]+@(?:([a-zA-Z0-9]+[_\-]?)*[a-zA-Z0-9]+\.)+([a-zA-Z]{2,})+$/).test(mail));
+        }
+        //忘记密码
+        function forgetPassword() {
+            var readerId=$('#readerId').val();
+            if(readerId!=null&&readerId!=""){
+                var code="readerId="+readerId;
+                $.ajax({
+                    type: "POST",
+                    url: "/forgetPassword",
+                    data: code,
+                    async: false,
+                    cache: false,
+                    success: function (data) {
+                        if ("success" === data) {
+                            alert("密码已经发送至用户邮箱！");
+                        } else if ("errreaderId" === data) {
+                            alert("用户名输入错误!");
+                        } else if ("error" === data) {
+                            alert("未知错误!");
+                        }
+                    },
+                    fail: function (data) {
+                        alert(data);
+                    }
+                });
+            }else{
+                alert("请输入用户名!");
+            }
+        }
+    </script>
 
 </body>
 

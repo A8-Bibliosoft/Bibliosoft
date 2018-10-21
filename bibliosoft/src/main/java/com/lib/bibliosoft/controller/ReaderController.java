@@ -8,6 +8,7 @@ import com.lib.bibliosoft.service.IReaderService;
 import com.lib.bibliosoft.service.impl.BookSortService;
 import com.lib.bibliosoft.utils.FileNameUtil;
 import com.lib.bibliosoft.utils.FileUtil;
+import com.lib.bibliosoft.utils.SendEmail;
 import com.lib.bibliosoft.utils.VerifyCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -359,19 +360,54 @@ public class ReaderController {
             Reader reader=readerRepository.findReaderByReaderId(readerId);
             if(reader.getImgsrc()!=null){
                 String oldimgrc=reader.getImgsrc().substring(21);
-                logger.info(upload.getAbsolutePath()+"\\"+oldimgrc);
+                //logger.info(upload.getAbsolutePath()+"\\"+oldimgrc);
                 File oldImg=new File(upload.getAbsolutePath()+"\\"+oldimgrc);
                 if(oldImg.delete()){logger.info("删除原图片成功");}else{logger.info("删除原图片失败");}
             }
             // 上传成功或者失败的提示
             String newfilename=FileNameUtil.getFileName(imgFile.getOriginalFilename());
-            FileUtil.upload(imgFile, upload.getAbsolutePath(), newfilename);
+            logger.info(newfilename);
+            FileUtil.upload2(imgFile, upload.getAbsolutePath(), newfilename);
+            logger.info(newfilename);
             String imgsrc="/static/readerimages/"+newfilename;
             readerRepository.updateReaderBasic(readerId,sex,readerName,imgsrc);
         }else{
             readerRepository.updateReaderBasic(readerId,sex,readerName);
         }
         return "redirect:goReaderInfo";
+    }
+    //忘记密码
+    @RequestMapping("/forgetPassword")
+    @ResponseBody
+    public String forgetPassword(String readerId) throws Exception{
+        if(readerId!=null&&!readerId.equals("")){
+            if(readerRepository.findReaderByReaderId(readerId)!=null){
+                Reader reader=readerRepository.findReaderByReaderId(readerId);
+                if(reader.getEmail()!=null&&reader.getPassword()!=null){
+                    //SendEmail.sendPassword(reader.getPassword(),reader.getEmail());
+                    return "success";
+                }
+            }
+           return "errreaderId";
+        }
+        return "error";
+    }
+    //修改密码
+    @RequestMapping("/changePassword")
+    @ResponseBody
+    public String changePassword(HttpServletRequest request,String oldpassword,String newpassword) throws Exception{
+        HttpSession session=request.getSession();
+        if(session.getAttribute("readerId")!=null&&oldpassword!=null&&!oldpassword.equals("")&&newpassword!=null&&!newpassword.equals("")){
+            String readerId=session.getAttribute("readerId").toString();
+            Reader reader=readerRepository.findReaderByReaderId(readerId);
+            if(!oldpassword.equals(reader.getPassword())){
+                return "erroldpassword";
+            }else{
+                readerRepository.updateReaderPassword(readerId,newpassword);
+                return "success";
+            }
+        }
+        return "error";
     }
 
     @RequestMapping("/goHomePage")
@@ -405,6 +441,7 @@ public class ReaderController {
     @RequestMapping("/search")
     public String search(Model model,String find_type,String find_info,Integer booktypeid) throws Exception{
         model.addAttribute("booktypelist",bookTypeRepository.findAll());
+        model.addAttribute("currpage",0);
         model.addAttribute("booklist",bookSortRepository.findByTypeId(booktypeid));
         if(find_info!=null&&!find_info.equals("")) {
             switch (find_type) {
@@ -504,7 +541,7 @@ public class ReaderController {
     //书籍存在 借书记录存在 书籍欠款为0
     @RequestMapping("/returnBook")
     public synchronized String returnBook(Integer bookId){
-        if(bookRepository.findByBookId(bookId)!=null&&borrowRecordRepository.findByBookId(bookId)!=null&&borrowRecordRepository.findByBookId(bookId).getDebt()==0){
+        if(bookRepository.findByBookId(bookId)!=null&&borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId)!=null&&borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId).getDebt()==0){
             bookRepository.updateBookStatus(0,bookId);
             //已考虑重复问题，查找为归还的书 returntime is null
             borrowRecordRepository.updateBorrow(new Date(),0,bookId);
