@@ -58,6 +58,11 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
     @Modifying
     @Query(value = "update reader r set r.reader_name=?3, r.sex=?2 where r.reader_id = ?1", nativeQuery = true)
     void updateReaderBasic(String readerId,String sex,String readerName);
+    //修改密码
+    @Transactional
+    @Modifying
+    @Query(value = "update reader r set r.password=?2 where r.reader_id = ?1", nativeQuery = true)
+    void updateReaderPassword(String readerId,String password);
 
     //更新读者当前欠款信息
     @Transactional

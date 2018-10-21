@@ -8,6 +8,7 @@ import com.lib.bibliosoft.service.IReaderService;
 import com.lib.bibliosoft.service.impl.BookSortService;
 import com.lib.bibliosoft.utils.FileNameUtil;
 import com.lib.bibliosoft.utils.FileUtil;
+import com.lib.bibliosoft.utils.SendEmail;
 import com.lib.bibliosoft.utils.VerifyCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -365,6 +366,39 @@ public class ReaderController {
         }
         return "redirect:goReaderInfo";
     }
+    //忘记密码
+    @RequestMapping("/forgetPassword")
+    @ResponseBody
+    public String forgetPassword(String readerId) throws Exception{
+        if(readerId!=null&&!readerId.equals("")){
+            if(readerRepository.findReaderByReaderId(readerId)!=null){
+                Reader reader=readerRepository.findReaderByReaderId(readerId);
+                if(reader.getEmail()!=null&&reader.getPassword()!=null){
+                    //SendEmail.sendPassword(reader.getPassword(),reader.getEmail());
+                    return "success";
+                }
+            }
+           return "errreaderId";
+        }
+        return "error";
+    }
+    //修改密码
+    @RequestMapping("/changePassword")
+    @ResponseBody
+    public String changePassword(HttpServletRequest request,String oldpassword,String newpassword) throws Exception{
+        HttpSession session=request.getSession();
+        if(session.getAttribute("readerId")!=null&&oldpassword!=null&&!oldpassword.equals("")&&newpassword!=null&&!newpassword.equals("")){
+            String readerId=session.getAttribute("readerId").toString();
+            Reader reader=readerRepository.findReaderByReaderId(readerId);
+            if(!oldpassword.equals(reader.getPassword())){
+                return "erroldpassword";
+            }else{
+                readerRepository.updateReaderPassword(readerId,newpassword);
+                return "success";
+            }
+        }
+        return "error";
+    }
 
     @RequestMapping("/goHomePage")
     public String goHomePage() throws Exception{
@@ -397,6 +431,7 @@ public class ReaderController {
     @RequestMapping("/search")
     public String search(Model model,String find_type,String find_info,Integer booktypeid) throws Exception{
         model.addAttribute("booktypelist",bookTypeRepository.findAll());
+        model.addAttribute("currpage",0);
         model.addAttribute("booklist",bookSortRepository.findByTypeId(booktypeid));
         if(find_info!=null&&!find_info.equals("")) {
             switch (find_type) {

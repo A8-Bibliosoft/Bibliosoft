@@ -81,7 +81,6 @@
                         <div class="col-md-8">
                             <input type="text" name="phone" class="form-control" id="phonenumber" th:value="${reader.phone}" readonly="readonly">
                         </div>
-                        <button class="col-md-2 btn btn-warning" type="button" onclick="ChangePhone()">更改绑定</button>
                     </div>
 
                     <div class="form-group has-success">
@@ -97,7 +96,20 @@
                         <div class="col-md-8">
                             <input type="password" name="password" class="form-control"  th:value="${reader.password}" readonly="readonly">
                         </div>
-                        <button class="col-md-2 btn btn-warning" type="button" onclick="ChangePassword()">更改密码</button>
+                        <button class="col-md-2 btn btn-warning" type="button" onclick="GoChangePassword()">更改密码</button>
+                    </div>
+
+                    <div class="form-group has-success" hidden="hidden" id="repassword">
+                        <label class="col-md-2 control-label">原密码</label>
+                        <div class="col-md-8">
+                            <input type="password" name="oldpassword" id="oldpassword" class="form-control">
+                        </div>
+                        <br><br>
+                        <label class="col-md-2 control-label">新密码</label>
+                        <div class="col-md-8">
+                            <input type="password" name="newpassword" id="newpassword" class="form-control">
+                        </div>
+                        <button class="col-md-2 btn btn-primary" type="button" onclick="ChangePassword()">确认更改</button>
                     </div>
 
                     <button type="submit" class="btn btn-primary" style="float: right" onclick="Change()">保存修改</button>
@@ -162,11 +174,11 @@
         document.getElementById("sex").value=sex;
     }
 
-    function ChangePhone(){
-   		window.location.href="UnBoundPhone1.jsp";
+    function GoChangePassword(){
+        $("#repassword").show();
     }
     function ChangeEmail(){
-   		window.location.href="UnBoundEmail1.jsp";
+
     }
     function UpLoad() {
         $("#file-btn").click();
@@ -190,6 +202,32 @@
             $('#headimgshow').get(0).src = e.target.result;
         }
     })
+
+    function ChangePassword() {
+        var oldpassword=$('#oldpassword').val();
+        var newpassword=$('#newpassword').val();
+        var code="oldpassword="+oldpassword+"&&newpassword="+newpassword;
+        $.ajax({
+            type: "POST",
+            url: "/changePassword",
+            data: code,
+            async: false,
+            cache: false,
+            success: function (data) {
+                if ("success" === data) {
+                    alert("修改密码成功！");
+                    window.location.href="/goReaderInfo";
+                } else if ("erroldpassword" === data) {
+                    alert("原密码输入错误!");
+                } else if ("error" === data) {
+                    alert("未知错误!");
+                }
+            },
+            fail: function (data) {
+                alert(data);
+            }
+        });
+    }
 </script>
 </body>
 </html>
