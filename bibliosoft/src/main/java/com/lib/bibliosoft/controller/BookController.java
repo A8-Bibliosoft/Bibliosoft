@@ -371,7 +371,7 @@ public class BookController {
     @Transactional
     @RequestMapping("/book_addnewbook")
     public ResponseEntity<Map<String,Object>> add_newbook(String booktitle, MultipartFile bookcover, String bookisbn, String bookauthor,
-                                                          Integer positionid, String bookprice, String bookid, String bookstatus, String bookaddtime,
+                                                          Integer bookposition, String bookprice, String bookid, String bookstatus, String bookaddtime,
                                                           String booksummary, String typeid){
         Map<String,Object> map = new HashMap<String,Object>();
 
@@ -381,7 +381,7 @@ public class BookController {
         book.setBookStatus(Ibookstatus);
         book.setBookAuthor(bookauthor);
         //通过用户选择的位置找到位置实体
-        BookPosition bookPosition = bookPositionRepository.findById(positionid).orElse(null);
+        BookPosition bookPosition = bookPositionRepository.findById(bookposition).orElse(null);
         bookPosition.getBooks().add(book);
         book.setBookPosition(bookPosition);
         book.setBookName(booktitle);

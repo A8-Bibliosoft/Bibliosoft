@@ -57,4 +57,32 @@ public class FileUtil {
 
     }
 
+    public static boolean upload2(MultipartFile file, String path, String fileName){
+        //使用原文件名
+        String realPath = path + "/" + fileName;
+
+        File dest = new File(realPath);
+
+        logger.info("文件保存路径==={}, 文件名字==={}", realPath, dest.getName());
+
+        //判断文件父目录是否存在
+        if(!dest.getParentFile().exists()){
+            if (dest.getParentFile().mkdir()){
+                logger.info("生成新的文件父目录={}",dest.getParentFile().getName());
+            }else{
+                logger.info("生成新的文件父失败！请检查代码！");
+            }
+        }
+
+        try {
+            //保存文件
+            file.transferTo(dest);
+            return true;
+        }catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
 }

@@ -352,13 +352,15 @@ public class ReaderController {
             Reader reader=readerRepository.findReaderByReaderId(readerId);
             if(reader.getImgsrc()!=null){
                 String oldimgrc=reader.getImgsrc().substring(21);
-                logger.info(upload.getAbsolutePath()+"\\"+oldimgrc);
+                //logger.info(upload.getAbsolutePath()+"\\"+oldimgrc);
                 File oldImg=new File(upload.getAbsolutePath()+"\\"+oldimgrc);
                 if(oldImg.delete()){logger.info("删除原图片成功");}else{logger.info("删除原图片失败");}
             }
             // 上传成功或者失败的提示
             String newfilename=FileNameUtil.getFileName(imgFile.getOriginalFilename());
-            FileUtil.upload(imgFile, upload.getAbsolutePath(), newfilename);
+            logger.info(newfilename);
+            FileUtil.upload2(imgFile, upload.getAbsolutePath(), newfilename);
+            logger.info(newfilename);
             String imgsrc="/static/readerimages/"+newfilename;
             readerRepository.updateReaderBasic(readerId,sex,readerName,imgsrc);
         }else{
@@ -531,7 +533,7 @@ public class ReaderController {
     //书籍存在 借书记录存在 书籍欠款为0
     @RequestMapping("/returnBook")
     public synchronized String returnBook(Integer bookId){
-        if(bookRepository.findByBookId(bookId)!=null&&borrowRecordRepository.findByBookId(bookId)!=null&&borrowRecordRepository.findByBookId(bookId).getDebt()==0){
+        if(bookRepository.findByBookId(bookId)!=null&&borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId)!=null&&borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId).getDebt()==0){
             bookRepository.updateBookStatus(0,bookId);
             //已考虑重复问题，查找为归还的书 returntime is null
             borrowRecordRepository.updateBorrow(new Date(),0,bookId);
