@@ -368,17 +368,19 @@ public class BookController {
      * @Description: add a new book to the library
      * @Date: 10:07 PM. 10/6/2018
      */
-    @Transactional
     @RequestMapping("/book_addnewbook")
-    public ResponseEntity<Map<String,Object>> add_newbook(String booktitle, MultipartFile bookcover, String bookisbn, String bookauthor,
-                                                          Integer bookposition, String bookprice, String bookid, String bookstatus, String bookaddtime,
+    @ResponseBody
+    public String add_newbook(String booktitle, MultipartFile bookcover, String bookisbn, String bookauthor,
+                                                          Integer bookposition, String bookprice, String bookid, Integer bookstatus, String bookaddtime,
                                                           String booksummary, String typeid){
-        Map<String,Object> map = new HashMap<String,Object>();
+//        Map<String,Object> map = new HashMap<String,Object>();
+        // 上传成功或者失败的提示
+        String msg;
 
         /*书籍*/
         Book book = new Book();
-        Integer Ibookstatus = Integer.parseInt(bookstatus);
-        book.setBookStatus(Ibookstatus);
+        //Integer Ibookstatus = Integer.parseInt(bookstatus);
+        book.setBookStatus(bookstatus);
         book.setBookAuthor(bookauthor);
         //通过用户选择的位置找到位置实体
         BookPosition bookPosition = bookPositionRepository.findById(bookposition).orElse(null);
@@ -394,8 +396,10 @@ public class BookController {
             book.setBookId(Ibookid);
         else{
             //bookid不能重复，若已存在则返回错误信息！
-            map.put("msg", ResultEnum.ADD_BOOK_FAILED.getMsg());
-            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_ACCEPTABLE);
+//            map.put("msg", ResultEnum.ADD_BOOK_FAILED.getMsg());
+//            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_ACCEPTABLE);
+            msg = ResultEnum.ADD_BOOK_FAILED.getMsg();
+            return msg;
         }
 
         //java.sql.Date
@@ -436,8 +440,6 @@ public class BookController {
         //logger.info(upload.getAbsolutePath());
         if(!upload.exists())
             upload.mkdirs();
-        // 上传成功或者失败的提示
-        String msg;
 
         /*这是获取项目根目录*/
 //        String ph = ClassUtils.getDefaultClassLoader().getResource("").getPath();
@@ -451,9 +453,9 @@ public class BookController {
         }
 
         // 显示图片
-        map.put("msg", msg);
+        //map.put("msg", msg);
         //map.put("fileName", file.getOriginalFilename());
-        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+        return msg;
     }
 
     /**

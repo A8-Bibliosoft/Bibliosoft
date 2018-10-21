@@ -268,8 +268,8 @@
             type: 'post',//提交方式
             url:  '/book_addnewbook',
             success: function(data) {
-                layer.alert(data.msg);
-                window.location.href="/book_list";
+                layer.alert(data);
+                //window.location.href="/book_list";
             }
         };
         $("#form-article-add").validate({
