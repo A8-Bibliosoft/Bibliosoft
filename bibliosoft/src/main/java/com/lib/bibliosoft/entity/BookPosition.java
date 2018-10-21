@@ -21,7 +21,7 @@ public class BookPosition {
 
     private String place;
 
-    @OneToMany(mappedBy = "bookPosition",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "bookPosition",fetch=FetchType.EAGER)
     private List<Book> books = new ArrayList<>();
 
     public BookPosition() {

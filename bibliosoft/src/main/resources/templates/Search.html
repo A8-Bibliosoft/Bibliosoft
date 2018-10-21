@@ -114,11 +114,12 @@
 <div class="container">
 	<div class="col-md-4">
 		<ul class="nav" >
-			<li th:each="booktype:${booktypelist}"><a href="#" th:onclick="'javascript:turn('+this+','+${booktype.typeId}+');'" th:text="${booktype.typeName}"></a></li>
+			<li th:each="booktype:${booktypelist}"><a href="#" th:onclick="'javascript:turn('+this+','+${booktype.typeId}+','+${currpage}+');'" th:text="${booktype.typeName}"></a></li>
 		</ul>
 	</div>
 	<form action="goSearch" method="post" name="form1" id="form1" hidden>
 		<input type="text" id="booktypeid" name="booktypeid" value="">
+        <input type="text" id="currpage" name="currpage" value="">
 	</form>
 	<div id="search_detail"  class="col-md-8">
 		<ul class="nav imgsize" >
@@ -131,10 +132,53 @@
                             <h4>书名: <span th:text="${book.bookName}"></span></h4>
                             <h4>作者: <span th:text="${book.bookAuthor}"></span></h4>
                             <h4>价格: <span th:text="${book.getOneBook().bookPrice}"></span></h4>
-                            <h4>位置: <span th:text="${book.getOneBook().bookPosition}"></span></h4>
+                            <h4>位置: <span th:text="${book.getOneBook().getBookPosition().getPlace()}"></span></h4>
                         </div>
                     </a>
                 </div>
+			</li>
+		</ul>
+	</div>
+	<div id="fenye" style="width: 100%;margin: 0 auto;" th:if="${currpage ne 0}">
+		<!--页码-->
+		<ul class="pager">
+			<li th:if="${currpage eq 1}" style="margin: 0 5px;" class="disabled">
+				<a href="javascript:return false;" >
+					index
+				</a>
+			</li>
+			<li th:if="${currpage ne 1}" style="margin: 0 5px;">
+				<a th:href="@{/goSearch(booktypeid=${booktypeid},currpage=1)}">
+					index
+				</a>
+			</li>
+			<li th:if="${currpage ne 1}" style="margin: 0 5px;">
+				<a th:href="@{/goSearch(booktypeid=${booktypeid},currpage=${currpage}-1)}">&larr; Older</a>
+			</li>
+			<li th:if="${currpage eq 1}" style="margin: 0 5px;" class="disabled">
+				<a href="javascript:return false;">&larr; Older</a>
+			</li>
+			<li style="margin: 0 5px;">
+				the&nbsp;<em style="color: mediumvioletred;" th:text="${currpage}"></em>&nbsp;page
+			</li>
+			<li style="margin: 0 5px;">
+				total:&nbsp;<em style="color: mediumvioletred;" th:text="${totalpages}"></em>&nbsp;pages
+			</li>
+			<li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
+				<a href="javascript:return false;">Newer &rarr;</a>
+			</li>
+			<li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
+				<a th:href="@{/goSearch(booktypeid=${booktypeid},currpage=${currpage}+1)}">Newer &rarr;</a>
+			</li>
+			<li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
+				<a href="javascript:return false;">
+					last
+				</a>
+			</li>
+			<li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
+				<a th:href="@{/goSearch(booktypeid=${booktypeid},currpage=${totalpages})}">
+					&nbsp;last&nbsp;
+				</a>
 			</li>
 		</ul>
 	</div>
@@ -233,8 +277,9 @@
         document.getElementById("find_type").value=type;
     }
 
-    function turn(obj,num) {
+    function turn(obj,num,currpage) {
         document.getElementById("booktypeid").value=num;
+        document.getElementById("currpage").value=1;
         document.form1.submit();
     }
 </script>

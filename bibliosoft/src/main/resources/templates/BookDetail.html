@@ -46,7 +46,7 @@
             </div>
             <div class="col-md-6" style="text-align: center">
                 <ul class="nav">
-                    <li><span th:text="#{bookdetail.location}">位置:</span><p th:text="${book.bookPosition}"></p></li>
+                    <li><span th:text="#{bookdetail.location}">位置:</span><p th:text="${book.getBookPosition().getPlace()}"></p></li>
                     <li><span th:text="#{bookdetail.borrowed}">已借出:</span><p th:text="${bookStatus1}"></p></li>
                     <li><span th:text="#{bookdetail.ordered}">已预约:</span><p th:text="${bookStatus4}"></p></li>
                     <li><span th:text="#{bookdetail.available}">在架上:</span><p th:text="${bookStatus0}"></p></li>
