@@ -10,6 +10,9 @@ import com.lib.bibliosoft.service.impl.AdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -281,5 +284,30 @@ public class AdminController {
         logger.info("阈值修改成功");
 
         return "redirect:/lib_list";
+    }
+
+    @Autowired
+    private JavaMailSender sender;
+    @Value("${spring.mail.username}")
+    String from;
+
+    @ResponseBody
+    @PostMapping("/find_pass")
+    public String findPass(String id){
+        String password=librarianRepository.findByLibId(id).getPassword();
+        String mail=librarianRepository.findByLibId(id).getEmail();
+        SimpleMailMessage mailMessage=new SimpleMailMessage();
+
+        mailMessage.setFrom(from);
+        mailMessage.setTo(mail);
+        mailMessage.setSubject("Subject：find your password");
+        mailMessage.setText("your password is : "+password);
+
+        try{sender.send(mailMessage);}
+        catch (Exception ex){
+            logger.info(ex.getMessage());
+            return ex.getMessage();
+        }
+        return "success";
     }
 }
