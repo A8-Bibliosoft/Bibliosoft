@@ -10,6 +10,7 @@ import com.lib.bibliosoft.utils.FileNameUtil;
 import com.lib.bibliosoft.utils.FileUtil;
 import com.lib.bibliosoft.utils.SendEmail;
 import com.lib.bibliosoft.utils.VerifyCode;
+import org.aspectj.weaver.ast.Not;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,8 @@ public class ReaderController {
     private FeedbackRepository feedbackRepository;
     @Autowired
     private BookSortService bookSortService;
+    @Autowired
+    private BulletinRepository bulletinRepository;
     /**
      * logger
      */
@@ -413,8 +416,13 @@ public class ReaderController {
     }
 
     @RequestMapping("/goHomePage")
-    public String goHomePage() throws Exception{
-        //logger.info(bookSortService.PageBook(0,5,1).getContent().toString());
+    public String goHomePage(Model model) throws Exception{
+        if(bulletinRepository.findHMNotices().size()>0&&bookSortRepository.findHMBook().size()>0){
+            List<Notices> noticesList=bulletinRepository.findHMNotices();
+            List<BookSort> bookSortList=bookSortRepository.findHMBook();
+            model.addAttribute("noticelist",noticesList);
+            model.addAttribute("booksortlist",bookSortList);
+        }
         return "HomePage";
     }
 

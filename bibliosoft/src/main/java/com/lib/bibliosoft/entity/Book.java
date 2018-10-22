@@ -131,6 +131,14 @@ public class Book  implements Serializable{
         return bookDesc;
     }
 
+    public String getHMBookDesc() {
+        if(bookDesc.length()>100){
+            return bookDesc.substring(0,100)+"......";
+        }else{
+            return bookDesc;
+        }
+    }
+
     public void setBookDesc(String bookDesc) {
         this.bookDesc = bookDesc;
     }
