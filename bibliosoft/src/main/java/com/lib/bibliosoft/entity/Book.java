@@ -39,7 +39,7 @@ public class Book  implements Serializable{
 
     private String bookAuthor;
 
-    @Max(value=4, message = "书籍状态：0-5")
+    @Max(value=5, message = "书籍状态：0-5")
     @Min(value=0, message = "书籍状态：0-5")
     private Integer bookStatus;
 

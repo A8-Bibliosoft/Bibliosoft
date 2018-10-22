@@ -9,7 +9,6 @@ import com.lib.bibliosoft.service.impl.BookSortService;
 import com.lib.bibliosoft.utils.FileNameUtil;
 import com.lib.bibliosoft.utils.FileUtil;
 import com.lib.bibliosoft.utils.VerifyCode;
-import org.aspectj.weaver.ast.Not;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,10 +135,23 @@ public class ReaderController {
     @ResponseBody
     public String delete_reader(String id){
         Integer Iid = Integer.parseInt(id);
+        //找到这个读者
         Reader reader = iReaderDao.findById(Iid);
-        iReaderDao.deleteReader(reader);
-        logger.info("delete reader>>>  id={}",id);
-        return "success";
+        /*判断能否删除此读者*/
+        //欠款未还清
+        if("OFF".equals(reader.getStatus())){
+            return ResultEnum.CANNOT_DEL_READER.getMsg();
+        }else if(borrowRecordRepository.findNowDebtByReaderId(reader.getReaderId()).size()>0){
+            return ResultEnum.READER_DEL_FAILED.getMsg();
+        }else if(borrowRecordRepository.findByReaderIdAndReturntimeIsNull(reader.getReaderId()).size()>0){
+            return ResultEnum.READER_DEL_CANCEL.getMsg();
+        }else{
+            //考虑要不要直接删掉，还是把状态改为OFF
+            //iReaderDao.deleteReader(reader);
+            iReaderDao.updateReaderStatusById(Iid, "OFF");
+            logger.info("delete reader>>>  id={}, name={}",id, reader.getReaderName());
+            return ResultEnum.READER_DEL_SUCCESS.getMsg();
+        }
     }
 
     /**
@@ -411,7 +423,7 @@ public class ReaderController {
         return "error";
     }
 
-    @RequestMapping("/goHomePage")
+    @RequestMapping(value={"/goHomePage", "/"})
     public String goHomePage(Model model) throws Exception{
         if(bulletinRepository.findHMNotices().size()>0&&bookSortRepository.findHMBook().size()>0){
             List<Notices> noticesList=bulletinRepository.findHMNotices();
@@ -524,23 +536,30 @@ public class ReaderController {
         return "BorrowBook";
     }
 
+    //借书，返回提示信息
     @RequestMapping("/borrowBook")
+    @ResponseBody
     public synchronized String borrowBook(String readerId,Integer bookId){
         //获取借书期限  借书前提 读者未被封禁(未欠款) 借书少于3本 且书还在架上
         Reader reader=readerRepository.findReaderByReaderId(readerId);
-        if(reader.getAlldebt()==0&&bookRepository.findByBookId(bookId)!=null&&readerRepository.findReaderByReaderId(readerId)!=null&&bookRepository.getBookStatusByBookId(bookId)==0){
+        //OFF代表没有借书权限，直接不允许
+        if("OFF".equals(reader.getStatus())){
+            return ResultEnum.CANNOT_BORROW.getMsg();
+        }else if(reader.getAlldebt()==0&&bookRepository.findByBookId(bookId)!=null&&readerRepository.findReaderByReaderId(readerId)!=null&&bookRepository.getBookStatusByBookId(bookId)==0){
             List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNull(readerId);
             //获取最大借书数量
             DefSetting maxborrow=defSettingRepository.findDefSettingById(5);
+            logger.info("{}",borrowRecordList.size());
             if(borrowRecordList.size()<maxborrow.getDefnumber()){
                 DefSetting defSetting=defSettingRepository.findDefSettingById(3);
                 bookRepository.updateBookStatus(1,bookId);
+                logger.info("{}",bookId);
                 borrowRecordRepository.insertBorrow(bookId,new Date(),defSetting.getDefnumber(),readerId);
-                return null;
+                return ResultEnum.BORROW_BOOK_SUCCESS.getMsg();
             }
-            return null;
+            return ResultEnum.HAVE_NO_BOOKS.getMsg();
         }
-       return null;
+        return ResultEnum.BORROW_BOOK_ERROR.getMsg();
     }
 
     //读者还书
@@ -548,17 +567,32 @@ public class ReaderController {
     public String goReturnBook(){
         return "ReturnBook";
     }
+
     //书籍存在 借书记录存在 书籍欠款为0
     @RequestMapping("/returnBook")
-    public synchronized String returnBook(Integer bookId){
-        if(bookRepository.findByBookId(bookId)!=null&&borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId)!=null&&borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId).getDebt()==0){
+    @ResponseBody
+    public synchronized String returnBook(String bookid){
+        Integer bookId = Integer.parseInt(bookid);
+        Integer debtmoney = 0;
+        if(borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId) != null){
+            debtmoney = borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId).getDebt();
+        }else{
+            return ResultEnum.BOOK_ALREADY_RETURN.getMsg();
+        }
+        if(bookRepository.findByBookId(bookId)!=null&&borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId)!=null&&debtmoney==0){
             bookRepository.updateBookStatus(0,bookId);
             //已考虑重复问题，查找为归还的书 returntime is null
             borrowRecordRepository.updateBorrow(new Date(),0,bookId);
             //logger.info(borrowRecordRepository.findByBookId(bookId).toString());
-            return null;
+            return ResultEnum.RETURN_BOOK_SUCCESS.getMsg();
+        }else if(debtmoney>0){
+            //还款
+            bookRepository.updateBookStatus(0,bookId);
+            borrowRecordRepository.updateBorrow(new Date(),0,bookId);
+            return ResultEnum.RETURN_BOOK_PAY.getMsg()+":"+debtmoney;
+        }else{
+            return ResultEnum.UNKNOWN_ERROR.getMsg();
         }
-        return null;
     }
 
     //计时测试 还书期限

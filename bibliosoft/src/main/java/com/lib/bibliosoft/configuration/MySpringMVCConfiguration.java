@@ -87,7 +87,7 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
      */
     @Override
     protected void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController( "/" ).setViewName( "goHomePage");
+//        registry.addViewController( "/" ).setViewName( "/goHomePage");
         registry.addViewController("/404").setViewName("/error/404");
         registry.addViewController("/500").setViewName("/error/500");
         registry.addViewController("/lib_login").setViewName("lib_login");

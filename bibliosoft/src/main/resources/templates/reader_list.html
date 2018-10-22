@@ -547,14 +547,15 @@
                 async: false,
                 cache: false,
                 success: function (result) {
-                    if (result === "success") {
-                        layer.msg('Deleted!', {icon: 1, time: 1000});
+                    if (result === "the book was deleted successfully!") {
+                        layer.msg(result, {icon: 1, time: 1000});
+                        $(obj).parents("tr").remove();
                     } else {
-                        layer.msg('Delete Failed!', {icon: 2, time: 1000});
+                        layer.msg(result, {icon: 2, time: 2000});
                     }
                 }
             });
-            $(obj).parents("tr").remove();
+
         });
     }
 

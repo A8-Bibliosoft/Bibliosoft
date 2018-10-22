@@ -61,7 +61,7 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
     //还书日期
     @Transactional
     @Modifying
-    @Query(value = "update borrowrecord set returntime=?1,lastday=?2 where book_id=?3 and debt=0 and returntime is null",nativeQuery = true)
+    @Query(value = "update borrowrecord set returntime=?1,lastday=?2 where book_id=?3 and returntime is null",nativeQuery = true)
     void updateBorrow(Date returntime, Integer lastday, Integer bookId);
 
     //倒计时借书日期减少

@@ -69,11 +69,11 @@ public class BookController {
     /*每页的大小*/
     private Integer pagesize = 6;
 
-    /**
-     * Test
-     * add a book
-     * @return Result<Book>
-     */
+//    /**
+//     * Test
+//     * add a book
+//     * @return Result<Book>
+//     */
 //    @PostMapping("/books")
 //    @ResponseBody
 //    public Result<Book> bookAdd(@Valid Book book, BindingResult bindingResult){
@@ -83,38 +83,38 @@ public class BookController {
 //        return ResultUtil.success(bookRepository.save(book));
 //    }
 
-    /**
-     * Test
-     * find a book by id
-     * @param id
-     * @return
-     */
-    @GetMapping("/books/{id}")
-    @ResponseBody
-    public Book bookFindOne(@PathVariable("id") Integer id){
-        return bookRepository.findById(id).orElse(null);
-        //the return statement also can write like this:
-        //return bookRepository.findById(id).get();
-        //When the method does not receive a parameter or the parameter is illegal, an error will be reported.
-    }
-
-    /**
-     * Test
-     * update a book's position by id
-     * @param id the book's id
-     * @param position book's position
-     * @return a Book
-     */
-    @PutMapping("/books/{id}")
-    @ResponseBody
-    public Book updateBook(@PathVariable("id") Integer id,
-                           @RequestParam("bookPosition") Integer position){
-        Book book = bookRepository.findById(id).get();
-        BookPosition bookPosition = bookPositionRepository.findById(position).orElse(null);
-        bookPosition.getBooks().add(book);
-        book.setBookPosition(bookPosition);
-        return bookRepository.save(book);
-    }
+//    /**
+//     * Test
+//     * find a book by id
+//     * @param id
+//     * @return
+//     */
+//    @GetMapping("/books/{id}")
+//    @ResponseBody
+//    public Book bookFindOne(@PathVariable("id") Integer id){
+//        return bookRepository.findById(id).orElse(null);
+//        //the return statement also can write like this:
+//        //return bookRepository.findById(id).get();
+//        //When the method does not receive a parameter or the parameter is illegal, an error will be reported.
+//    }
+//
+//    /**
+//     * Test
+//     * update a book's position by id
+//     * @param id the book's id
+//     * @param position book's position
+//     * @return a Book
+//     */
+//    @PutMapping("/books/{id}")
+//    @ResponseBody
+//    public Book updateBook(@PathVariable("id") Integer id,
+//                           @RequestParam("bookPosition") Integer position){
+//        Book book = bookRepository.findById(id).get();
+//        BookPosition bookPosition = bookPositionRepository.findById(position).orElse(null);
+//        bookPosition.getBooks().add(book);
+//        book.setBookPosition(bookPosition);
+//        return bookRepository.save(book);
+//    }
 
     /**
      * @title  BookController.java
@@ -123,26 +123,37 @@ public class BookController {
      * @author  毛文杰
      * @description delete a book by it's id
      * @date  6:10 PM. 10/7/2018
+     * @Modify time 5:05 PM 10/22/2018
      */
     @Transactional
     @PostMapping("/book/{id}")
     public ResponseEntity<Map<String,Object>> bookDelete(@PathVariable("id") Integer id, HttpSession session){
 
-        /*先在删除记录表里记录*/
-        BookDelRecord bookDelRecord = new BookDelRecord();
-        Librarian librarian = (Librarian) session.getAttribute("librarian");
-        Integer bookid = bookRepository.findById(id).get().getBookId();
-        bookDelRecord.setBookId(bookid);
-        bookDelRecord.setLibId(librarian.getLibId());
-        bookDelRecord.setTime(new java.util.Date());
-        bookDelRecordRepository.save(bookDelRecord);
-        /*然后删除book表，这里用改变状态替代删除*/
-//        bookRepository.deleteById(id);
-        /*5: 已删除，但没从数据库删除记录*/
-        bookRepository.updateBookStatus(5, bookid);
-
         Map<String,Object> map = new HashMap<String,Object>();
-        map.put("msg", ResultEnum.SUCCESS.getMsg());
+        /*先判断是否已不在数据库*/
+        Book book = bookRepository.findById(id).get();
+        Integer status = book.getBookStatus();
+        logger.info("status={}", status);
+        if(status == 5){
+            map.put("msg", ResultEnum.BOOK_ALREADY_DEL.getMsg());
+        }else if(status == 0){
+            /*先在删除记录表里记录*/
+            BookDelRecord bookDelRecord = new BookDelRecord();
+            Librarian librarian = (Librarian) session.getAttribute("librarian");
+            Integer bookid = book.getBookId();
+            bookDelRecord.setBookId(bookid);
+            bookDelRecord.setLibId(librarian.getLibId());
+            bookDelRecord.setTime(new java.util.Date());
+            bookDelRecordRepository.save(bookDelRecord);
+            /*然后删除book表，这里用改变状态替代删除*/
+//        bookRepository.deleteById(id);
+
+            /*5: 已删除，但没从数据库删除记录*/
+            bookRepository.updateBookStatus(5, bookid);
+            map.put("msg", ResultEnum.BOOK_DEL_SUCCESS.getMsg());
+        }else{
+            map.put("msg", ResultEnum.BOOK_DEL_FAILED.getMsg());
+        }
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
 
@@ -157,7 +168,7 @@ public class BookController {
     @GetMapping("/book_sBybisbn")
     public String findBooksByIsbn(@RequestParam("isbn") String isbn, Model model){
         List<Book> books = bookRepository.findBookByBookIsbn(isbn);
-        logger.info("bookisbn={}", isbn);
+//        logger.info("bookisbn={}", isbn);
         Integer totalcount =  books.size();
         model.addAttribute("totalcount", totalcount);
         Integer totalPages = (totalcount + pagesize - 1)/pagesize;
@@ -200,7 +211,7 @@ public class BookController {
         //获得每页的数据
         List<Book> bookList = bookService.getPage(currpage, pagesize).getContent();
 
-        logger.info("currpage={}",currpage);
+//        logger.info("currpage={}",currpage);
 //        List<Book> list = new ArrayList<>();
 //        while(bookIterator.hasNext()) {
 //            list.add(bookIterator.next());
@@ -236,7 +247,7 @@ public class BookController {
         //获得每页的数据
         List<Book> bookList = bookService.getPage(currpage, pagesize).getContent();
 
-        logger.info("currpage={}",currpage);
+        //logger.info("currpage={}",currpage);
 //        List<Book> list = new ArrayList<>();
 //        while(bookIterator.hasNext()) {
 //            list.add(bookIterator.next());
@@ -258,7 +269,7 @@ public class BookController {
      */
     @RequestMapping("/book_search")
     public String search_book(Model model, @RequestParam("bookname") String bookname, @RequestParam("bookaddtime") String bookaddtime){
-        logger.info("book name==={}, book add time==={}",bookname, bookaddtime);
+//        logger.info("book name==={}, book add time==={}",bookname, bookaddtime);
         List<Book> searchBook = null;
         try {
             if (bookService.searchBookByNameOrAddTime(bookname, bookaddtime) != null){
@@ -297,7 +308,7 @@ public class BookController {
         Integer ibookid = Integer.parseInt(bookid);
 //        List<Book> books = bookRepository.findBookByBookIsbn(sbookid);
         Book books = bookRepository.findBookByBookId(ibookid);
-        logger.info("bookid={}", bookid);
+//        logger.info("bookid={}", bookid);
         if(books != null){
             model.addAttribute("totalcount", 1);
             model.addAttribute("totalpages", 1);
@@ -489,7 +500,7 @@ public class BookController {
         //Integer bookid = Integer.parseInt(bookId);
         Book book = bookService.getBookById(bookId);
         String sstatus = bookService.findsstatusByid(bookId);
-        logger.info("书籍状态 === {}", sstatus);
+//        logger.info("书籍状态 === {}", sstatus);
         model.addAttribute("book", book);
         model.addAttribute("sstatus", sstatus);
         return "book_show";
