@@ -211,6 +211,10 @@
     function ChangePassword() {
         var oldpassword=$('#oldpassword').val();
         var newpassword=$('#newpassword').val();
+        if(oldpassword==null||oldpassword==""||newpassword==null||newpassword==""){
+            alert("请输入正确的密码！");
+            return false;
+        }
         var code="oldpassword="+oldpassword+"&&newpassword="+newpassword;
         $.ajax({
             type: "POST",

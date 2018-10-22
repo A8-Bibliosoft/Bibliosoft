@@ -311,7 +311,11 @@ public class ReaderController {
                 session.setAttribute("loginname",reader.getReaderName());
                 session.setAttribute("logintype","reader");
                 session.setAttribute("islogin", true);
-                logger.info("login uccess");
+                logger.info("login success");
+                if(reader.getImgsrc()==null||reader.getImgsrc().equals("")){
+                    reader.setImgsrc("/static/readerimages/defaultimg.jpg");
+                    readerRepository.save(reader);
+                }
                 return "success";
             }
             else{
