@@ -334,7 +334,6 @@ public class BookController {
      * @param price
      * @param author
      * @param status
-     * @param flag
      * @return
      */
     @PostMapping("/edit_book")

@@ -65,7 +65,7 @@
 					<span class="icon-bar"></span>
 				</button>
 				<h1>
-					<a class="navbar-brand" href="goHomePage" th:text="#{homepage.libraryname}">Library图书馆</a>
+					<a class="navbar-brand" href="goHomePage" ><img th:src="@{/static/huimages/biglogo.png}"/></a>
 				</h1>
 				
 			</div>
@@ -95,16 +95,16 @@
         <h1 style="text-align: center;margin-top: 150px;color: white;" th:text="#{search.title}">书籍查找</h1>
         <form method="post" action="search" class="form-horizontal" role="form" style="margin-top: 250px;margin-left: 50px;">
             <div class="form-group">
-                <select name="find_code" id="find_code" class="col-md-2" style="height: 35px;border-radius: 5px">
-                    <option value="0" selected="" th:text="#{search.bookname}">书名</option>
-                    <option value="1" th:text="#{search.author}">著者</option>
-                    <option value="2" th:text="#{search.isbn}">ISBN</option>
+                <select name="find_code" id="find_code" class="col-md-2" style="height: 50px;font-size: 18px;border-radius: 5px">
+                    <option value="0" selected="" th:text="#{search.bookname}" style="height: 30px;font-size: 18px">书名</option>
+                    <option value="1" th:text="#{search.author}" style="height: 30px;font-size: 18px">著者</option>
+                    <option value="2" th:text="#{search.isbn}" style="height: 30px;font-size: 18px">ISBN</option>
                 </select>
                 <input name="find_type" type="text" id="find_type" value="" hidden="hidden" />
                 <div class="col-md-8" style="padding: 0;margin: 0;">
-                    <input class="form-control" name="find_info" type="text">
+                    <input class="form-control" name="find_info" type="text" style="height:50px; font-size: 20px">
                 </div>
-                <input type="submit" class="btn btn-primary col-md-2" th:value="#{search.submit}" onclick="submitfind()">
+                <input type="submit" class="btn btn-primary col-md-2" th:value="#{search.submit}" style="height: 50px;font-size: 20px" onclick="submitfind()">
             </div>
         </form>
 	</div>

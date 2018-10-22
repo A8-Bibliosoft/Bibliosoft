@@ -60,7 +60,9 @@
 									<span class="icon-bar"></span>
 								</button>
 								<h1>
-									<a class="navbar-brand" href="goHomePage" th:text="#{homepage.libraryname}">Library图书馆</a>
+									<!---->
+
+									<a class="navbar-brand" href="goHomePage"><img th:src="@{/static/huimages/biglogo.png}"/></a>
 								</h1>
 								
 							</div>
@@ -69,10 +71,10 @@
 								<nav class="cl-effect-1">
 									<ul class="nav navbar-nav ">
 										<li><a class="scroll hvr-bounce-to-bottom active" href="#about">ABOUT</a></li>
-										<li><a class="scroll hvr-bounce-to-bottom" href="#ban-bot">SERVICES</a></li>
-										<li><a class="scroll hvr-bounce-to-bottom" href="#gallery">GALLERY</a></li>
-										<li><a class="scroll hvr-bounce-to-bottom" href="#team">TEAM</a></li>
-										<li><a class="scroll hvr-bounce-to-bottom" href="#contact">CONTACT</a></li>
+										<!--<li><a class="scroll hvr-bounce-to-bottom" href="#ban-bot">SERVICES</a></li>-->
+										<li><a class="scroll hvr-bounce-to-bottom" href="#navigation">NAVIGATION</a></li>
+										<li><a class="scroll hvr-bounce-to-bottom" href="#librarian">LIBRARIAN</a></li>
+										<!--<li><a class="scroll hvr-bounce-to-bottom" href="#contact">CONTACT</a></li>-->
 									</ul>
 								</nav>
 							</div><!-- /navbar-collapse -->
@@ -134,8 +136,8 @@
 		<img class="img-responsive" th:src="@{/static/huimages/b2.jpg}" alt=" " />
 	</div>
 	<div class="col-md-6 bottom-grid2 text-center wow flipInY" data-wow-duration="1.5s" data-wow-delay="0.1s">
-		<h3>我们将为你打开知识世界的大门</h3>
-		<h4>KNOWLEDGE <span>|</span> HARD WORK <span>|</span> INTELLIGENCE</h4>
+		<h3 th:text="#{homepage.proverb}">我们将为你打开知识世界的大门</h3>
+		<!--<h4>KNOWLEDGE <span>|</span> HARD WORK <span>|</span> INTELLIGENCE</h4>-->
 		<a class="hvr-bounce-to-bottom scroll" href="#about">SEE MORE ABOUT US</a>
 	</div>
 	<div class="col-md-3 bottom-grid3 wow flipInY" data-wow-duration="1.5s" data-wow-delay="0.2s">
@@ -171,9 +173,9 @@
 </div>
 <!-- //bottom -->
 <!-- content -->
-<div id="gallery" class="gallery all_pad wthree">
+<div id="navigation" class="gallery all_pad wthree">
 	<div class="container">
-		<h3 class="title">功能</h3>
+		<!--<h3 class="title">功能</h3>-->
 		<!-- 九个模块 -->
 			<div class="col-md-4 gal-grid  wow bounceInUp" data-wow-duration="1.5s" data-wow-delay="0s">
 				<div class="gal-img">
@@ -182,7 +184,7 @@
 							<div class="item-hover">
 								<div class="item-info">			
 									<div class="line"></div>			
-									<div class="headline">Pedagogy</div>
+									<div class="headline">Enter</div>
 									<div class="line"></div>
 								</div>
 								<div class="mask"></div>
@@ -191,7 +193,7 @@
 						</div>
 					</a>
 					<div class="view-pos"><h4 th:text="#{homepage.search}">查找书籍</h4></div>
-					<p>Doloremque laudantium</p>
+					<p></p>
 				</div>
 			</div>
 			<div class="col-md-4 gal-grid  wow bounceInUp" data-wow-duration="1.5s" data-wow-delay="0s">
@@ -201,7 +203,7 @@
 							<div class="item-hover">
 								<div class="item-info">			
 									<div class="line"></div>			
-									<div class="headline">Pedagogy</div>
+									<div class="headline">Enter</div>
 									<div class="line"></div>
 								</div>
 								<div class="mask"></div>
@@ -210,7 +212,7 @@
 						</div>
 					</a>
 					<div class="view-pos"><h4 th:text="#{homepage.classification}">书籍分类</h4></div>
-					<p>Doloremque laudantium</p>
+					<p></p>
 				</div>
 			</div>
 			<div class="col-md-4 gal-grid wow bounceInUp" data-wow-duration="1.5s" data-wow-delay="0s">
@@ -220,7 +222,7 @@
 							<div class="item-hover">
 								<div class="item-info">			
 									<div class="line"></div>			
-									<div class="headline">Pedagogy</div>
+									<div class="headline">Enter</div>
 									<div class="line"></div>
 								</div>
 								<div class="mask"></div>
@@ -229,7 +231,7 @@
 						</div>
 					</a>
 					<div class="view-pos"><h4 th:text="#{homepage.advice}">书籍建购</h4></div>
-					<p>Doloremque laudantium</p>
+					<p></p>
 				</div>
 			</div>
 			<div class="col-md-4 gal-grid gal-top wow bounceInDown" data-wow-duration="1.5s" data-wow-delay="0.3s">
@@ -239,7 +241,7 @@
 							<div class="item-hover">
 								<div class="item-info">			
 									<div class="line"></div>			
-									<div class="headline">Pedagogy</div>
+									<div class="headline">Enter</div>
 									<div class="line"></div>
 								</div>
 								<div class="mask"></div>
@@ -248,7 +250,7 @@
 						</div>
 					</a>
 					<div class="view-pos"><h4>图书概况</h4></div>
-					<p>Doloremque laudantium</p>
+					<p></p>
 				</div>
 			</div>
 			<div class="col-md-4 gal-grid gal-top wow bounceInDown" data-wow-duration="1.5s" data-wow-delay="0.3s">
@@ -258,7 +260,7 @@
 							<div class="item-hover">
 								<div class="item-info">			
 									<div class="line"></div>			
-									<div class="headline">Pedagogy</div>
+									<div class="headline">Enter</div>
 									<div class="line"></div>
 								</div>
 								<div class="mask"></div>
@@ -267,7 +269,7 @@
 						</div>
 					</a>
 					<div class="view-pos"><h4>Dolorem</h4></div>
-					<p>Doloremque laudantium</p>
+					<p></p>
 				</div>
 			</div>
 			<div class="col-md-4 gal-grid gal-top wow bounceInDown" data-wow-duration="1.5s" data-wow-delay="0.3s">
@@ -277,7 +279,7 @@
 							<div class="item-hover">
 								<div class="item-info">			
 									<div class="line"></div>			
-									<div class="headline">Pedagogy</div>
+									<div class="headline">Enter</div>
 									<div class="line"></div>
 								</div>
 								<div class="mask"></div>
@@ -286,7 +288,7 @@
 						</div>
 					</a>
 					<div class="view-pos"><h4>Dolorem</h4></div>
-					<p>Doloremque laudantium</p>
+					<p></p>
 				</div>
 			</div>
 			<div class="col-md-4 gal-grid gal-top wow bounceInUp" data-wow-duration="1.5s" data-wow-delay="0s">
@@ -296,7 +298,7 @@
 							<div class="item-hover">
 								<div class="item-info">			
 									<div class="line"></div>			
-									<div class="headline">Pedagogy</div>
+									<div class="headline">Enter</div>
 									<div class="line"></div>
 								</div>
 								<div class="mask"></div>
@@ -305,7 +307,7 @@
 						</div>
 					</a>
 					<div class="view-pos"><h4>Dolorem</h4></div>
-					<p>Doloremque laudantium</p>
+					<p></p>
 				</div>
 			</div>
 			<div class="col-md-4 gal-grid gal-top wow bounceInUp" data-wow-duration="1.5s" data-wow-delay="0s">
@@ -315,7 +317,7 @@
 							<div class="item-hover">
 								<div class="item-info">			
 									<div class="line"></div>			
-									<div class="headline">Pedagogy</div>
+									<div class="headline">Enter</div>
 									<div class="line"></div>
 								</div>
 								<div class="mask"></div>
@@ -324,7 +326,7 @@
 						</div>
 					</a>
 					<div class="view-pos"><h4>Dolorem</h4></div>
-					<p>Doloremque laudantium</p>
+					<p></p>
 				</div>
 			</div>
 			
@@ -335,7 +337,7 @@
 							<div class="item-hover">
 								<div class="item-info">			
 									<div class="line"></div>			
-									<div class="headline">Pedagogy</div>
+									<div class="headline">Enter</div>
 									<div class="line"></div>
 								</div>
 								<div class="mask"></div>
@@ -344,7 +346,7 @@
 						</div>
 					</a>
 					<div class="view-pos"><h4>Dolorem</h4></div>
-					<p>Doloremque laudantium</p>
+					<p></p>
 				</div>
 			</div>
 			<!-- swipe box js -->
@@ -360,39 +362,39 @@
 	</div>
 </div>
 <!-- //content -->
-<div class="tlinks">Collect from <a href="http://www.cssmoban.com/" >企业网站模板</a></div>
+
 <!-- about -->
 <div id="about" class="about all_pad agile">
 	<div class="container">
 		<h3 class="title">ABOUT</h3>
-		<p class="para">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium 
+		<p class="para" th:text="#{homepage.about}">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
 		doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo.</p>
-		<div class="abt-grids wow zoomIn" data-wow-duration="1.5s" data-wow-delay="0.1s">
-			<div class="col-md-3 abt-grd text-center">
-				<img th:src="@{/static/huimages/icon1.png}" alt=" "/>
-				<h4>laudantium</h4>
-			</div>
-			<div class="col-md-3 abt-grd text-center">
-				<img th:src="@{/static/huimages/icon2.png}" alt=" "/>
-				<h4>Perspiciatis</h4>
-			</div>
-			<div class="col-md-3 abt-grd text-center">
-				<img th:src="@{/static/huimages/icon3.png}" alt=" "/>
-				<h4>Voluptatem</h4>
-			</div>
-			<div class="col-md-3 abt-grd text-center">
-				<img th:src="@{/static/huimages/icon4.png}" alt=" "/>
-				<h4>Accusantium</h4>
-			</div>
-			<div class="clearfix"> </div>
-		</div>
+		<!--<div class="abt-grids wow zoomIn" data-wow-duration="1.5s" data-wow-delay="0.1s">-->
+			<!--<div class="col-md-3 abt-grd text-center">-->
+				<!--<img th:src="@{/static/huimages/icon1.png}" alt=" "/>-->
+				<!--<h4>laudantium</h4>-->
+			<!--</div>-->
+			<!--<div class="col-md-3 abt-grd text-center">-->
+				<!--<img th:src="@{/static/huimages/icon2.png}" alt=" "/>-->
+				<!--<h4>Perspiciatis</h4>-->
+			<!--</div>-->
+			<!--<div class="col-md-3 abt-grd text-center">-->
+				<!--<img th:src="@{/static/huimages/icon3.png}" alt=" "/>-->
+				<!--<h4>Voluptatem</h4>-->
+			<!--</div>-->
+			<!--<div class="col-md-3 abt-grd text-center">-->
+				<!--<img th:src="@{/static/huimages/icon4.png}" alt=" "/>-->
+				<!--<h4>Accusantium</h4>-->
+			<!--</div>-->
+			<!--<div class="clearfix"> </div>-->
+		<!--</div>-->
 	</div>
 </div>
 <!-- //about -->
 <!-- about-bottom -->
 <div class="abt-what agileits all_pad wow fadeIn animated animated" data-wow-delay="0.1s" data-wow-duration="0s">
 	<div class="container">
-		<h3 class="title">图书馆概述</h3>
+		<h3 class="title" th:text="#{homepage.overview}">图书馆概述</h3>
 		<div class="col-md-5 ab-left">
 			<div class="port-7 effect-2">
                 	<div class="image-box">
@@ -405,12 +407,8 @@
             </div>
 		</div>
 		<div class="col-md-7 ab-right">
-			<h2>Voluptatem Accusantium </h2>
-			<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium 
-		doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium 
-		doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo ipsa quae ab illo.</p>
-		<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium 
-		doloremque laudantium, totam rem aperiam, eaque. </p>
+			<!--<h2>Voluptatem Accusantium </h2>-->
+			<p th:text="#{homepage.overviewcontent}"></p>
 		</div>
 		<div class="clearfix"> </div>
 	</div>
@@ -440,184 +438,184 @@
 </div> -->
 <!-- num-scroller -->
 <!-- team -->
-<div id="team" class="team-content all_pad w3agile">
+<div id="librarian" class="team-content all_pad w3agile">
 	<div class="container">
-		<h3 class="title">OUR TEAM</h3>
-		<div class="t-content-gds">
-			<div class="col-md-3 t-cont-gds wow bounceInUp" data-wow-duration="1.5s" data-wow-delay="0s">
+		<h3 class="title" th:text="#{homepage.librarian}"></h3>
+		<div class="t-content-gds" align="center">
+			<div class="col-md-3 t-cont-gds wow bounceInUp" data-wow-duration="1.5s" data-wow-delay="0s" style="width:33%">
 				<div class="team-img">
-					<img class="img-responsive" th:src="@{/static/huimages/team1.jpg}" alt=" "/>
+					<img class="img-responsive" th:src="@{/static/huimages/MaoWenjie.jpg}" alt=" "/>
 					<div class="team-text">
-						<h4>Federica</h4>
-						<p>Teacher</p>
-						<ul>
-							<li><a class="tw1" href="#"></a></li>
-							<li><a class="tw2" href="#"></a></li>
-							<li><a class="tw3" href="#"></a></li>
-							<li><a class="tw4" href="#"></a></li>
-						</ul>
+						<h4>Mao Wenjie</h4>
+						<p>Leader</p>
+						<!--<ul>-->
+							<!--<li><a class="tw1" href="#"></a></li>-->
+							<!--<li><a class="tw2" href="#"></a></li>-->
+							<!--<li><a class="tw3" href="#"></a></li>-->
+							<!--<li><a class="tw4" href="#"></a></li>-->
+						<!--</ul>-->
 					</div>
 				</div>
 			</div>
-			<div class="col-md-3 t-cont-gds wow bounceInUp" data-wow-duration="1.5s" data-wow-delay="0s">
+			<div class="col-md-3 t-cont-gds wow bounceInUp" data-wow-duration="1.5s" data-wow-delay="0s" style="width:33%">
 				<div class="team-img">
-					<img class="img-responsive" th:src="@{/static/huimages/team2.jpg}" alt=" "/>
+					<img class="img-responsive" th:src="@{/static/huimages/WuChuntao.jpg}" alt=" "/>
 					<div class="team-text">
-						<h4>Thomas</h4>
-						<p>Tutor</p>
-						<ul>
-							<li><a class="tw1" href="#"></a></li>
-							<li><a class="tw2" href="#"></a></li>
-							<li><a class="tw3" href="#"></a></li>
-							<li><a class="tw4" href="#"></a></li>
-						</ul>
+						<h4>Wu Chuntao</h4>
+						<p>Member</p>
+						<!--<ul>-->
+							<!--<li><a class="tw1" href="#"></a></li>-->
+							<!--<li><a class="tw2" href="#"></a></li>-->
+							<!--<li><a class="tw3" href="#"></a></li>-->
+							<!--<li><a class="tw4" href="#"></a></li>-->
+						<!--</ul>-->
 					</div>
 				</div>
 			</div>
-			<div class="col-md-3 t-cont-gds wow bounceInUp" data-wow-duration="1.5s" data-wow-delay="0s">
+			<div class="col-md-3 t-cont-gds wow bounceInUp" data-wow-duration="1.5s" data-wow-delay="0s" style="width:33%">
 				<div class="team-img">
-					<img class="img-responsive" th:src="@{/static/huimages/team3.jpg}" alt=" "/>
+					<img class="img-responsive" th:src="@{/static/huimages/SunAo.jpg}" alt=" "/>
 					<div class="team-text">
-						<h4>Albert</h4>
-						<p>School Correspondent</p>
-						<ul>
-							<li><a class="tw1" href="#"></a></li>
-							<li><a class="tw2" href="#"></a></li>
-							<li><a class="tw3" href="#"></a></li>
-							<li><a class="tw4" href="#"></a></li>
-						</ul>
+						<h4>Sun Ao</h4>
+						<p>Member</p>
+						<!--<ul>-->
+							<!--<li><a class="tw1" href="#"></a></li>-->
+							<!--<li><a class="tw2" href="#"></a></li>-->
+							<!--<li><a class="tw3" href="#"></a></li>-->
+							<!--<li><a class="tw4" href="#"></a></li>-->
+						<!--</ul>-->
 					</div>
 				</div>
 			</div>
-			<div class="col-md-3 t-cont-gds wow bounceInUp" data-wow-duration="1.5s" data-wow-delay="0s">
-				<div class="team-img">
-					<img class="img-responsive" th:src="@{/static/huimages/team4.jpg}" alt=" "/>
-					<div class="team-text">
-						<h4>Patrick</h4>
-						<p>School Principal</p>
-						<ul>
-							<li><a class="tw1" href="#"></a></li>
-							<li><a class="tw2" href="#"></a></li>
-							<li><a class="tw3" href="#"></a></li>
-							<li><a class="tw4" href="#"></a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
+			<!--<div class="col-md-3 t-cont-gds wow bounceInUp" data-wow-duration="1.5s" data-wow-delay="0s">-->
+				<!--<div class="team-img">-->
+					<!--<img class="img-responsive" th:src="@{/static/huimages/team4.jpg}" alt=" "/>-->
+					<!--<div class="team-text">-->
+						<!--<h4>Patrick</h4>-->
+						<!--<p>School Principal</p>-->
+						<!--<ul>-->
+							<!--<li><a class="tw1" href="#"></a></li>-->
+							<!--<li><a class="tw2" href="#"></a></li>-->
+							<!--<li><a class="tw3" href="#"></a></li>-->
+							<!--<li><a class="tw4" href="#"></a></li>-->
+						<!--</ul>-->
+					<!--</div>-->
+				<!--</div>-->
+			<!--</div>-->
 			<div class="clearfix"></div>
 		</div>
 	</div>
 </div>
 <!-- team -->
 <!-- twitter-content -->
-<div class="twi-content agileinfo all_pad text-center wow zoomIn" data-wow-duration="1.5s" data-wow-delay="0.1s">
-	<div class="container">
-		<script>
-									// You can also use "$(window).load(function() {"
-									$(function () {
-									 // Slideshow 4
-									$("#slider5").responsiveSlides({
-										auto: true,
-										pager: false,
-										nav: true,
-										speed: 500,
-										namespace: "callbacks",
-										before: function () {
-									$('.events').append("<li>before event fired.</li>");
-									},
-									after: function () {
-										$('.events').append("<li>after event fired.</li>");
-										}
-										});
-										});
-		</script>
-		<div class="callbacks_container">
-			<ul class="rslides" id="slider5">
-				<li>
-					<div class="twi-info-text">
-						<img th:src="@{/static/huimages/14.png}" alt=" "/>
-						<h3>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, 
-						consectetur, adipisci.</h3>
-						<p><a href="mailto:info@example.com">info@example.com</a></p>
-						<p>Jonathan Doe<span>3 days ago</span></p>
-					</div>
-				</li>
-				<li>
-					<div class="twi-info-text">
-						<img th:src="@{/static/huimages/dribble.png}" alt=" "/>
-						<h3>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, 
-						consectetur, adipisci.</h3>
-						<p><a href="mailto:info@example.com">info@example.com</a></p>
-						<p>Thompson<span>6 days ago</span></p>
-					</div>
-				</li>
-			</ul>
-		</div>
-	</div>
-</div>
-<!-- //twitter-content -->
-<div class="newsletter all_pad wow fadeInUp animated" data-wow-delay=".5s">
-	<div class="container">
-		<h3 class="title">NEWSLETTER</h3>
-			<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit</p>
-			<div class="sub">
-				<form action="#" method="post">
-					<input type="text" name="Name" placeholder="Name" required="">
-					<input type="email" name="Email" placeholder="Email" required="">
-					<input type="submit" value="SUBSCRIBE NOW" >
-				</form>
-			</div>
-	</div>
-</div>
-<!-- map -->
-<div id="contact" class="map">
-	<iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d2482.432383990807!2d0.028213999961443994!3d51.52362882484525!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1423469959819" style="border:0"></iframe>
-	<div class="map-pos wow zoomIn" data-wow-duration="1.5s" data-wow-delay="0.1s">
-		<h3>ADDRESS</h3>
-		<p>1234k Avenue, 4th block</p>
-		<p>Newyork City.</p>
-		<p>Call : 123 456 7890</p>
-		<p><a href="mailto:info@example.com">info@example.com</a></p>
-	</div>
-</div>
-<div class="contact-form">
-	<div class="container">
-		<form action="#" method="post">
-			<div class="col-md-6 contact-left">
-				<input type="text" value="Name" name="Name" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Name';}" required="">
-				<input type="email address" value="Email" name="Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email';}" required="">
-				<input type="text" value="Mobile Number" name="Mobile Number" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Mobile Number';}" required="">
-			</div>
-			<div class="col-md-6 contact-right">
-				<textarea name="Message..." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Message...';}" required>Message...</textarea>
-				<input type="submit" value="Submit" >
-			</div>
-			<div class="clearfix"></div>
-		</form>
-	</div>
-</div>
-<div class="footer text-center">
-	<div class="container">
-		<ul class="foo-nav">
-			<li><a class="scroll" href="#home">HOME</a></li>
-			<li><a class="scroll" href="#about">ABOUT</a></li>
-			<li><a class="scroll" href="#ban-bot">SERVICES</a></li>
-			<li><a class="scroll" href="#gallery">GALLERY</a></li>
-			<li><a class="scroll" href="#team">TEAM</a></li>
-			<li><a class="scroll" href="#contact">CONTACT</a></li>
-		</ul>
-		<p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>+123 456 7890</p>
-		<ul class="social-one">
-			<li><a class="fb1" href="#"></a></li>
-			<li><a class="fb2" href="#"></a></li>
-			<li><a class="fb3" href="#"></a></li>
-			<li><a class="fb4" href="#"></a></li>
-		</ul>
-	</div>
-</div>
+<!--<div class="twi-content agileinfo all_pad text-center wow zoomIn" data-wow-duration="1.5s" data-wow-delay="0.1s">-->
+	<!--<div class="container">-->
+		<!--<script>-->
+									<!--// You can also use "$(window).load(function() {"-->
+									<!--$(function () {-->
+									 <!--// Slideshow 4-->
+									<!--$("#slider5").responsiveSlides({-->
+										<!--auto: true,-->
+										<!--pager: false,-->
+										<!--nav: true,-->
+										<!--speed: 500,-->
+										<!--namespace: "callbacks",-->
+										<!--before: function () {-->
+									<!--$('.events').append("<li>before event fired.</li>");-->
+									<!--},-->
+									<!--after: function () {-->
+										<!--$('.events').append("<li>after event fired.</li>");-->
+										<!--}-->
+										<!--});-->
+										<!--});-->
+		<!--</script>-->
+		<!--<div class="callbacks_container">-->
+			<!--<ul class="rslides" id="slider5">-->
+				<!--<li>-->
+					<!--<div class="twi-info-text">-->
+						<!--<img th:src="@{/static/huimages/14.png}" alt=" "/>-->
+						<!--<h3>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, -->
+						<!--consectetur, adipisci.</h3>-->
+						<!--<p><a href="mailto:info@example.com">info@example.com</a></p>-->
+						<!--<p>Jonathan Doe<span>3 days ago</span></p>-->
+					<!--</div>-->
+				<!--</li>-->
+				<!--<li>-->
+					<!--<div class="twi-info-text">-->
+						<!--<img th:src="@{/static/huimages/dribble.png}" alt=" "/>-->
+						<!--<h3>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, -->
+						<!--consectetur, adipisci.</h3>-->
+						<!--<p><a href="mailto:info@example.com">info@example.com</a></p>-->
+						<!--<p>Thompson<span>6 days ago</span></p>-->
+					<!--</div>-->
+				<!--</li>-->
+			<!--</ul>-->
+		<!--</div>-->
+	<!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash; //twitter-content &ndash;&gt;-->
+<!--<div class="newsletter all_pad wow fadeInUp animated" data-wow-delay=".5s">-->
+	<!--<div class="container">-->
+		<!--<h3 class="title">NEWSLETTER</h3>-->
+			<!--<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit</p>-->
+			<!--<div class="sub">-->
+				<!--<form action="#" method="post">-->
+					<!--<input type="text" name="Name" placeholder="Name" required="">-->
+					<!--<input type="email" name="Email" placeholder="Email" required="">-->
+					<!--<input type="submit" value="SUBSCRIBE NOW" >-->
+				<!--</form>-->
+			<!--</div>-->
+	<!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash; map &ndash;&gt;-->
+<!--<div id="contact" class="map">-->
+	<!--<iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d2482.432383990807!2d0.028213999961443994!3d51.52362882484525!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1423469959819" style="border:0"></iframe>-->
+	<!--<div class="map-pos wow zoomIn" data-wow-duration="1.5s" data-wow-delay="0.1s">-->
+		<!--<h3>ADDRESS</h3>-->
+		<!--<p>1234k Avenue, 4th block</p>-->
+		<!--<p>Newyork City.</p>-->
+		<!--<p>Call : 123 456 7890</p>-->
+		<!--<p><a href="mailto:info@example.com">info@example.com</a></p>-->
+	<!--</div>-->
+<!--</div>-->
+<!--<div class="contact-form">-->
+	<!--<div class="container">-->
+		<!--<form action="#" method="post">-->
+			<!--<div class="col-md-6 contact-left">-->
+				<!--<input type="text" value="Name" name="Name" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Name';}" required="">-->
+				<!--<input type="email address" value="Email" name="Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email';}" required="">-->
+				<!--<input type="text" value="Mobile Number" name="Mobile Number" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Mobile Number';}" required="">-->
+			<!--</div>-->
+			<!--<div class="col-md-6 contact-right">-->
+				<!--<textarea name="Message..." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Message...';}" required>Message...</textarea>-->
+				<!--<input type="submit" value="Submit" >-->
+			<!--</div>-->
+			<!--<div class="clearfix"></div>-->
+		<!--</form>-->
+	<!--</div>-->
+<!--</div>-->
+<!--<div class="footer text-center">-->
+	<!--<div class="container">-->
+		<!--<ul class="foo-nav">-->
+			<!--<li><a class="scroll" href="#home">HOME</a></li>-->
+			<!--<li><a class="scroll" href="#about">ABOUT</a></li>-->
+			<!--<li><a class="scroll" href="#ban-bot">SERVICES</a></li>-->
+			<!--<li><a class="scroll" href="#gallery">GALLERY</a></li>-->
+			<!--<li><a class="scroll" href="#team">TEAM</a></li>-->
+			<!--<li><a class="scroll" href="#contact">CONTACT</a></li>-->
+		<!--</ul>-->
+		<!--<p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>+123 456 7890</p>-->
+		<!--<ul class="social-one">-->
+			<!--<li><a class="fb1" href="#"></a></li>-->
+			<!--<li><a class="fb2" href="#"></a></li>-->
+			<!--<li><a class="fb3" href="#"></a></li>-->
+			<!--<li><a class="fb4" href="#"></a></li>-->
+		<!--</ul>-->
+	<!--</div>-->
+<!--</div>-->
 <div class="copy-right">
 	<div class="container">
-		<p>Copyright &copy; 2016.Company name All rights reserved</p>
+		<p th:text="#{copyright}"></p>
 	</div>
 </div>
 <!-- //map -->
