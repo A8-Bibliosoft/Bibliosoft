@@ -1,7 +1,7 @@
 package com.lib.bibliosoft.repository;
+
 import com.lib.bibliosoft.entity.Reader;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -41,8 +41,8 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
 
     @Transactional
     @Modifying
-    @Query(value = "update reader r set r.reader_name=?3, r.sex=?2, r.phone=?4, r.reader_id=?5, r.email=?6, r.status=?7 where r.id = ?1", nativeQuery = true)
-    void updateReader(Integer id, String sex, String readerName, String phone, String readerId, String email, String status);
+    @Query(value = "update reader r set r.reader_name=?3, r.sex=?2, r.phone=?4, r.reader_id=?5, r.email=?6, r.status=?7, r.password=?8 where r.id = ?1", nativeQuery = true)
+    void updateReader(Integer id, String sex, String readerName, String phone, String readerId, String email, String status, String password);
 
     @Transactional
     @Modifying

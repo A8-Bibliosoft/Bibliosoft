@@ -8,16 +8,11 @@ import com.lib.bibliosoft.service.IReaderService;
 import com.lib.bibliosoft.service.impl.BookSortService;
 import com.lib.bibliosoft.utils.FileNameUtil;
 import com.lib.bibliosoft.utils.FileUtil;
-import com.lib.bibliosoft.utils.SendEmail;
 import com.lib.bibliosoft.utils.VerifyCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,17 +22,16 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: 毛文杰
@@ -98,12 +92,12 @@ public class ReaderController {
         //获得每页的数据
         List<Reader> readerList = iReaderService.getPage(currpage, pagesize).getContent();
 
-        logger.info("currpage={}",currpage);
+        //logger.info("currpage={}",currpage);
 //        List<Reader> list = new ArrayList<>();
 //        while(readerIterator.hasNext()) {
 //            list.add(readerIterator.next());
 //        }
-        logger.info("list.size = {}",readerList.size());
+        //logger.info("list.size = {}",readerList.size());
         //logger.info("list[0]={}", list.get(0));
         //放在model
         model.addAttribute("readers", readerList);
@@ -157,11 +151,12 @@ public class ReaderController {
     @PostMapping("/add_reader")
     public String reader_add(String readerId,String readerName,
                              @RequestParam("form-field-radio") String sex,
-                             String phone, String email,
+                             String phone, String email, String password,
                              @RequestParam("form-field-radio1") String status, String flag){
         if (flag.equals("edit")){
             Integer id = readerRepository.findReaderByReaderId(readerId).getId();
-            iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status);
+            //id是主键
+            iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status, password);
         }else if(flag.equals("add")){
             Reader reader = new Reader();
             reader.setSex(sex);
@@ -170,6 +165,7 @@ public class ReaderController {
             reader.setReaderId(readerId);
             reader.setEmail(email);
             reader.setStatus(status);
+            reader.setPassword(password);
             iReaderDao.addReader(reader);
             logger.info("Add reader={}", reader.toString());
         }

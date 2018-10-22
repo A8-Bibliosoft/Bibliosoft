@@ -1,8 +1,6 @@
 package com.lib.bibliosoft.DAO;
 
 import com.lib.bibliosoft.entity.Reader;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -16,7 +14,7 @@ public interface IReaderDao {
 //  原生SQL实现更新方法接口
 //  @Query(value = "update reader set reader_name=?1 where reader_id=?2 ", nativeQuery = true)
 //  @Modifying
-    void updateReader(Integer id, String sex, String readerName, String phone, String readerId, String email, String status);
+    void updateReader(Integer id, String sex, String readerName, String phone, String readerId, String email, String status, String password);
 
     List<Reader> findAll();
     Reader findById(Integer id);

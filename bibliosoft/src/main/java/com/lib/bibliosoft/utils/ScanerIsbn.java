@@ -122,6 +122,7 @@ public class ScanerIsbn {
             books.add(book);
         }
 
+        //booksort表插入
         List<BookSort> bs = scanerIsbn.bookSortRepository.findByBookIsbn(isbn);
         if(bs.size() != 0){
             logger.info("BookSort表已有ISBN编号为==={}的书籍，故不插入", isbn);
