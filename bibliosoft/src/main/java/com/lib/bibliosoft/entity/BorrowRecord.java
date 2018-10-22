@@ -25,6 +25,7 @@ public class BorrowRecord {
 
     private  Integer lastday;
 
+    @Column(nullable=false,columnDefinition="INT default 0")
     private Integer debt;
 
     @JoinColumn(name = "book_id",referencedColumnName="book_id")

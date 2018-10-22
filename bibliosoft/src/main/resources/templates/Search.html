@@ -65,7 +65,7 @@
 					<span class="icon-bar"></span>
 				</button>
 				<h1>
-					<a class="navbar-brand" href="goHomePage" th:text="#{homepage.libraryname}">Library图书馆</a>
+					<a class="navbar-brand" href="goHomePage" ><img th:src="@{/static/huimages/biglogo.png}"/></a>
 				</h1>
 				
 			</div>
@@ -95,22 +95,22 @@
         <h1 style="text-align: center;margin-top: 150px;color: white;" th:text="#{search.title}">书籍查找</h1>
         <form method="post" action="search" class="form-horizontal" role="form" style="margin-top: 250px;margin-left: 50px;">
             <div class="form-group">
-                <select name="find_code" id="find_code" class="col-md-2" style="height: 35px;border-radius: 5px">
-                    <option value="0" selected="" th:text="#{search.bookname}">书名</option>
-                    <option value="1" th:text="#{search.author}">著者</option>
-                    <option value="2" th:text="#{search.isbn}">ISBN</option>
+                <select name="find_code" id="find_code" class="col-md-2" style="height: 50px;font-size: 18px;border-radius: 5px">
+                    <option value="0" selected="" th:text="#{search.bookname}" style="height: 30px;font-size: 18px">书名</option>
+                    <option value="1" th:text="#{search.author}" style="height: 30px;font-size: 18px">著者</option>
+                    <option value="2" th:text="#{search.isbn}" style="height: 30px;font-size: 18px">ISBN</option>
                 </select>
                 <input name="find_type" type="text" id="find_type" value="" hidden="hidden" />
                 <div class="col-md-8" style="padding: 0;margin: 0;">
-                    <input class="form-control" name="find_info" type="text">
+                    <input class="form-control" name="find_info" type="text" style="height:50px; font-size: 20px">
                 </div>
-                <input type="submit" class="btn btn-primary col-md-2" th:value="#{search.submit}" onclick="submitfind()">
+                <input type="submit" class="btn btn-primary col-md-2" th:value="#{search.submit}" style="height: 50px;font-size: 20px" onclick="submitfind()">
             </div>
         </form>
 	</div>
 </div>
 <!-- //header -->
-
+<br><br><br>
 <!-- Search -->
 <div class="container">
 	<div class="col-md-4">
@@ -189,68 +189,68 @@
 <!-- //Search -->
 
 <!-- //twitter-content -->
-<div class="newsletter all_pad wow fadeInUp animated" data-wow-delay=".5s">
+<!--<div class="newsletter all_pad wow fadeInUp animated" data-wow-delay=".5s">-->
+	<!--<div class="container">-->
+		<!--<h3 class="title">NEWSLETTER</h3>-->
+			<!--<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit</p>-->
+			<!--<div class="sub">-->
+				<!--<form action="#" method="post">-->
+					<!--<input type="text" name="Name" placeholder="Name" required="">-->
+					<!--<input type="email" name="Email" placeholder="Email" required="">-->
+					<!--<input type="submit" value="SUBSCRIBE NOW" >-->
+				<!--</form>-->
+			<!--</div>-->
+	<!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash; map &ndash;&gt;-->
+<!--<div id="contact" class="map">-->
+	<!--<iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d2482.432383990807!2d0.028213999961443994!3d51.52362882484525!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1423469959819" style="border:0"></iframe>-->
+	<!--<div class="map-pos wow zoomIn" data-wow-duration="1.5s" data-wow-delay="0.1s">-->
+		<!--<h3>ADDRESS</h3>-->
+		<!--<p>1234k Avenue, 4th block</p>-->
+		<!--<p>Newyork City.</p>-->
+		<!--<p>Call : 123 456 7890</p>-->
+		<!--<p><a href="mailto:info@example.com">info@example.com</a></p>-->
+	<!--</div>-->
+<!--</div>-->
+<!--<div class="contact-form">-->
+	<!--<div class="container">-->
+		<!--<form action="#" method="post">-->
+			<!--<div class="col-md-6 contact-left">-->
+				<!--<input type="text" value="Name" name="Name" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Name';}" required="">-->
+				<!--<input type="email address" value="Email" name="Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email';}" required="">-->
+				<!--<input type="text" value="Mobile Number" name="Mobile Number" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Mobile Number';}" required="">-->
+			<!--</div>-->
+			<!--<div class="col-md-6 contact-right">-->
+				<!--<textarea name="Message..." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Message...';}" required>Message...</textarea>-->
+				<!--<input type="submit" value="Submit" >-->
+			<!--</div>-->
+			<!--<div class="clearfix"></div>-->
+		<!--</form>-->
+	<!--</div>-->
+<!--</div>-->
+<!--<div class="footer text-center">-->
+	<!--<div class="container">-->
+		<!--<ul class="foo-nav">-->
+			<!--<li><a class="scroll" href="#home">HOME</a></li>-->
+			<!--<li><a class="scroll" href="#about">ABOUT</a></li>-->
+			<!--<li><a class="scroll" href="#ban-bot">SERVICES</a></li>-->
+			<!--<li><a class="scroll" href="#gallery">GALLERY</a></li>-->
+			<!--<li><a class="scroll" href="#team">TEAM</a></li>-->
+			<!--<li><a class="scroll" href="#contact">CONTACT</a></li>-->
+		<!--</ul>-->
+		<!--<p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>+123 456 7890</p>-->
+		<!--<ul class="social-one">-->
+			<!--<li><a class="fb1" href="#"></a></li>-->
+			<!--<li><a class="fb2" href="#"></a></li>-->
+			<!--<li><a class="fb3" href="#"></a></li>-->
+			<!--<li><a class="fb4" href="#"></a></li>-->
+		<!--</ul>-->
+	<!--</div>-->
+<!--</div>-->
+<div class="copy-right" style="margin-top: 250px;">
 	<div class="container">
-		<h3 class="title">NEWSLETTER</h3>
-			<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit</p>
-			<div class="sub">
-				<form action="#" method="post">
-					<input type="text" name="Name" placeholder="Name" required="">
-					<input type="email" name="Email" placeholder="Email" required="">
-					<input type="submit" value="SUBSCRIBE NOW" >
-				</form>
-			</div>
-	</div>
-</div>
-<!-- map -->
-<div id="contact" class="map">
-	<iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d2482.432383990807!2d0.028213999961443994!3d51.52362882484525!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1423469959819" style="border:0"></iframe>
-	<div class="map-pos wow zoomIn" data-wow-duration="1.5s" data-wow-delay="0.1s">
-		<h3>ADDRESS</h3>
-		<p>1234k Avenue, 4th block</p>
-		<p>Newyork City.</p>
-		<p>Call : 123 456 7890</p>
-		<p><a href="mailto:info@example.com">info@example.com</a></p>
-	</div>
-</div>
-<div class="contact-form">
-	<div class="container">
-		<form action="#" method="post">
-			<div class="col-md-6 contact-left">
-				<input type="text" value="Name" name="Name" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Name';}" required="">
-				<input type="email address" value="Email" name="Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email';}" required="">
-				<input type="text" value="Mobile Number" name="Mobile Number" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Mobile Number';}" required="">
-			</div>
-			<div class="col-md-6 contact-right">
-				<textarea name="Message..." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Message...';}" required>Message...</textarea>
-				<input type="submit" value="Submit" >
-			</div>
-			<div class="clearfix"></div>
-		</form>
-	</div>
-</div>
-<div class="footer text-center">
-	<div class="container">
-		<ul class="foo-nav">
-			<li><a class="scroll" href="#home">HOME</a></li>
-			<li><a class="scroll" href="#about">ABOUT</a></li>
-			<li><a class="scroll" href="#ban-bot">SERVICES</a></li>
-			<li><a class="scroll" href="#gallery">GALLERY</a></li>
-			<li><a class="scroll" href="#team">TEAM</a></li>
-			<li><a class="scroll" href="#contact">CONTACT</a></li>
-		</ul>
-		<p><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>+123 456 7890</p>
-		<ul class="social-one">
-			<li><a class="fb1" href="#"></a></li>
-			<li><a class="fb2" href="#"></a></li>
-			<li><a class="fb3" href="#"></a></li>
-			<li><a class="fb4" href="#"></a></li>
-		</ul>
-	</div>
-</div>
-<div class="copy-right">
-	<div class="container">
-		<p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+		<p th:text="#{copyright}"></p>
 	</div>
 </div>
 <!-- //map -->

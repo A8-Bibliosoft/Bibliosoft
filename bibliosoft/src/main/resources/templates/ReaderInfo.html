@@ -23,35 +23,35 @@
 <nav class="navbar" role="navigation">
     <div class="container-fluid">
         <ul class="nav navbar-nav">
-            <li class="active"><a href="goHomePage">首页</a></li>
-            <li><a href="#">所有藏书</a></li>
+            <li class="active"><a href="goHomePage" th:text="#{bookdetail.homepage}">首页</a></li>
+            <li><a href="#" th:text="#{bookdetail.allbooks}">所有藏书</a></li>
         </ul>
         <ul class="nav navbar-nav" style="float: right;">
-            <li><a href="#">我的消息</a></li>
+            <li><a href="#" th:text="#{readerinfo.mymessage}">我的消息</a></li>
             <li><a href="goReaderInfo"><span th:text="${session.loginname}"></span></a></li>
-            <li><a href="goOut">退出登录</a></li>
+            <li><a href="goOut" th:text="#{homepage.logout}">退出登录</a></li>
         </ul>
     </div>
 </nav>
 <div class="container">
     <div class="col-md-12">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#info-1" data-toggle="tab">我的信息</a></li>
-            <li><a href="#info-2" data-toggle="tab">我的借阅</a></li>
-            <li><a href="#info-3" data-toggle="tab">我的预约</a></li>
-            <li><a href="#info-4" data-toggle="tab">借阅历史</a></li>
+            <li class="active"><a href="#info-1" data-toggle="tab" th:text="#{readerinfo.myinfo}">我的信息</a></li>
+            <li><a href="#info-2" data-toggle="tab" th:text="#{readerinfo.myborr}">我的借阅</a></li>
+            <li><a href="#info-3" data-toggle="tab" th:text="#{readerinfo.myorder}">我的预约</a></li>
+            <li><a href="#info-4" data-toggle="tab" th:text="#{readerinfo.history}">借阅历史</a></li>
         </ul>
         <div  class="tab-content" >
             <div class="tab-pane fade in active" id="info-1">
                 <br>
                 <form class="form-horizontal" role="form" action="changeReaderInfo" enctype="multipart/form-data" method="post">
                     <div class="col-md-8 form-group">
-                        <label class="col-md-3 control-label">姓名</label>
+                        <label class="col-md-3 control-label" th:text="#{readerinfo.name}">姓名</label>
                         <div class="col-md-7">
                             <input class="form-control" id="name" name="readerName" type="text" th:value="${reader.readerName}">
                         </div>
                         <br><br><br>
-                        <label class="col-md-3 control-label">性别</label>
+                        <label class="col-md-3 control-label" th:text="#{readerinfo.sex}">性别</label>
                         <div class="col-md-7">
                             <select name="choose-sex" class="selectpicker show-tick form-control"  data-live-search="false" id="choose-sex">
                                 <option value="0" >secret</option>
@@ -61,7 +61,7 @@
                         </div>
                         <input   name="sex" type="text" id="sex" value="" hidden>
                         <br><br><br>
-                        <label class="col-md-3 control-label">罚金</label>
+                        <label class="col-md-3 control-label" th:text="#{readerinfo.fine}">罚金</label>
                         <div class="col-md-7">
                             <input class="form-control" id="alldebt" name="alldebt" type="text" th:value="${reader.alldebt}" readonly="readonly">
                         </div>
@@ -78,42 +78,42 @@
                     </div>
 
                     <div class="form-group has-success">
-                        <label class="col-md-2 control-label">电话</label>
+                        <label class="col-md-2 control-label" th:text="#{readerinfo.tel}">电话</label>
                         <div class="col-md-8">
                             <input type="text" name="phone" class="form-control" id="phonenumber" th:value="${reader.phone}" readonly="readonly">
                         </div>
                     </div>
 
                     <div class="form-group has-success">
-                        <label class="col-md-2 control-label">邮箱</label>
+                        <label class="col-md-2 control-label" th:text="#{readerinfo.mail}">邮箱</label>
                         <div class="col-md-8">
                             <input type="text" class="form-control" id="email" name="eamil" th:value="${reader.email}" readonly="readonly">
                         </div>
-                        <button class="col-md-2 btn btn-warning" type="button" onclick="ChangeEmail()">更改绑定</button>
+                        <button class="col-md-2 btn btn-warning" type="button" onclick="ChangeEmail()" th:text="#{readerinfo.changebinding}">更改绑定</button>
                     </div>
 
                     <div class="form-group has-success">
-                        <label class="col-md-2 control-label">密码</label>
+                        <label class="col-md-2 control-label" th:text="#{readerinfo.password}">密码</label>
                         <div class="col-md-8">
                             <input type="password" name="password" class="form-control"  th:value="${reader.password}" readonly="readonly">
                         </div>
-                        <button class="col-md-2 btn btn-warning" type="button" onclick="GoChangePassword()">更改密码</button>
+                        <button class="col-md-2 btn btn-warning" type="button" onclick="GoChangePassword()" th:text="#{readerinfo.changepwd}">更改密码</button>
                     </div>
 
                     <div class="form-group has-success" hidden="hidden" id="repassword">
-                        <label class="col-md-2 control-label">原密码</label>
+                        <label class="col-md-2 control-label" th:text="#{readerinfo.oldpwd}">原密码</label>
                         <div class="col-md-8">
                             <input type="password" name="oldpassword" id="oldpassword" class="form-control">
                         </div>
                         <br><br>
-                        <label class="col-md-2 control-label">新密码</label>
+                        <label class="col-md-2 control-label" th:text="#{readerinfo.newpwd}">新密码</label>
                         <div class="col-md-8">
                             <input type="password" name="newpassword" id="newpassword" class="form-control">
                         </div>
-                        <button class="col-md-2 btn btn-primary" type="button" onclick="ChangePassword()">确认更改</button>
+                        <button class="col-md-2 btn btn-primary" type="button" onclick="ChangePassword()" th:text="#{readerinfo.confirm}">确认更改</button>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" style="float: right" onclick="Change()">保存修改</button>
+                    <button type="submit" class="btn btn-primary" style="float: right" onclick="Change()" th:text="#{readerinfo.save}">保存修改</button>
                 </form>
             </div>
             <div class="tab-pane fade" id="info-2">
@@ -123,10 +123,10 @@
                             <img th:src="@{${borrow.book.bookImg}}" alt="">
                         </a>
                         <div>
-                            <h4 th:text="${borrow.book.bookName}"></h4>
-                            <h4><span>借书时间:</span><span th:text="${borrow.borrowtime}"></span></h4>
-                            <h4><span>剩余还书天数:</span><span th:text="${borrow.lastday}"></span></h4>
-                            <h4><span>该书籍欠费:</span><span th:text="${borrow.debt}"></span></h4>
+                            <h4><span th:text="#{readerinfo.bookname}">书籍名称:</span><span th:text="${borrow.book.bookName}"></span></h4>
+                            <h4><span th:text="#{readerinfo.borrdate}">借书时间:</span><span th:text="${borrow.borrowtime}"></span></h4>
+                            <h4><span th:text="#{readerinfo.remaining}">剩余还书天数:</span><span th:text="${borrow.lastday}"></span></h4>
+                            <h4><span th:text="#{readerinfo.charge}">该书籍欠费:</span><span th:text="${borrow.debt}"></span></h4>
                         </div>
                     </li>
                 </ul>
@@ -139,8 +139,8 @@
                         </a>
                         <div>
                             <br><br>
-                            <h4 th:text="${appointment.book.bookName}"></h4>
-                            <h4><span>书籍位置:</span><span th:text="${appointment.book.getBookPosition().getPlace()}"></span></h4>
+                            <h4><span th:text="#{readerinfo.bookname}">书籍名称:</span><span th:text="${appointment.book.bookName}"></span></h4>
+                            <h4><span th:text="#{bookdetail.location}">书籍位置:</span><span th:text="${appointment.book.getBookPosition().getPlace()}"></span></h4>
                         </div>
                     </li>
                 </ul>
@@ -152,10 +152,10 @@
                             <img th:src="${history.book.bookImg}" alt="" >
                         </a>
                         <div>
-                            <h4 th:text="${history.book.bookName}"></h4>
-                            <h4><span>借书时间:</span><span th:text="${history.borrowtime}"></span></h4>
-                            <h4><span>还书时间:</span><span th:text="${history.returntime}"></span></h4>
-                            <h4><span>该书籍曾欠费:</span><span th:text="${history.debt}"></span></h4>
+                            <h4><span th:text="#{readerinfo.bookname}">书籍名称:</span><span th:text="${history.book.bookName}"></span></h4>
+                            <h4><span th:text="#{readerinfo.borrdate}">借书时间:</span><span th:text="${history.borrowtime}"></span></h4>
+                            <h4><span th:text="#{readerinfo.returndate}">还书时间:</span><span th:text="${history.returntime}"></span></h4>
+                            <h4><span th:text="#{readerinfo.charge}">该书籍曾欠费:</span><span th:text="${history.debt}"></span></h4>
                         </div>
                     </li>
                 </ul>
@@ -211,6 +211,10 @@
     function ChangePassword() {
         var oldpassword=$('#oldpassword').val();
         var newpassword=$('#newpassword').val();
+        if(oldpassword==null||oldpassword==""||newpassword==null||newpassword==""){
+            alert("请输入正确的密码！");
+            return false;
+        }
         var code="oldpassword="+oldpassword+"&&newpassword="+newpassword;
         $.ajax({
             type: "POST",

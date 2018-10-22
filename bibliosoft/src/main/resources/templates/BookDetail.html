@@ -40,7 +40,7 @@
         <div class="col-md-12">
             <img th:src="${book.bookImg}" alt="书籍封面" style="width: 45%;height: 600px;" class="col-md-8">
             <div class="col-md-6">
-                <h2 style="text-align: center">书籍简介</h2>
+                <h2 style="text-align: center" th:text="#{bookdetail.description}">书籍简介</h2>
                 <p th:text="'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+${book.bookDesc}" style="font-size: 1.5em; padding: 5px;line-height: 40px;"></p>
             </div>
         </div>
@@ -83,6 +83,12 @@
                         alert("预约失败！书籍库存不足！");
                     } else if ("unlogin" === data) {
                         window.location.href="goLogin";
+                    } else if("lockreader" === data){
+                        alert("预约失败！您有借阅书籍已经超期！");
+                    } else if("maxborrow" === data){
+                        alert("预约失败！您最多借阅(预约)3本图书！");
+                    }else if("error" === data){
+                        alert("预约失败！未知错误！");
                     }
                 },
                 fail: function (data) {
