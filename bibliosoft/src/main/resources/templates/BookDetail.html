@@ -83,6 +83,12 @@
                         alert("预约失败！书籍库存不足！");
                     } else if ("unlogin" === data) {
                         window.location.href="goLogin";
+                    } else if("lockreader" === data){
+                        alert("预约失败！您有借阅书籍已经超期！");
+                    } else if("maxborrow" === data){
+                        alert("预约失败！您最多借阅(预约)3本图书！");
+                    }else if("error" === data){
+                        alert("预约失败！未知错误！");
                     }
                 },
                 fail: function (data) {
