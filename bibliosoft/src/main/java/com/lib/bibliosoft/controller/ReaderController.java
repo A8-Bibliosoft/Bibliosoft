@@ -9,6 +9,7 @@ import com.lib.bibliosoft.service.impl.BookSortService;
 import com.lib.bibliosoft.utils.FileNameUtil;
 import com.lib.bibliosoft.utils.FileUtil;
 import com.lib.bibliosoft.utils.VerifyCode;
+import org.aspectj.weaver.ast.Not;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,8 @@ public class ReaderController {
     private FeedbackRepository feedbackRepository;
     @Autowired
     private BookSortService bookSortService;
+    @Autowired
+    private BulletinRepository bulletinRepository;
     /**
      * logger
      */
@@ -354,11 +357,13 @@ public class ReaderController {
 
             //删除原图片
             Reader reader=readerRepository.findReaderByReaderId(readerId);
-            if(reader.getImgsrc()!=null){
+            if(reader.getImgsrc()!=null&&!reader.getImgsrc().equals("")){
                 String oldimgrc=reader.getImgsrc().substring(21);
                 //logger.info(upload.getAbsolutePath()+"\\"+oldimgrc);
-                File oldImg=new File(upload.getAbsolutePath()+"\\"+oldimgrc);
-                if(oldImg.delete()){logger.info("删除原图片成功");}else{logger.info("删除原图片失败");}
+                if(!oldimgrc.equals("defaultimg.jpg")){
+                    File oldImg=new File(upload.getAbsolutePath()+"\\"+oldimgrc);
+                    if(oldImg.delete()){logger.info("删除原图片成功");}else{logger.info("删除原图片失败");}
+                }
             }
             // 上传成功或者失败的提示
             String newfilename=FileNameUtil.getFileName(imgFile.getOriginalFilename());
@@ -407,23 +412,32 @@ public class ReaderController {
     }
 
     @RequestMapping("/goHomePage")
-    public String goHomePage() throws Exception{
-        //logger.info(bookSortService.PageBook(0,5,1).getContent().toString());
+    public String goHomePage(Model model) throws Exception{
+        if(bulletinRepository.findHMNotices().size()>0&&bookSortRepository.findHMBook().size()>0){
+            List<Notices> noticesList=bulletinRepository.findHMNotices();
+            List<BookSort> bookSortList=bookSortRepository.findHMBook();
+            model.addAttribute("noticelist",noticesList);
+            model.addAttribute("booksortlist",bookSortList);
+        }
         return "HomePage";
     }
 
     @RequestMapping("/goSearch")
     public String goSearch(Model model,Integer booktypeid,Integer currpage) throws Exception{
-        if(booktypeid!=null){
+        if(booktypeid!=null&&currpage!=0){
             Integer totalPages =  bookSortService.PageBook(0,pagesize,booktypeid).getTotalPages();
             model.addAttribute("totalpages", totalPages);
             //获得每页的数据
             if(currpage == 1)
                 currpage = 0;
-            if(currpage == totalPages)
+            if(currpage == totalPages&&currpage>0)
                 currpage = totalPages-1;
             List<BookSort> bookSortList=bookSortService.PageBook(currpage,pagesize,booktypeid).getContent();
-            model.addAttribute("currpage",currpage+1);
+            if(totalPages>1){
+                model.addAttribute("currpage",currpage+1);
+            }else{
+                model.addAttribute("currpage",0);
+            }
             model.addAttribute("booklist",bookSortList);
             model.addAttribute("booktypeid",booktypeid);
             model.addAttribute("booktypelist",bookTypeRepository.findAll());

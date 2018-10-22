@@ -82,14 +82,15 @@
 				</nav>
 			</div><!-- /navbar-collapse -->
 		</nav>
-        <div id="readeronline" style="float: right" >
-            <a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}">登录</a>
-			<span><a style="color:white;cursor: pointer" th:href="@{/goSearch(l='zh_CN')}">中文</a>&nbsp;&nbsp;<a th:href="@{/goSearch(l='en_US')}" style="color:white;cursor: pointer;">english</a></span>
+		<div id="readeronline" style="float: right" >
+			<a th:if="${session.loginname} eq null" href="/lib_login">Librarian</a>
+			<a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}">登录</a>
+			&nbsp;
 			<div th:if="${session.loginname} ne null">
-                <a href="goReaderInfo"><span th:text="${session.loginname}"></span></a>
-                <a href="goOut" th:text="#{homepage.logout}">退出登录</a>
-            </div>
-        </div>
+				<a href="goReaderInfo"><span th:text="${session.loginname}"></span></a>
+				<a href="goOut" th:text="#{homepage.logout}">退出登录</a>
+			</div>
+		</div>
 		<!-- 搜索框-->
         <h1 style="text-align: center;margin-top: 150px;color: white;" th:text="#{search.title}">书籍查找</h1>
         <form method="post" action="search" class="form-horizontal" role="form" style="margin-top: 250px;margin-left: 50px;">

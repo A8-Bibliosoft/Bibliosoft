@@ -78,19 +78,16 @@
 							</div><!-- /navbar-collapse -->
 		</nav>
 		<div id="readeronline" style="float: right" >
-			<a href="/lib_login">Librarian</a>
-			<a href="/goAdminLogin">Admin</a>
-			<a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}"></a>
-			<span><a style="color:white;cursor: pointer" th:href="@{/goHomePage(l='zh_CN')}">中文</a>&nbsp;&nbsp;<a th:href="@{/goHomePage(l='en_US')}" style="color:white;cursor: pointer;">english</a></span>
-			<a href="/goBorrowBook">BorrowBook</a>
-            <a href="/goReturnBook">BorrowBook</a>
+			<a th:if="${session.loginname} eq null" href="/lib_login">Librarian</a>
 			<a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}">登录</a>
+            &nbsp;
 			<div th:if="${session.loginname} ne null">
                 <a href="goReaderInfo"><span th:text="${session.loginname}"></span></a>
 				<a href="goOut" th:text="#{homepage.logout}">退出登录</a>
-
 			</div>
-        </div>
+            &nbsp;
+			<span><a style="color:white;cursor: pointer" th:href="@{/goHomePage(l='zh_CN')}">中文</a>&nbsp;&nbsp;<a th:href="@{/goHomePage(l='en_US')}" style="color:white;cursor: pointer;">english</a></span>
+		</div>
 
 		<div class="banner-info wow bounceInDown" data-wow-duration="1s" data-wow-delay="0s">
 			<script th:src="@{/static/hujs/responsiveslides.min.js}"></script>
@@ -115,20 +112,10 @@
 			</script>
 			<div  class="callbacks_container">
 				<ul class="rslides" id="slider3">
-					<li>
+					<li th:each="notice:${noticelist}">
 						<div class="banner-text">
-							<h3>书是人类进步的阶梯</h3>
-							<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem 
-							accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae
-							ab illo.</p>
-						</div>
-					</li>
-					<li>
-						<div class="banner-text">
-							<h3>书中自有黄金屋</h3>
-							<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem 
-							accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae
-							ab illo.</p>
+							<h3 th:text="${notice.getTitle()}"></h3>
+							<p th:text="${notice.getContent()}"></p>
 						</div>
 					</li>
 				</ul>
@@ -173,29 +160,9 @@
 		</script>
 		<div class="callbacks_container">
 				<ul class="rslides" id="slider4">
-					<li>
-						<h4>Java基础知识</h4>
-						<p>At vero eos et accusamus et iusto odio dignissimos ducimus
-							qui blanditiis vero eos et accusamus et iusto dignissimos ducimus
-							qui blanditiis.</p>
-					</li>
-					<li>
-						<h4>海的女儿</h4>
-						<p>At vero eos et accusamus et iusto odio dignissimos ducimus
-							qui blanditiis vero eos et accusamus et iusto dignissimos ducimus
-							qui blanditiis.</p>
-					</li>
-					<li>
-						<h4>中国上下五千年</h4>
-						<p>At vero eos et accusamus et iusto odio dignissimos ducimus
-							qui blanditiis vero eos et accusamus et iusto dignissimos ducimus
-							qui blanditiis.</p>
-					</li>
-					<li>
-						<h4>时间简史</h4>
-						<p>At vero eos et accusamus et iusto odio dignissimos ducimus
-							qui blanditiis vero eos et accusamus et iusto dignissimos ducimus
-							qui blanditiis.</p>
+					<li th:each="booksort:${booksortlist}">
+						<h4 th:text="${booksort.getOneBook().getBookName()}"></h4>
+						<p th:text="${booksort.getOneBook().getHMBookDesc()}"></p>
 					</li>
 				</ul>
 		</div>
