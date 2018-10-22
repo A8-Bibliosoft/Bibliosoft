@@ -35,5 +35,10 @@ public interface BookSortRepository extends JpaRepository<BookSort, Integer>,Jpa
 
     List<BookSort> findByTypeId(Integer typeId);
 
+    //随机选择4条数据放到首页
+    @Transactional
+    @Query(value = "select * from booksort ORDER BY book_isbn LIMIT 4  ",nativeQuery = true)
+    List<BookSort> findHMBook();
+
 }
 

@@ -327,7 +327,7 @@ public class BookController {
      * @return
      */
     @PostMapping("/edit_book")
-    public String book_edit(String bookId, String bookName, String bookPosition,
+    public String book_edit(String bookId, String bookName, Integer bookPosition,
                              String isbn, String price, String author,
                              @RequestParam("bookstatus") String status){
         float fprice = Float.parseFloat(price);
@@ -386,13 +386,14 @@ public class BookController {
         BookPosition bookPosition = bookPositionRepository.findById(bookposition).orElse(null);
         bookPosition.getBooks().add(book);
         book.setBookPosition(bookPosition);
+
         book.setBookName(booktitle);
         float Fbookprice = Float.parseFloat(bookprice);
         book.setBookPrice(Fbookprice);
         book.setBookIsbn(bookisbn);
 
         Integer Ibookid = Integer.parseInt(bookid);
-        if (bookRepository.findByBookId(Ibookid)!= null)
+        if (bookRepository.findByBookId(Ibookid) == null)
             book.setBookId(Ibookid);
         else{
             //bookid不能重复，若已存在则返回错误信息！
@@ -407,9 +408,22 @@ public class BookController {
         book.setRegisterTime(date);
         book.setBookDesc(booksummary);
 
+        // 要上传的目标文件存放路径为 static/bookimages/
+        File p = null;
+        try {
+            p = new File(ResourceUtils.getURL("classpath:").getPath());
+            //logger.info(p.getAbsolutePath());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        File upload = new File(p.getAbsolutePath(),"static/bookimages/");
+        //logger.info(upload.getAbsolutePath());
+        if(!upload.exists())
+            upload.mkdirs();
+
         /*获得新的文件名*/
         String bookImg = FileNameUtil.getFileName(bookcover.getOriginalFilename());
-        book.setBookImg(bookImg);
+        book.setBookImg(upload.getAbsolutePath()+'/'+bookImg);
 
         if(bookSortRepository.findByBookIsbn(bookisbn) != null){
             logger.info("已有ISBN编号为==={}的书籍，故不插入", bookisbn);
@@ -424,28 +438,31 @@ public class BookController {
             bookSort.getBookList().add(book);
             book.setBookSort(bookSort);
         }
-
-        //保存
+        //保存到book表
         bookService.addBook(book);
+        //插入book表中的sort关联的isbn号
+        bookRepository.insertBookIsbn(bookisbn, Ibookid);
 
-        // 要上传的目标文件存放路径为 static/bookimages/
-        File p = null;
-        try {
-            p = new File(ResourceUtils.getURL("classpath:").getPath());
-            //logger.info(p.getAbsolutePath());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        //booksort表插入数据
+        List<BookSort> bs = bookSortRepository.findByBookIsbn(bookisbn);
+        if(bs.size() != 0){
+            logger.info("BookSort表已有ISBN编号为==={}的书籍，故不插入", bookisbn);
+        }else{
+            //书籍分类表
+            BookSort bookSort = new BookSort();
+            bookSort.setBookAuthor(bookauthor);
+            bookSort.setBookIsbn(bookisbn);
+            bookSort.setBookName(booktitle);
+            bookSort.setTypeId(Integer.parseInt(typeid));
+            bookSortRepository.save(bookSort);
+            bookSortRepository.insertTypeId(Integer.parseInt(typeid),bookisbn);
         }
-        File upload = new File(p.getAbsolutePath(),"static/bookimages/");
-        //logger.info(upload.getAbsolutePath());
-        if(!upload.exists())
-            upload.mkdirs();
 
         /*这是获取项目根目录*/
 //        String ph = ClassUtils.getDefaultClassLoader().getResource("").getPath();
 //        logger.info("path的绝对路径 = {}", ph);
 
-        if (FileUtil.upload(bookcover, upload.getAbsolutePath(), bookcover.getOriginalFilename())){
+        if (FileUtil.upload2(bookcover, upload.getAbsolutePath(), bookImg)){
             // 上传成功，给出页面提示
             msg = ResultEnum.ADD_BOOK_SUCCESS.getMsg();
         }else {
@@ -468,10 +485,10 @@ public class BookController {
      * @date 6:24 PM. 10/7/2018
      */
     @GetMapping("/book_show/{id}")
-    public String show_book(@PathVariable("id") String bookId, Model model){
-        Integer bookid = Integer.parseInt(bookId);
-        Book book = bookService.getBookById(bookid);
-        String sstatus = bookService.findsstatusByid(bookid);
+    public String show_book(@PathVariable("id") Integer bookId, Model model){
+        //Integer bookid = Integer.parseInt(bookId);
+        Book book = bookService.getBookById(bookId);
+        String sstatus = bookService.findsstatusByid(bookId);
         logger.info("书籍状态 === {}", sstatus);
         model.addAttribute("book", book);
         model.addAttribute("sstatus", sstatus);
@@ -502,8 +519,8 @@ public class BookController {
         try {
             for (Book b : books){
                 bookService.addBook(b);
-                logger.info(isbn);
-                logger.info(""+b.getBookId());
+                //logger.info(isbn);
+                //logger.info(""+b.getBookId());
                 bookRepository.insertBookIsbn(isbn,b.getBookId());
                 //生成条形码
                 BarcodeUtil.generateFile(String.valueOf(b.getBookId()));

@@ -27,7 +27,7 @@ public class FileUtil {
      */
     public static boolean upload(MultipartFile file, String path, String fileName){
 
-        // 拼接上生成的新的文件名
+        // 拼接上生成的新的文件名，传进来的是文件原始名字
         String realPath = path + "/" + FileNameUtil.getFileName(fileName);
 
         //使用原文件名
@@ -58,7 +58,7 @@ public class FileUtil {
     }
 
     public static boolean upload2(MultipartFile file, String path, String fileName){
-        //使用原文件名
+        //使用传进来的文件名，即已经经过uuid转化过的文件名，可以保持数据库和文件名一致。
         String realPath = path + "/" + fileName;
 
         File dest = new File(realPath);

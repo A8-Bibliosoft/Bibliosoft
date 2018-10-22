@@ -8,16 +8,12 @@ import com.lib.bibliosoft.service.IReaderService;
 import com.lib.bibliosoft.service.impl.BookSortService;
 import com.lib.bibliosoft.utils.FileNameUtil;
 import com.lib.bibliosoft.utils.FileUtil;
-import com.lib.bibliosoft.utils.SendEmail;
 import com.lib.bibliosoft.utils.VerifyCode;
+import org.aspectj.weaver.ast.Not;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,17 +23,16 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: 毛文杰
@@ -70,6 +65,8 @@ public class ReaderController {
     private FeedbackRepository feedbackRepository;
     @Autowired
     private BookSortService bookSortService;
+    @Autowired
+    private BulletinRepository bulletinRepository;
     /**
      * logger
      */
@@ -98,12 +95,12 @@ public class ReaderController {
         //获得每页的数据
         List<Reader> readerList = iReaderService.getPage(currpage, pagesize).getContent();
 
-        logger.info("currpage={}",currpage);
+        //logger.info("currpage={}",currpage);
 //        List<Reader> list = new ArrayList<>();
 //        while(readerIterator.hasNext()) {
 //            list.add(readerIterator.next());
 //        }
-        logger.info("list.size = {}",readerList.size());
+        //logger.info("list.size = {}",readerList.size());
         //logger.info("list[0]={}", list.get(0));
         //放在model
         model.addAttribute("readers", readerList);
@@ -157,11 +154,12 @@ public class ReaderController {
     @PostMapping("/add_reader")
     public String reader_add(String readerId,String readerName,
                              @RequestParam("form-field-radio") String sex,
-                             String phone, String email,
+                             String phone, String email, String password,
                              @RequestParam("form-field-radio1") String status, String flag){
         if (flag.equals("edit")){
             Integer id = readerRepository.findReaderByReaderId(readerId).getId();
-            iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status);
+            //id是主键
+            iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status, password);
         }else if(flag.equals("add")){
             Reader reader = new Reader();
             reader.setSex(sex);
@@ -170,6 +168,7 @@ public class ReaderController {
             reader.setReaderId(readerId);
             reader.setEmail(email);
             reader.setStatus(status);
+            reader.setPassword(password);
             iReaderDao.addReader(reader);
             logger.info("Add reader={}", reader.toString());
         }
@@ -358,11 +357,13 @@ public class ReaderController {
 
             //删除原图片
             Reader reader=readerRepository.findReaderByReaderId(readerId);
-            if(reader.getImgsrc()!=null){
+            if(reader.getImgsrc()!=null&&!reader.getImgsrc().equals("")){
                 String oldimgrc=reader.getImgsrc().substring(21);
                 //logger.info(upload.getAbsolutePath()+"\\"+oldimgrc);
-                File oldImg=new File(upload.getAbsolutePath()+"\\"+oldimgrc);
-                if(oldImg.delete()){logger.info("删除原图片成功");}else{logger.info("删除原图片失败");}
+                if(!oldimgrc.equals("defaultimg.jpg")){
+                    File oldImg=new File(upload.getAbsolutePath()+"\\"+oldimgrc);
+                    if(oldImg.delete()){logger.info("删除原图片成功");}else{logger.info("删除原图片失败");}
+                }
             }
             // 上传成功或者失败的提示
             String newfilename=FileNameUtil.getFileName(imgFile.getOriginalFilename());
@@ -411,23 +412,32 @@ public class ReaderController {
     }
 
     @RequestMapping("/goHomePage")
-    public String goHomePage() throws Exception{
-        //logger.info(bookSortService.PageBook(0,5,1).getContent().toString());
+    public String goHomePage(Model model) throws Exception{
+        if(bulletinRepository.findHMNotices().size()>0&&bookSortRepository.findHMBook().size()>0){
+            List<Notices> noticesList=bulletinRepository.findHMNotices();
+            List<BookSort> bookSortList=bookSortRepository.findHMBook();
+            model.addAttribute("noticelist",noticesList);
+            model.addAttribute("booksortlist",bookSortList);
+        }
         return "HomePage";
     }
 
     @RequestMapping("/goSearch")
     public String goSearch(Model model,Integer booktypeid,Integer currpage) throws Exception{
-        if(booktypeid!=null){
+        if(booktypeid!=null&&currpage!=0){
             Integer totalPages =  bookSortService.PageBook(0,pagesize,booktypeid).getTotalPages();
             model.addAttribute("totalpages", totalPages);
             //获得每页的数据
             if(currpage == 1)
                 currpage = 0;
-            if(currpage == totalPages)
+            if(currpage == totalPages&&currpage>0)
                 currpage = totalPages-1;
             List<BookSort> bookSortList=bookSortService.PageBook(currpage,pagesize,booktypeid).getContent();
-            model.addAttribute("currpage",currpage+1);
+            if(totalPages>1){
+                model.addAttribute("currpage",currpage+1);
+            }else{
+                model.addAttribute("currpage",0);
+            }
             model.addAttribute("booklist",bookSortList);
             model.addAttribute("booktypeid",booktypeid);
             model.addAttribute("booktypelist",bookTypeRepository.findAll());

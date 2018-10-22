@@ -73,8 +73,8 @@ public class ReaderDAO implements IReaderDao {
      * update reader's info
      */
     @Override
-    public void updateReader(Integer id, String sex, String readerName, String phone, String readerId, String email, String status) {
-        readerRepository.updateReader(id, sex, readerName, phone, readerId, email, status);
+    public void updateReader(Integer id, String sex, String readerName, String phone, String readerId, String email, String status, String password) {
+        readerRepository.updateReader(id, sex, readerName, phone, readerId, email, status, password);
     }
 
     @Override

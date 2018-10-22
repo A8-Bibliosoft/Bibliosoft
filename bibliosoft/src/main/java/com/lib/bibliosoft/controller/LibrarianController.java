@@ -109,9 +109,12 @@ public class LibrarianController {
      */
     @GetMapping("/librarian_info")
     public String info_lib(Model model, HttpSession session){
-        Librarian lib = (Librarian) session.getAttribute("librarian");
-        model.addAttribute("lib", lib);
-        return "librarian_info";
+        if(session.getAttribute("librarian") != null){
+            Librarian lib = (Librarian) session.getAttribute("librarian");
+            model.addAttribute("lib", lib);
+            return "librarian_info";
+        }else
+            return "lib_login";
     }
 
     /**

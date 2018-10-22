@@ -34,13 +34,13 @@
 </nav>
 <div class="container">
     <div class="col-md-12">
-        <ul id="pro-info" class="nav nav-tabs">
+        <ul class="nav nav-tabs">
             <li class="active"><a href="#info-1" data-toggle="tab">我的信息</a></li>
             <li><a href="#info-2" data-toggle="tab">我的借阅</a></li>
             <li><a href="#info-3" data-toggle="tab">我的预约</a></li>
             <li><a href="#info-4" data-toggle="tab">借阅历史</a></li>
         </ul>
-        <div id="pro-info-content" class="tab-content" >
+        <div  class="tab-content" >
             <div class="tab-pane fade in active" id="info-1">
                 <br>
                 <form class="form-horizontal" role="form" action="changeReaderInfo" enctype="multipart/form-data" method="post">
@@ -133,10 +133,14 @@
             <div class="tab-pane fade" id="info-3">
                 <ul class="nav imgsize">
                     <li th:each="appointment:${appointmentlist}">
-                        <a th:href="@{'goBookDetail?bookIsbn='+${appointment.book.bookIsbn}}">
-                            <h4 th:text="${appointment.book.bookName}"></h4>
+                        <a th:href="@{'goBookDetail?bookIsbn='+${appointment.book.bookIsbn}}" style="float: left">
                             <img th:src="@{${appointment.book.bookImg}}" alt="">
                         </a>
+                        <div>
+                            <br><br>
+                            <h4 th:text="${appointment.book.bookName}"></h4>
+                            <h4><span>书籍位置:</span><span th:text="${appointment.book.getBookPosition().getPlace()}"></span></h4>
+                        </div>
                     </li>
                 </ul>
             </div>

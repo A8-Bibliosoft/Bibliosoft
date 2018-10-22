@@ -118,7 +118,7 @@
                     <td th:text="${book.getBookIsbn()}"></td>
                     <td th:text="${book.getBookAuthor()}"></td>
                     <td th:text="${book.getBookPrice()}"></td>
-                    <td th:text="${book.getBookPosition().place}"></td>
+                    <td th:text="${book.getBookPosition().getPlace()}"></td>
                     <td th:text="${book.getRegisterTime()}"></td>
 
                     <td class="td-status">
@@ -127,7 +127,7 @@
                     <td class="td-manage">
                         <!-- th:onclick="'javascript:member_edit('+${book.getBookId()}+','+${book.getBookPosition()}+','+${book.getBookPrice()}+','+${book.getBookName()}+','+${book.getBookAuthor()}+','+${book.getBookIsbn()}+')'"  -->
                         <a title="Edit" href="javascript:;"
-                           th:onclick="'javascript:member_edit('+${book.getBookId()}+','+${book.getBookPrice()}+','+'\''+${book.getBookName()}+'\''+','+'\''+${book.getBookAuthor()}+'\''+','+'\''+${book.getBookIsbn()}+'\''+')'"
+                           th:onclick="'javascript:member_edit('+${book.getBookId()}+','+${book.getBookPosition().id}+','+${book.getBookStatus()}+','+${book.getBookPrice()}+','+'\''+${book.getBookName()}+'\''+','+'\''+${book.getBookAuthor()}+'\''+','+'\''+${book.getBookIsbn()}+'\''+')'"
                            class="btn btn-xs btn-info"> <i class="icon-edit bigger-120"></i>
                         </a>
                         <a title="Delete" href="javascript:;"
@@ -185,7 +185,7 @@
             </div>
         </div>
     </div>
-    <!--添加用户图层-->
+    <!--编辑书籍图层-->
     <div class="add_menber" id="add_menber_style" style="display:none">
         <form action="/edit_book" method="post" id="addbook">
             <ul class=" page-content">
@@ -206,7 +206,7 @@
                     <label class="label_name">Position：</label>
                     <span class="add_name">
                         <!--<input name="bookPosition" type="text" class="text_add" id="book_position"/>-->
-                        <select style="margin-left: 10px;width: 166px;" class="text_add" title="select status" name="bookposition" id="book_position">
+                        <select style="margin-left: 10px;width: 166px;" class="text_add" title="select status" name="bookPosition" id="book_position">
                                 <option th:each="p : ${place}" th:text="${p.place}" th:value="${p.id}"></option>
                         </select>
                     </span>
@@ -233,35 +233,12 @@
                 <li>
                     <label class="label_name">Status：</label>
                     <span class="add_name">
-                        <!--<label th:each="s : ${status}">-->
-                            <!--<input name="form-field-radio1" type="radio" class="ace" th:value="${s.getStatus()}">-->
-                            <!--<span th:text="${s.getDesc()}" class="lbl"></span>-->
-                        <!--</label>-->
                         <select style="margin-left: 10px;width: 166px;" class="text_add" title="select status" name="bookstatus" id="book_status">
                                 <option th:each="s : ${status}" th:text="${s.getDesc()}" th:value="${s.getStatus()}"></option>
                         </select>
-                        <!--<label>-->
-                            <!--<input name="form-field-radio1" type="radio" class="ace" value="1">-->
-                            <!--<span class="lbl">已被借走</span>-->
-                        <!--</label>-->
-                        <!--<label>-->
-                            <!--<input name="form-field-radio1" type="radio" class="ace" value="2">-->
-                            <!--<span class="lbl">已损坏</span>-->
-                        <!--</label>-->
-                        <!--<label>-->
-                            <!--<input name="form-field-radio1" type="radio" class="ace" value="3">-->
-                            <!--<span class="lbl">正在购买</span>-->
-                        <!--</label>-->
-                        <!--<label>-->
-                            <!--<input name="form-field-radio1" type="radio" class="ace" value="4">-->
-                            <!--<span class="lbl">已被预约</span>-->
-                        <!--</label>-->
                     </span>
                     <div class="prompt l_f"></div>
                 </li>
-                <!--<li>-->
-                    <!--<input name="flag" id="flag" type="text" hidden="hidden"/>-->
-                <!--</li>-->
             </ul>
         </form>
     </div>
@@ -312,7 +289,7 @@
         $("#search").submit();
     }
 
-    jQuery(function ($) {
+    // jQuery(function ($) {
         // var oTable1 = $('#sample-table').dataTable({
         //     "aaSorting": [CDATA[1, "desc"]],//默认第几个排序
         //     "bStateSave": true,//状态保存
@@ -348,7 +325,7 @@
         //     if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
         //     return 'left';
         // }
-    });
+    // });
     $(function () {
         $("#products_style").fix({
             float: 'left',
@@ -371,11 +348,13 @@
     }
 
     /*书籍-编辑*/
-    function member_edit(id, price, name, author, isbn) {
+    function member_edit(id, positionid, status, price, name, author, isbn) {
         $('#book_id').val(id);
-        // $('#flag').val('edit');
         $('#book_id').attr("readonly", "readonly");
-        // $('#book_position').val(position);
+        $("#book_position").removeAttr("selected");
+        $("#book_status").removeAttr("selected");
+        $("#book_position").find("option[value='"+positionid+"']").attr("selected",true);
+        $("#book_status").find("option[value='"+status+"']").attr("selected",true);
         $('#book_status').val(status);
         $('#book_price').val(price);
         $('#book_name').val(name);

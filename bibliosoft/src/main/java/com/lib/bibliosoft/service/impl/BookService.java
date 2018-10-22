@@ -1,6 +1,8 @@
 package com.lib.bibliosoft.service.impl;
 
 import com.lib.bibliosoft.entity.Book;
+import com.lib.bibliosoft.entity.BookPosition;
+import com.lib.bibliosoft.repository.BookPositionRepository;
 import com.lib.bibliosoft.repository.BookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.text.ParseException;
@@ -25,6 +28,9 @@ public class BookService {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private BookPositionRepository bookPositionRepository;
 
     private Logger logger = LoggerFactory.getLogger(BookService.class);
 
@@ -107,8 +113,21 @@ public class BookService {
      * @method name updateBook
      * @date 3:13 PM. 10/14/2018
      */
-    public void updateBook(Integer id, String bookName, String bookPosition, String isbn, Integer bookId, float fprice, String author, Integer istatus) {
-        bookRepository.updateBook(id, bookName, bookPosition, isbn, bookId, fprice, author, istatus);
+    @Transactional
+    public void updateBook(Integer id, String bookName, Integer bookPosition, String isbn, Integer bookId, float fprice, String author, Integer istatus) {
+
+        Book book = bookRepository.getOne(id);
+        BookPosition bookposition = bookPositionRepository.findById(bookPosition).get();
+        book.setBookName(bookName);
+        book.setBookIsbn(isbn);
+        book.setBookId(bookId);
+        book.setBookPrice(fprice);
+        book.setBookAuthor(author);
+        book.setBookStatus(istatus);
+        book.setBookPosition(bookposition);
+        bookposition.getBooks().add(book);
+        bookRepository.save(book);
+        //bookRepository.updateBook(id, bookName, bookPosition, isbn, bookId, fprice, author, istatus);
     }
 
     /**

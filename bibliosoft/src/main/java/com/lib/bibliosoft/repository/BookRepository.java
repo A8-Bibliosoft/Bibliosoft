@@ -70,8 +70,8 @@ public interface BookRepository extends JpaRepository<Book, Integer>,JpaSpecific
      */
     @Transactional
     @Modifying
-    @Query(value = "update book b set b.book_name=?2, b.book_position=?3, b.book_isbn=?4, b.book_id=?5, b.book_price=?6, b.book_author=?7, b.book_status=?8 where b.id=?1", nativeQuery = true)
-    void updateBook(Integer id, String bookName, String bookPosition, String isbn, Integer bookId, float fprice, String author, Integer istatus);
+    @Query(value = "update book b set b.book_name=?2, b.bookposition_id=?3, b.book_isbn=?4, b.book_id=?5, b.book_price=?6, b.book_author=?7, b.book_status=?8 where b.id=?1", nativeQuery = true)
+    void updateBook(Integer id, String bookName, Integer bookPosition, String isbn, Integer bookId, float fprice, String author, Integer istatus);
 
     @Query(value = "select bs.desc from bookstatus bs, book b where bs.status = b.book_status and b.id = ?1", nativeQuery = true)
     String getsstatusByid(Integer bookid);

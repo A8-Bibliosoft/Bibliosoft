@@ -123,7 +123,7 @@
                         <td>
                             <u style="cursor:pointer" class="text-primary" th:text="${reader.getReaderName()}"
                                th:onclick="'javascript:member_show('+${reader.getReaderId()}+')'">
-                                <!-- 两个参数的话，一致传不成功，它竟然把thymeleaf取回的值转变成了js变量名，而不是字符串 -->
+                                <!-- 两个参数的话，一致传不成功，它竟然把thymeleaf取回的值转变成了js变量名，而不是字符串，解决：拼接字符串 -->
                             </u>
                         </td>
                         <td th:text="${reader.getSex()}"></td>
@@ -150,7 +150,7 @@
                                 <i class="icon-ok bigger-120"></i>
                             </a>
 
-                            <a title="Edit" th:onclick="'javascript:member_edit('+ this +','+${reader.getReaderId()}+')'"
+                            <a title="Edit" th:onclick="'javascript:member_edit('+${reader.readerId}+','+'\''+${reader.readerName}+'\''+','+'\''+${reader.sex}+'\''+','+'\''+${reader.phone}+'\''+','+'\''+${reader.email}+'\''+','+'\''+${reader.password}+'\''+','+'\''+${reader.status}+'\''+')'"
                                href="javascript:;"
                                class="btn btn-xs btn-info">
                                 <i class="icon-edit bigger-120"></i>
@@ -245,33 +245,45 @@
                 </li>
                 <li>
                     <label class="label_name">Sex：</label>
-                    <span class="add_name">
-             <label><input name="form-field-radio" type="radio" checked="checked" class="ace" value="male">
-                 <span class="lbl">male</span></label>&nbsp;&nbsp;&nbsp;
-             <label><input name="form-field-radio" type="radio" class="ace" value="famle">
-                 <span class="lbl">famle</span></label>&nbsp;&nbsp;&nbsp;
-             <label><input name="form-field-radio" type="radio" class="ace" value="secret">
-                 <span class="lbl">secret</span></label>
-            </span>
+                    <span class="add_name" id="reader_sex">
+                         <label>
+                             <input name="form-field-radio" type="radio" class="ace" value="male">
+                             <span class="lbl">male</span>
+                         </label>&nbsp;&nbsp;&nbsp;
+                         <label>
+                             <input name="form-field-radio" type="radio" class="ace" value="famle">
+                             <span class="lbl">famle</span>
+                         </label>&nbsp;&nbsp;&nbsp;
+                         <label>
+                             <input name="form-field-radio" type="radio" class="ace" value="secret">
+                             <span class="lbl">secret</span>
+                         </label>
+                    </span>
                     <div class="prompt l_f"></div>
                 </li>
                 <li><label class="label_name">Mobile Phone：</label>
-                    <span class="add_name"><input name="phone" type="text" class="text_add"/></span>
+                    <span class="add_name">
+                        <input name="phone" type="text" class="text_add" id="reader_phone"/>
+                    </span>
                     <div class="prompt r_f"></div>
                 </li>
                 <li><label class="label_name">Email：</label>
-                    <span class="add_name"><input name="email" type="text" class="text_add"/></span>
+                    <span class="add_name">
+                        <input name="email" type="text" class="text_add" id="reader_email"/>
+                    </span>
                     <div class="prompt l_f"></div>
                 </li>
                 <li><label class="label_name">Password：</label>
-                    <span class="add_name"><input name="password" type="text" class="text_add"/></span>
+                    <span class="add_name">
+                        <input name="password" type="text" class="text_add" id="reader_pwd"/>
+                    </span>
                     <div class="prompt r_f"></div>
                 </li>
                 <li>
                     <label class="label_name">Status：</label>
-                    <span class="add_name">
+                    <span class="add_name" id="reader_status">
                         <label>
-                            <input name="form-field-radio1" type="radio" checked="checked" class="ace" value="ON">
+                            <input name="form-field-radio1" type="radio" class="ace" value="ON">
                             <span class="lbl">TURN ON</span>
                         </label>
                         <label>
@@ -308,16 +320,16 @@
         $("#search").submit();
     }
 
-    jQuery(function ($) {
-        var oTable1 = $('#sample-table').dataTable({
-            //这个少写一个“CDATA”足以致命
-            "aaSorting": [CDATA[1, "desc"]],//默认第几个排序
-            "bStateSave": true,//状态保存
-            "aoColumnDefs": [
-                //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 8, 9]}// 制定列不参与排序
-            ]
-        });
+    // jQuery(function ($) {
+        // var oTable1 = $('#sample-table').dataTable({
+        //     //这个少写一个“CDATA”足以致命
+        //     "aaSorting": [CDATA[1, "desc"]],//默认第几个排序
+        //     "bStateSave": true,//状态保存
+        //     "aoColumnDefs": [
+        //         //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+        //         {"orderable": false, "aTargets": [0, 8, 9]}// 制定列不参与排序
+        //     ]
+        // });
 
 
         //复选框已不使用
@@ -346,7 +358,7 @@
         //     if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
         //     return 'left';
         // }
-    })
+    // })
 
 
     /*用户-查看*/
@@ -360,6 +372,14 @@
     /*用户-添加*/
     $('#member_add').on('click', function () {
         $('#reader_id').val('');
+        $('#reader_sex').find("input").removeAttr("checked");
+        $("#reader_status").find("input").removeAttr("checked");
+        $('#reader_name').val('');
+        $('#reader_phone').removeAttr("readonly");
+        $('#reader_phone').val('');
+        $('#reader_email').val('');
+        $('#reader_pwd').val('');
+
         $('#flag').val('add');
         $('#reader_id').removeAttr("readonly");
         $('#reader_id').focus();
@@ -445,7 +465,7 @@
                         $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs btn-success" onClick="member_stop(this,data)" href="javascript:;" title="OFF"><i class="icon-ok bigger-120"></i></a>');
                         $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">ON</span>');
                         $(obj).remove();
-                        layer.msg('Activated!', {icon: 4, time: 1000});
+                        layer.msg('Activated!', {icon: 6, time: 1000});
                     } else {
                         layer.msg('Activate Failed!', {icon: 5, time: 1000});
                     }
@@ -455,10 +475,19 @@
     }
 
     /*读者-编辑*/
-    function member_edit(obj, id) {
+    function member_edit(id, name, sex, phone, email, pwd, status) {
         $('#reader_id').val(id);
-        $('#flag').val('edit');
         $('#reader_id').attr("readonly","readonly");
+        $("#reader_sex").removeAttr("checked");
+        $("#reader_status").removeAttr("checked");
+        $('#reader_name').val(name);
+        $('#reader_sex').find("input[value='"+sex+"']").attr("checked", true);
+        $('#reader_phone').val(phone);
+        $('#reader_phone').attr("readonly","readonly");
+        $('#reader_email').val(email);
+        $('#reader_pwd').val(pwd);
+        $('#reader_status').find("input[value='"+status+"']").attr("checked", true);
+        $('#flag').val('edit');
         $('#reader_name').focus();
         layer.open({
             type: 1,
@@ -485,15 +514,21 @@
                     return false;
                 }
                 else {
-                    layer.alert('Added successfully！', {
+                    layer.alert('edited successfully！', {
                         title: 'Info',
                         icon: 1,
                     });
                     layer.close(index);
                     // alert($('#reader_id').val());
                     $('#addReader').submit();
-                    $('#reader_id').val('');
-                    $('#reader_id').removeAttr("readonly");
+                    // $('#reader_id').val('');
+                    // $("#reader_sex").val('');
+                    // $('#reader_name').val('');
+                    // $('#reader_phone').val('');
+                    // $('#reader_email').val('');
+                    // $('#reader_pwd').val('');
+                    // $('#reader_id').removeAttr("readonly");
+                    // $('#reader_phone').removeAttr("readonly");
                 }
             }
         });

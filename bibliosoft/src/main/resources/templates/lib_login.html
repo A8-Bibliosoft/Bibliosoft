@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>login</title>
+    <base target="_parent" />
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -45,12 +46,11 @@
     <script>
         //window.setTimeout(showfh,3000);
         var timer;
-
         function showfh() {
             fhi = 1;
-            关闭提示晃动屏幕，注释掉这句话即可
-            timer = setInterval(xzfh2, 5);
-        };
+            //关闭提示晃动屏幕，注释掉这句话即可
+            timer = setInterval(xzfh2, 2);
+        }
         var current = 0;
 
         function xzfh() {
@@ -82,13 +82,15 @@
         };
         //判断当前窗口是否有顶级窗口，如果有就让当前的窗口的地址栏发生变化， 
         function loadTopWindow(){
-            if (window.top!=null && window.top.document.URL!=document.URL){
-                window.top.location= document.URL; //这样就可以让登陆窗口显示在整个窗口了 
+            if (window.top!=null && window.top.document.URL!=document.URL) {
+                window.top.location = document.URL; //这样就可以让登陆窗口显示在整个窗口了 
+                $("#a")[0].click();
             }
         }
     </script>
 </head>
 <body onload="loadTopWindow()">
+<a href="/lib_login" id="a" hidden="hidden" disabled="true"></a>
 <!-- 小键盘 -->
 <canvas class="cavs"></canvas>
 <div style="width:100%;text-align: center;margin: 0 auto;position: absolute;">
