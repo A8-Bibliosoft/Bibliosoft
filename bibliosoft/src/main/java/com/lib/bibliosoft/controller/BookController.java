@@ -179,6 +179,7 @@ public class BookController {
         else
             model.addAttribute("currpage",1);
         model.addAttribute("place", bookPositionRepository.findAll());
+        model.addAttribute("status", status);
         return "book_list";
     }
 
@@ -292,6 +293,7 @@ public class BookController {
         //logger.info("查询结果===大小size={}",searchBook.size());
         model.addAttribute("books",searchBook);
         model.addAttribute("status", status);
+        model.addAttribute("place", bookPositionRepository.findAll());
         return "book_list";
     }
 
@@ -320,6 +322,7 @@ public class BookController {
         }
         model.addAttribute("books",books);
         model.addAttribute("status", status);
+        model.addAttribute("place", bookPositionRepository.findAll());
         return "book_list";
     }
 

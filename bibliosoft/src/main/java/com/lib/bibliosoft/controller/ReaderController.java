@@ -77,6 +77,17 @@ public class ReaderController {
     /**/
     private Integer totalCount;
 
+    private void updateReaderAlldebt(String readerId){
+        List<BorrowRecord> borrowRecordDebtList= borrowRecordRepository.findNowDebtByReaderId(readerId);
+        Integer NowAllDebt=0;
+        if(borrowRecordDebtList.size()>0){
+            for(BorrowRecord x:borrowRecordDebtList){
+                NowAllDebt+=x.getDebt();
+            }
+        }
+        readerRepository.updateReaderNowDebt(readerId,NowAllDebt);
+    }
+
     /**
      * list all the reader
      * @param model
@@ -217,6 +228,9 @@ public class ReaderController {
         Integer Iid = Integer.parseInt(id);
         logger.info("OFF >>> ON");
         iReaderDao.updateReaderStatusById(Iid, "ON");
+        Reader reader=readerRepository.findById(Iid).get();
+        reader.setAlldebt(0);
+        readerRepository.save(reader);
         logger.info("reader.status >>> ={}",iReaderDao.findById(Iid).getStatus());
         model.addAttribute("readers", iReaderDao.findAll());
         return Iid.toString();
@@ -312,9 +326,17 @@ public class ReaderController {
                 session.setAttribute("logintype","reader");
                 session.setAttribute("islogin", true);
                 logger.info("login success");
+                //默认头像
                 if(reader.getImgsrc()==null||reader.getImgsrc().equals("")){
                     reader.setImgsrc("/static/readerimages/defaultimg.jpg");
                     readerRepository.save(reader);
+                }
+                //状态确认
+                if(reader.getStatus().equals("ON")){
+                    if(reader.getAlldebt()>0){
+                        reader.setStatus("OFF");
+                        readerRepository.save(reader);
+                    }
                 }
                 return "success";
             }
@@ -332,14 +354,7 @@ public class ReaderController {
         String readerId=null;
         if(session.getAttribute("readerId")!=null){
             readerId=session.getAttribute("readerId").toString();
-            List<BorrowRecord> borrowRecordDebtList= borrowRecordRepository.findNowDebtByReaderId(readerId);
-            Integer NowAllDebt=0;
-            if(borrowRecordDebtList.size()>0){
-                for(BorrowRecord x:borrowRecordDebtList){
-                    NowAllDebt+=x.getDebt();
-                }
-            }
-            readerRepository.updateReaderNowDebt(readerId,NowAllDebt);
+            updateReaderAlldebt(readerId);
             List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNull(readerId);
             List<AppointmentRecord> appointmentRecordList=appointmentRecordRepository.findByReaderId(readerId);
             List<BorrowRecord> historyRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNotNull(readerId);
@@ -517,6 +532,7 @@ public class ReaderController {
         DefSetting maxborrow=defSettingRepository.findDefSettingById(5);
         logger.info(defSetting.getDeftype());
         String readerId=session.getAttribute("readerId").toString();
+        updateReaderAlldebt(readerId);
         //已借书籍+已预约书籍<最大可借书籍 剩余书籍大于0 用户未欠款(或状态为on)
         Book book=bookRepository.findByBookId(bookId);
         List<Book> reminebooklist=bookRepository.findByBookStatusAndBookIsbn(0,book.getBookIsbn());
@@ -524,7 +540,7 @@ public class ReaderController {
         List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNull(readerId);
         List<AppointmentRecord> appointmentRecordList=appointmentRecordRepository.findByReaderId(readerId);
         if(reader!=null&&borrowRecordList!=null&&appointmentRecordList!=null){
-            if(reader.getAlldebt()==0){
+            if(reader.getAlldebt()==0&&reader.getStatus().equals("ON")){
                 if(reminebooklist.size()>0){
                     if((borrowRecordList.size()+appointmentRecordList.size())<maxborrow.getDefnumber()){
                         appointmentRecordRepository.insertAppointment(reminebooklist.get(0).getBookId(),readerId,defSetting.getDefnumber());
@@ -555,12 +571,13 @@ public class ReaderController {
     @RequestMapping("/borrowBook")
     @ResponseBody
     public synchronized String borrowBook(String readerId,Integer bookId){
+
         //获取借书期限  借书前提 读者未被封禁(未欠款) 借书少于3本 且书还在架上
         Reader reader=readerRepository.findReaderByReaderId(readerId);
         //OFF代表没有借书权限，直接不允许
         if("OFF".equals(reader.getStatus())){
             return ResultEnum.CANNOT_BORROW.getMsg();
-        }else if(reader.getAlldebt()==0&&bookRepository.findByBookId(bookId)!=null&&readerRepository.findReaderByReaderId(readerId)!=null){
+        }else if(reader.getStatus().equals("ON")&&reader.getAlldebt()==0&&bookRepository.findByBookId(bookId)!=null&&readerRepository.findReaderByReaderId(readerId)!=null){
             //书籍在架上或者书籍被该读者预约
             if(bookRepository.getBookStatusByBookId(bookId)==0||appointmentRecordRepository.findbook(bookId)!=null){
                 List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNull(readerId);
@@ -591,17 +608,11 @@ public class ReaderController {
     //书籍存在 借书记录存在 书籍欠款为0
     @RequestMapping("/returnBook")
     @ResponseBody
-    public synchronized String returnBook(HttpSession session,String bookid){
-        String readerId=session.getAttribute("readerId").toString();
-        List<BorrowRecord> borrowRecordDebtList= borrowRecordRepository.findNowDebtByReaderId(readerId);
-        Integer NowAllDebt=0;
-        if(borrowRecordDebtList.size()>0){
-            for(BorrowRecord x:borrowRecordDebtList){
-                NowAllDebt+=x.getDebt();
-            }
-        }
-        readerRepository.updateReaderNowDebt(readerId,NowAllDebt);
+    public synchronized String returnBook(String bookid){
         Integer bookId = Integer.parseInt(bookid);
+        BorrowRecord borrowRecord=borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId);
+        String readerId=borrowRecord.getReaderId();
+        updateReaderAlldebt(readerId);
         Integer debtmoney = 0;
         if(borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId) != null){
             debtmoney = borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId).getDebt();
@@ -630,8 +641,14 @@ public class ReaderController {
     public void testCron1() {
         //日期减少
         borrowRecordRepository.minusLastday();
+        // 所有欠款记录
+        // List<Reader> readers=readerRepository.findAllDebtReader();
+       // List<BorrowRecord> borrowRecordListDebt=borrowRecordRepository.findByDebt();
+
         //增加欠款
         borrowRecordRepository.addDebt();
+
+        //7天限制
         List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByLastday();
         if(borrowRecordList.size()>0){
             logger.info("发邮件啦!!");
