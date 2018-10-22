@@ -129,16 +129,16 @@ public class AdminController {
      *@ Title: AdminController.java
      *@ Params: libname
      *@ Return: lib_list
-     *@Author: 毛文杰
-     *@Description: 现在是只能查询出来一个用户或者0个用户，因为不是模糊查询，所以对于某个要搜索的图书馆员的名字只能有零个或者一个
-     *@Date: 10:34 PM. 10/7/2018
+     *@ Author: 董杭
+     *@ Description: 查询图书馆员
+     *@ Date: 2018.10.22
      */
     @PostMapping("/lib_search")
     public String search_book(Model model, @RequestParam("libname") String libname){
         logger.info("lib name==={}",libname);
-        Librarian searchLibrarian = null;
+        List<Librarian> searchLibrarian = null;
         try {
-            searchLibrarian = librarianRepository.findByLibName(libname);
+            searchLibrarian = librarianRepository.findByLibNameLike("%"+libname+"%");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -148,9 +148,9 @@ public class AdminController {
             model.addAttribute("totalcount", 0);
             model.addAttribute("totalpages", 0);
         }else{
+            Integer totalPages = (totalcount + pagesize - 1)/pagesize;
             model.addAttribute("currpage",1);
-            model.addAttribute("totalcount", 1);
-            Integer totalPages = (1 + pagesize - 1)/pagesize;
+            model.addAttribute("totalcount", searchLibrarian.size());
             model.addAttribute("totalpages", totalPages);
         }
         return "lib_list";

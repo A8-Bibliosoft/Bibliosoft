@@ -21,6 +21,7 @@ public interface LibrarianRepository extends JpaRepository<Librarian, Integer> {
      * Expansion: find a librarian by his name
      */
     Librarian findByLibName(String name);
+    List<Librarian> findByLibNameLike(String name);
 
     Librarian findByLibId(String id);
 
