@@ -78,19 +78,16 @@
 							</div><!-- /navbar-collapse -->
 		</nav>
 		<div id="readeronline" style="float: right" >
-			<a href="/lib_login">Librarian</a>
-			<a href="/goAdminLogin">Admin</a>
-			<a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}"></a>
-			<span><a style="color:white;cursor: pointer" th:href="@{/goHomePage(l='zh_CN')}">中文</a>&nbsp;&nbsp;<a th:href="@{/goHomePage(l='en_US')}" style="color:white;cursor: pointer;">english</a></span>
-			<a href="/goBorrowBook">BorrowBook</a>
-            <a href="/goReturnBook">BorrowBook</a>
+			<a th:if="${session.loginname} eq null" href="/lib_login">Librarian</a>
 			<a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}">登录</a>
+            &nbsp;
 			<div th:if="${session.loginname} ne null">
                 <a href="goReaderInfo"><span th:text="${session.loginname}"></span></a>
 				<a href="goOut" th:text="#{homepage.logout}">退出登录</a>
-
 			</div>
-        </div>
+            &nbsp;
+			<span><a style="color:white;cursor: pointer" th:href="@{/goHomePage(l='zh_CN')}">中文</a>&nbsp;&nbsp;<a th:href="@{/goHomePage(l='en_US')}" style="color:white;cursor: pointer;">english</a></span>
+		</div>
 
 		<div class="banner-info wow bounceInDown" data-wow-duration="1s" data-wow-delay="0s">
 			<script th:src="@{/static/hujs/responsiveslides.min.js}"></script>
