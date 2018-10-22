@@ -343,8 +343,6 @@ public class ReaderController {
             model.addAttribute("borrowlist",borrowRecordList);
             model.addAttribute("appointmentlist",appointmentRecordList);
             model.addAttribute("historylist",historyRecordList);
-            //logger.info(borrowRecordList.get(0).getBook().getBookName());
-           // logger.info(appointmentRecordList.get(0).getBook().getBookPosition());
             return "ReaderInfo";
         }
 
@@ -521,12 +519,25 @@ public class ReaderController {
         Reader reader=readerRepository.findReaderByReaderId(readerId);
         List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNull(readerId);
         List<AppointmentRecord> appointmentRecordList=appointmentRecordRepository.findByReaderId(readerId);
-        if(reader.getAlldebt()==0&&reminebooklist.size()>0&&(borrowRecordList.size()+appointmentRecordList.size())<maxborrow.getDefnumber()){
-            appointmentRecordRepository.insertAppointment(reminebooklist.get(0).getBookId(),readerId,defSetting.getDefnumber());
-            bookRepository.updateBookStatus(4,reminebooklist.get(0).getBookId());
-            return "success";
-        }else {
-            return "default";
+        if(reader!=null&&borrowRecordList!=null&&appointmentRecordList!=null){
+            if(reader.getAlldebt()==0){
+                if(reminebooklist.size()>0){
+                    if((borrowRecordList.size()+appointmentRecordList.size())<maxborrow.getDefnumber()){
+                        appointmentRecordRepository.insertAppointment(reminebooklist.get(0).getBookId(),readerId,defSetting.getDefnumber());
+                        bookRepository.updateBookStatus(4,reminebooklist.get(0).getBookId());
+                        return "success";
+                    }else{
+                        return "maxborrow";
+                    }
+                }else{
+                    return "default";
+                }
+            }else{
+                return "lockreader";
+            }
+        }else{
+            return "error";
+
         }
     }
 
@@ -545,17 +556,22 @@ public class ReaderController {
         //OFF代表没有借书权限，直接不允许
         if("OFF".equals(reader.getStatus())){
             return ResultEnum.CANNOT_BORROW.getMsg();
-        }else if(reader.getAlldebt()==0&&bookRepository.findByBookId(bookId)!=null&&readerRepository.findReaderByReaderId(readerId)!=null&&bookRepository.getBookStatusByBookId(bookId)==0){
-            List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNull(readerId);
-            //获取最大借书数量
-            DefSetting maxborrow=defSettingRepository.findDefSettingById(5);
-            logger.info("{}",borrowRecordList.size());
-            if(borrowRecordList.size()<maxborrow.getDefnumber()){
-                DefSetting defSetting=defSettingRepository.findDefSettingById(3);
-                bookRepository.updateBookStatus(1,bookId);
-                logger.info("{}",bookId);
-                borrowRecordRepository.insertBorrow(bookId,new Date(),defSetting.getDefnumber(),readerId);
-                return ResultEnum.BORROW_BOOK_SUCCESS.getMsg();
+        }else if(reader.getAlldebt()==0&&bookRepository.findByBookId(bookId)!=null&&readerRepository.findReaderByReaderId(readerId)!=null){
+            //书籍在架上或者书籍被该读者预约
+            if(bookRepository.getBookStatusByBookId(bookId)==0||appointmentRecordRepository.findbook(bookId)!=null){
+                List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByReaderIdAndReturntimeIsNull(readerId);
+                //获取最大借书数量
+                DefSetting maxborrow=defSettingRepository.findDefSettingById(5);
+                //logger.info("{}",borrowRecordList.size());
+                if(borrowRecordList.size()<maxborrow.getDefnumber()){
+                    DefSetting defSetting=defSettingRepository.findDefSettingById(3);
+                    bookRepository.updateBookStatus(1,bookId);
+                    //logger.info("{}",bookId);
+                    borrowRecordRepository.insertBorrow(bookId,new Date(),defSetting.getDefnumber(),readerId);
+                    //将预约的书籍记录删除
+                    appointmentRecordRepository.clearbook(bookId);
+                    return ResultEnum.BORROW_BOOK_SUCCESS.getMsg();
+                }
             }
             return ResultEnum.HAVE_NO_BOOKS.getMsg();
         }
@@ -571,7 +587,16 @@ public class ReaderController {
     //书籍存在 借书记录存在 书籍欠款为0
     @RequestMapping("/returnBook")
     @ResponseBody
-    public synchronized String returnBook(String bookid){
+    public synchronized String returnBook(HttpSession session,String bookid){
+        String readerId=session.getAttribute("readerId").toString();
+        List<BorrowRecord> borrowRecordDebtList= borrowRecordRepository.findNowDebtByReaderId(readerId);
+        Integer NowAllDebt=0;
+        if(borrowRecordDebtList.size()>0){
+            for(BorrowRecord x:borrowRecordDebtList){
+                NowAllDebt+=x.getDebt();
+            }
+        }
+        readerRepository.updateReaderNowDebt(readerId,NowAllDebt);
         Integer bookId = Integer.parseInt(bookid);
         Integer debtmoney = 0;
         if(borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId) != null){

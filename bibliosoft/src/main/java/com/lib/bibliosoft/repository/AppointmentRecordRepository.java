@@ -31,5 +31,14 @@ public interface AppointmentRecordRepository extends JpaRepository<AppointmentRe
     @Transactional
     @Query(value = "select * from appointmentrecord where lasttime=0",nativeQuery = true)
     List<AppointmentRecord> findAllEnd();
+
+    @Transactional
+    @Query(value = "select * from appointmentrecord where book_id=?1",nativeQuery = true)
+    List<AppointmentRecord> findbook(Integer bookId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from appointmentrecord where book_id=?1",nativeQuery = true)
+    void clearbook(Integer bookId);
 }
 
