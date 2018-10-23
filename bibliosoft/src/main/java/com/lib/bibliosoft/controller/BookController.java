@@ -526,16 +526,19 @@ public class BookController {
         List<Book> books = ScanerIsbn.getBookInfoByIsbn(isbn, number, time, position, status, typeid);
 
         StringBuilder bookids = new StringBuilder();
+        String s = "";
         try {
             for (Book b : books){
                 bookService.addBook(b);
                 //logger.info(isbn);
                 //logger.info(""+b.getBookId());
-                bookRepository.insertBookIsbn(isbn,b.getBookId());
+                bookRepository.insertBookIsbn(isbn, b.getBookId());
                 //生成条形码
                 BarcodeUtil.generateFile(String.valueOf(b.getBookId()));
                 //提示语句
-                bookids.append(b.getBookId() + ";");
+                String name = "static/barcodeimages/"+String.valueOf(b.getBookId())+".png";
+                s = "<a target='view_window' href='http://localhost:8080/"+name+"'>"+b.getBookId()+"</a>;";
+                bookids.append(s);
             }
 
         }catch(Exception e){
@@ -544,6 +547,7 @@ public class BookController {
             e.printStackTrace();
             return new ResponseEntity<Map<String,Object>>(map, HttpStatus.valueOf(500));
         }
+        //http://localhost:8080/downloadImage
         map.put("msg", ResultEnum.ADD_BOOK_SUCCESS.getMsg() + " bookid: " + bookids);
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
