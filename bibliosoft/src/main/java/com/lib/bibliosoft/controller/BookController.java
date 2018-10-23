@@ -258,6 +258,7 @@ public class BookController {
         model.addAttribute("books", bookList);
         model.addAttribute("currpage",currpage);
         model.addAttribute("status", status);
+        model.addAttribute("place", bookPositionRepository.findAll());
         return "book_list";
     }
 
