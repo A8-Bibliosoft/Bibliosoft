@@ -35,6 +35,7 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
      * @param string
      * @return
      */
+    @Transactional
     @Query(value = "select r from Reader r where r.readerName like %?1% or r.phone like %?1%")
     List<Reader> searchReaderByPhoneOrName(String string);
 
@@ -69,5 +70,10 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
     @Modifying
     @Query(value = "update reader r set r.alldebt=?2 where r.reader_id = ?1", nativeQuery = true)
     void updateReaderNowDebt(String readerId,Integer alldebt);
+
+    //所有欠款读者
+    @Transactional
+    @Query(value = "select r from Reader r where r.alldebt>0")
+    List<Reader> findAllDebtReader();
 }
 

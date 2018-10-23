@@ -478,8 +478,8 @@
     function member_edit(id, name, sex, phone, email, pwd, status) {
         $('#reader_id').val(id);
         $('#reader_id').attr("readonly","readonly");
-        $("#reader_sex").removeAttr("checked");
-        $("#reader_status").removeAttr("checked");
+        $('#reader_sex').find("input").removeAttr("checked");
+        $("#reader_status").find("input").removeAttr("checked");
         $('#reader_name').val(name);
         $('#reader_sex').find("input[value='"+sex+"']").attr("checked", true);
         $('#reader_phone').val(phone);
