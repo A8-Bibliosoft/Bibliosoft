@@ -80,8 +80,8 @@ spring:
   #Mail邮件配置信息
   mail:
     host: smtp.qq.com
-    username: 2360410880@qq.com
-    password: lbaukxszswxmeaah
+    username: 1448318125@qq.com
+    password: ajhyxrxdkyipjjcg
 
     #默认编码
     default-encoding: UTF-8
