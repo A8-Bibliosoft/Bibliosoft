@@ -100,5 +100,11 @@ public interface BookRepository extends JpaRepository<Book, Integer>,JpaSpecific
 
     @Query(value = "select * from book where bookposition_id=?1", nativeQuery = true)
     List<Book> findByBookPosition(Integer id);
+
+    @Query(value = "select * from book where year(register_time)=?1 and month(register_time) = ?2", nativeQuery = true)
+    List<Book> findBookNumByMonth(int year, int month);
+
+    @Query(value = "select * from book where year(register_time)=?1 and month(register_time) = ?2 and book_status=?3", nativeQuery = true)
+    List<Book> findBookNumByMonthandStatus(int year, int month, int status);
 }
 

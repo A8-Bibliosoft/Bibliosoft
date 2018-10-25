@@ -35,7 +35,7 @@
     <div class="state-overview clearfix">
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <a href="#" title="All Readers">
+                <a href="/reader_list" title="All Readers">
                     <div class="symbol terques">
                         <i class="icon-user"></i>
                     </div>
@@ -89,7 +89,7 @@
     <!--实时反馈记录-->
     <div class="clearfix">
         <div class="t_Record">
-            <div id="main" style="height:300px; overflow:hidden; width:100%; overflow:auto">123</div>
+            <div id="main" style="height:300px; overflow:hidden; width:100%; overflow:auto"></div>
         </div>
         <div class="news_style">
             <div class="title_name">New Feedbacks</div>
@@ -145,16 +145,20 @@
             ],
             function (ec, theme) {
                 var myChart = ec.init(document.getElementById('main'), theme);
-                option = {
+                //图表显示提示信息
+                myChart.showLoading({
+                    text: "chart data is trying to load..."
+                });
+                var option = {
                     title: {
-                        text: '月读者借书记录',
-                        subtext: '实时获取读者借阅书籍记录'
+                        text: 'library book status',
+                        subtext: 'list book status records monthly'
                     },
                     tooltip: {
                         trigger: 'axis'
                     },
                     legend: {
-                        data: ['所有书籍', '在架上', '已借走', '已损坏', '正在购买', '已被预约']
+                        data: []
                     },
                     toolbox: {
                         show: true,
@@ -178,59 +182,29 @@
                             type: 'value'
                         }
                     ],
-                    series: [
-                        {
-                            name: 'All Books',
-                            type: 'bar',
-                            data: [120, 49, 70, 232, 256, 767, 1356, 1622, 326, 200, 164, 133],
-                            markPoint: {
-                                data: [
-                                    {type: 'max', name: '最大值'},
-                                    {type: 'min', name: '最小值'}
-                                ]
-                            }
-                        },
-                        {
-                            name: '待付款',
-                            type: 'bar',
-                            data: [26, 59, 30, 84, 27, 77, 176, 1182, 487, 188, 60, 23],
-                            markPoint: {
-                                data: [
-                                    {name: '年最高', value: 1182, xAxis: 7, yAxis: 1182, symbolSize: 18},
-                                    {name: '年最低', value: 23, xAxis: 11, yAxis: 3}
-                                ]
-                            },
-
-
-                        }
-                        , {
-                            name: '已付款',
-                            type: 'bar',
-                            data: [26, 59, 60, 264, 287, 77, 176, 122, 247, 148, 60, 23],
-                            markPoint: {
-                                data: [
-                                    {name: '年最高', value: 172, xAxis: 7, yAxis: 172, symbolSize: 18},
-                                    {name: '年最低', value: 23, xAxis: 11, yAxis: 3}
-                                ]
-                            },
-
-                        }
-                        , {
-                            name: '代发货',
-                            type: 'bar',
-                            data: [26, 59, 80, 24, 87, 70, 175, 1072, 48, 18, 69, 63],
-                            markPoint: {
-                                data: [
-                                    {name: '年最高', value: 1072, xAxis: 7, yAxis: 1072, symbolSize: 18},
-                                    {name: '年最低', value: 22, xAxis: 11, yAxis: 3}
-                                ]
-                            },
-
-                        }
-                    ]
+                    series: []
                 };
-
-                myChart.setOption(option);
+                $.ajax({
+                    type : "post",
+                    url : "/homedata",
+                    async: false, //同步执行
+                    dataType: "json", //返回数据形式为json
+                    success : function(result) {
+                        //将从后台接收的json字符串转换成json对象
+                        var jsonobj = eval(result);
+                        //给图标标题赋值
+                        option.legend.data = jsonobj.legend;
+                        var series_arr = jsonobj.series;
+                        //驱动图表生成的数据内容，数组中每一项代表一个系列的特殊选项及数据
+                        for(var i = 0; i < series_arr.length; i++) {
+                            option.series[i] = series_arr[i];
+                        }
+                        //过渡控制，隐藏loading（读取中）
+                        myChart.hideLoading();
+                        // 为echarts对象加载数据
+                        myChart.setOption(option);
+                    }
+                });
             }
         );
     </script>

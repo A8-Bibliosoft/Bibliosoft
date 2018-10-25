@@ -1,5 +1,6 @@
 package com.lib.bibliosoft.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.lib.bibliosoft.DAO.IReaderDao;
 import com.lib.bibliosoft.entity.*;
 import com.lib.bibliosoft.enums.ResultEnum;
@@ -28,10 +29,8 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.PrintWriter;
+import java.util.*;
 
 /**
  * @Author: 毛文杰
@@ -107,6 +106,70 @@ public class ReaderController {
         return "home";
     }
 
+    /**
+     * home主页图表
+     * @title ReaderController.java
+     * @param response
+     * @return void
+     * @author 毛文杰
+     * @method name showDataChart
+     * @date 9:16 PM. 10/25/2018
+     */
+    @PostMapping("/homedata")
+    @ResponseBody
+    public void showDataChart(HttpServletResponse response){
+        List<String> legend = new ArrayList<String>(Arrays.asList(new String[] { "所有书籍", "在架上", "已借走", "已损坏","正在购买", "已被预约"}));
+
+        List<Integer> data = new ArrayList<>();
+        List<Series> series = new ArrayList<Series>();
+
+        for(int i=1;i<13;i++){
+            data.add(bookRepository.findBookNumByMonth(2018, i).size());
+        }
+        series.add(new Series("所有书籍","bar", data));
+
+        data = new ArrayList<>();
+        for(int i=1;i<13;i++){
+            data.add(bookRepository.findBookNumByMonthandStatus(2018, i, 0).size());
+        }
+        series.add(new Series("在架上","bar",data));
+        data = new ArrayList<>();
+        for(int i=1;i<13;i++){
+            data.add(bookRepository.findBookNumByMonthandStatus(2018, i, 1).size());
+        }
+        series.add(new Series("已借走","bar",data));
+        data = new ArrayList<>();
+        for(int i=1;i<13;i++){
+            data.add(bookRepository.findBookNumByMonthandStatus(2018, i, 2).size());
+        }
+        series.add(new Series("已损坏","bar",data));
+        data = new ArrayList<>();
+        for(int i=1;i<13;i++){
+            data.add(bookRepository.findBookNumByMonthandStatus(2018, i, 3).size());
+        }
+        series.add(new Series("正在购买","bar",data));
+        data = new ArrayList<>();
+        for(int i=1;i<13;i++){
+            data.add(bookRepository.findBookNumByMonthandStatus(2018, i, 4).size());
+        }
+        series.add(new Series("已被预约","bar",data));
+
+        Echarts echarts = new Echarts(legend, series);
+        //解决中文乱码
+        response.setContentType("text/html;charset=utf-8");
+        PrintWriter out;
+        try{
+            out = response.getWriter();
+            String str=JSON.toJSONString(echarts);
+            out.print(str);
+            out.flush();
+            out.close();
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //???????
     private void updateReaderAlldebt(String readerId){
         List<BorrowRecord> borrowRecordDebtList= borrowRecordRepository.findNowDebtByReaderId(readerId);
         Integer NowAllDebt=0;
