@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Search</title>
+	<!-- for-mobile-apps -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="" />
+	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+			function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<!-- //for-mobile-apps -->
+	<link th:href="@{/static/hucss/bootstrap.css}" rel="stylesheet" type="text/css" media="all" />
+	<script type="text/javascript" th:src="@{/static/hujs/jquery-2.1.4.min.js}"></script>
+	<script type="text/javascript" th:src="@{/static/hujs/bootstrap-3.1.1.min.js}"></script>
+	<link rel="stylesheet" th:href="@{/static/hucss/swipebox.css}">
+	<link th:href="@{/static/hucss/style.css}" rel="stylesheet" type="text/css" media="all" />
+	<!-- js -->
+	<link rel="shortcut icon" th:href="@{/static/images/favicon.ico}"/>
+	<script type="text/javascript" th:src="@{/static/hujs/jquery-2.1.4.min.js}"></script>
+	<!-- //js -->
+	<!--animate-->
+	<link th:href="@{/static/hucss/animate.css}" rel="stylesheet" type="text/css" media="all">
+	<script th:src="@{/static/hujs/wow.min.js}"></script>
+		<script>
+			 new WOW().init();
+		</script>
+	<!--//end-animate-->
+	<link href='http://fonts.googleapis.com/css?family=Quicksand:400,300,700' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+	<!-- start-smoth-scrolling -->
+	<script type="text/javascript" th:src="@{/static/hujs/move-top.js}"></script>
+	<script type="text/javascript" th:src="@{/static/hujs/easing.js}"></script>
+	<!-- start-smoth-scrolling -->
+	<script type="text/javascript" th:src="@{/static/hujs/numscroller-1.0.js}"></script>
+	<style>
+		.imgsize img{
+			width: 85px;
+			height: 120px;
+		}
+		.imgsize li{
+			height: 150px;
+			width: 100%;
+		}
+        #readeronline a{
+            color: yellow;
+        }
+	</style>
+</head>
+<body>
+<!-- header -->
+<div id="home" class="banner w3l">
+	<div class="container">
+		<nav class="navbar navbar-default  wow zoomIn" data-wow-duration="1.5s" data-wow-delay="0.3s">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header logo">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<h1>
+					<a class="navbar-brand" href="goHomePage" ><img th:src="@{/static/huimages/biglogo.png}"/></a>
+				</h1>
+
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse nav-wil" id="bs-example-navbar-collapse-1">
+				<nav class="cl-effect-1">
+					<ul class="nav navbar-nav ">
+						<li><a class="scroll hvr-bounce-to-bottom" href="goHomePage">HomePage</a></li>
+						<li><a class="scroll hvr-bounce-to-bottom" href="goSearch">Search</a></li>
+						<li><a class="scroll hvr-bounce-to-bottom" href="goFeedBack">Advice</a></li>
+					</ul>
+				</nav>
+			</div><!-- /navbar-collapse -->
+		</nav>
+		<div id="readeronline" style="float: right" >
+			<a th:if="${session.loginname} eq null" href="/lib_login">Librarian</a>
+			<a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}">登录</a>
+			&nbsp;
+			<div th:if="${session.loginname} ne null">
+				<a href="goReaderInfo"><span th:text="${session.loginname}"></span></a>
+				<a href="goOut" th:text="#{homepage.logout}">退出登录</a>
+			</div>
+		</div>
+		<!-- 搜索框-->
+        <h1 style="text-align: center;margin-top: 150px;color: white;">书籍建购</h1>
+        <br><br><br>
+	</div>
+    <div class="container">
+        <div style="text-align: center">
+            <textarea style="width: 80%;height: 300px;resize: none;border-radius: 5px;background-color: #f7f7f7" id="content"></textarea>
+            <br>
+            <a href="#" onclick="feedback()" class="btn btn-success">提交建议</a>
+        </div>
+    </div>
+</div>
+<!-- //header -->
+
+<div class="copy-right" style="margin-top: 250px;">
+	<div class="container">
+		<p th:text="#{copyright}"></p>
+	</div>
+</div>
+<!-- //map -->
+<!-- smooth scrolling -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+	        $().UItoTop({ easingType: 'easeOutQuart' });
+		});
+	</script>
+	<a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+<!-- //smooth scrolling -->
+<script type="text/javascript" th:src="@{/static/hujs/bootstrap-3.1.1.min.js}"></script>
+
+<!--huhao -->
+<script>
+    function feedback() {
+        var content=$("#content").val();
+        if(content==null||content==""){
+            alert("请输入正确的内容！");
+            return false;
+        }else{
+            var code="content="+content;
+            $.ajax({
+                type: "POST",
+                url: "/feedBack",
+                data: code,
+                async: false,
+                cache: false,
+                success: function (data) {
+                    if ("success" === data) {
+                        alert("提交成功！");
+                        window.location.href="goFeedBack";
+                    } else if ("unlogin" === data) {
+                        window.location.href="goLogin";
+                    } else {
+                        alert("预约失败！未知错误！");
+                    }
+                },
+                fail: function (data) {
+                    alert(data);
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>
