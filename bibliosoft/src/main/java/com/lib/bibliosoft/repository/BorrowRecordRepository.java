@@ -48,6 +48,11 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
     //所有未还记录
     List<BorrowRecord> findByReturntimeIsNull();
 
+    //已还欠款的书的总缴纳欠款
+    @Query(value = "select * from borrowrecord where borrowtime is not null and debt > 0", nativeQuery = true)
+    List<BorrowRecord> findAllIncome();
+
+
     //所有欠款记录
     @Transactional
     @Query(value = "select * from borrowrecord where borrowrecord.debt>0",nativeQuery = true)

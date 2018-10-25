@@ -150,30 +150,36 @@
                 <li class="purple">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <i class="icon-bell-alt"></i>
-                        <span th:if="${commentNum} + ${feedbackNum} eq 0" class="badge badge-important"></span>
-                        <span th:if="${commentNum} + ${feedbackNum} gt 0" class="badge badge-important" th:text="${commentNum} + ${feedbackNum}"></span>
+                        <!--<span th:if="${commentNum} + ${feedbackNum} eq 0" class="badge badge-important"></span>-->
+                        <!--<span th:if="${commentNum} + ${feedbackNum} gt 0" class="badge badge-important" th:text="${commentNum} + ${feedbackNum}"></span>-->
+                        <span th:if="${feedbackNum} eq 0" class="badge badge-important"></span>
+                        <span th:if="${feedbackNum} gt 0" class="badge badge-important" th:text="${feedbackNum}"></span>
                     </a>
                     <!--  -->
                     <ul class="pull-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
                         <li class="dropdown-header">
-                            <i th:if="${commentNum} + ${feedbackNum} eq 0" class="icon-warning-sign">&nbsp;0</i>
+                            <!--<i th:if="${commentNum} + ${feedbackNum} eq 0" class="icon-warning-sign">&nbsp;0</i>-->
+                            <!--&nbsp;-->
+                            <!--<i th:if="${commentNum} + ${feedbackNum} gt 0" class="icon-warning-sign" th:text="${commentNum} + ${feedbackNum}"></i>-->
+                            <!--notifications-->
+                            <i th:if="${feedbackNum} eq 0" class="icon-warning-sign">&nbsp;0</i>
                             &nbsp;
-                            <i th:if="${commentNum} + ${feedbackNum} gt 0" class="icon-warning-sign" th:text="${commentNum} + ${feedbackNum}"></i>
+                            <i th:if="${feedbackNum} gt 0" class="icon-warning-sign" th:text="${feedbackNum}"></i>
                             notifications
                         </li>
-                        <li>
-                            <!--th:href="${'/reader_comment'}"-->
-                            <a href="javascript:void(0)" name="/reader_comment" class="iframeurl" title="view comment">
-                                <div class="clearfix">
-											<span class="pull-left">
-												<i class="btn btn-xs no-hover btn-pink icon-comment"></i>
-												Readers' Comment
-											</span>
-                                    <span th:if="${commentNum} eq 0" class="pull-right badge badge-info"></span>
-                                    <span th:if="${commentNum} gt 0" class="pull-right badge badge-info" th:text="${commentNum}"></span>
-                                </div>
-                            </a>
-                        </li>
+                        <!--<li>-->
+                            <!--&lt;!&ndash;th:href="${'/reader_comment'}"&ndash;&gt;-->
+                            <!--<a href="javascript:void(0)" name="/reader_comment" class="iframeurl" title="view comment">-->
+                                <!--<div class="clearfix">-->
+											<!--<span class="pull-left">-->
+												<!--<i class="btn btn-xs no-hover btn-pink icon-comment"></i>-->
+												<!--Readers' Comment-->
+											<!--</span>-->
+                                    <!--<span th:if="${commentNum} eq 0" class="pull-right badge badge-info"></span>-->
+                                    <!--<span th:if="${commentNum} gt 0" class="pull-right badge badge-info" th:text="${commentNum}"></span>-->
+                                <!--</div>-->
+                            <!--</a>-->
+                        <!--</li>-->
                         <li>
                             <a href="javascript:void(0)" name="/reader_feedback" class="iframeurl" title="view feedback">
                                 <div class="clearfix">
@@ -221,10 +227,10 @@
                     Bibliosoft Librarian
                 </div>
                 <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-                    <span class="btn btn-success"></span>
-                    <span class="btn btn-info"></span>
-                    <span class="btn btn-warning"></span>
-                    <span class="btn btn-danger"></span>
+                    <span class="btn btn-success">1</span>
+                    <span class="btn btn-info">2</span>
+                    <span class="btn btn-warning">3</span>
+                    <span class="btn btn-danger">4</span>
                 </div>
             </div><!-- #sidebar-shortcuts -->
             <ul class="nav nav-list" id="nav_list">
@@ -377,7 +383,6 @@
 
             <iframe id="iframe" style="border:0; width:100%; background-color:#FFF;" name="iframe" frameborder="0"
                     src="/home"></iframe>
-
 
             <!-- /.page-content -->
         </div><!-- /.main-content -->

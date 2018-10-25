@@ -77,6 +77,36 @@ public class ReaderController {
     /**/
     private Integer totalCount;
 
+
+    /**
+     * 后台首页的数据展示页面，网站统计
+     * @title ReaderController.java
+     * @param model
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name lgoHome
+     * @date 6:48 PM. 10/25/2018
+     */
+    @GetMapping("/home")
+    public String lgoHome(Model model){
+        Integer totalReaders = readerRepository.findAll().size();
+        model.addAttribute("totalReaders", totalReaders);
+        model.addAttribute("totalBooks", bookRepository.findAll().size());
+        model.addAttribute("totalBooks", bookRepository.findAll().size());
+        model.addAttribute("feedbacks", feedbackRepository.findFeedbacksByIsView("no"));
+        model.addAttribute("totalfeedbacks", feedbackRepository.findAll().size());
+        Integer deposit = defSettingRepository.findById(2).get().getDefnumber();
+        Integer debt = 0;
+        //找出所有的欠款的
+        for(BorrowRecord borrowRecord : borrowRecordRepository.findAllIncome()){
+            debt+=borrowRecord.getDebt();
+        }
+        //先这样算总收入
+        Integer income = deposit*totalReaders + debt;
+        model.addAttribute("income", income);
+        return "home";
+    }
+
     private void updateReaderAlldebt(String readerId){
         List<BorrowRecord> borrowRecordDebtList= borrowRecordRepository.findNowDebtByReaderId(readerId);
         Integer NowAllDebt=0;

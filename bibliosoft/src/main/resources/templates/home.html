@@ -1,6 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="../static/assets/css/bootstrap.min.css" rel="stylesheet"/>
@@ -36,64 +35,69 @@
     <div class="state-overview clearfix">
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <a href="#" title="商城会员">
+                <a href="#" title="All Readers">
                     <div class="symbol terques">
                         <i class="icon-user"></i>
                     </div>
                     <div class="value">
-                        <h1>34522</h1>
-                        <p>商城用户</p>
+                        <h1 th:text="${totalReaders}"></h1>
+                        <p>Readers</p>
                     </div>
                 </a>
             </section>
         </div>
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <div class="symbol red">
-                    <i class="icon-tags"></i>
-                </div>
-                <div class="value">
-                    <h1>140</h1>
-                    <p>分销记录</p>
-                </div>
+                <a href="/book_list" title="All Books">
+                    <div class="symbol red">
+                        <i class="icon-book"></i>
+                    </div>
+                    <div class="value">
+                        <h1 th:text="${totalBooks}"></h1>
+                        <p>Books</p>
+                    </div>
+                </a>
             </section>
         </div>
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <div class="symbol yellow">
-                    <i class="icon-shopping-cart"></i>
-                </div>
-                <div class="value">
-                    <h1>345</h1>
-                    <p>商城订单</p>
-                </div>
+                <a href="/reader_feedback" title="Feedbacks">
+                    <div class="symbol yellow">
+                        <i class="icon-comment"></i>
+                    </div>
+                    <div class="value">
+                        <h1 th:text="${totalfeedbacks}"></h1>
+                        <p>Feedbacks</p>
+                    </div>
+                </a>
             </section>
         </div>
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <div class="symbol blue">
-                    <i class="icon-bar-chart"></i>
-                </div>
-                <div class="value">
-                    <h1>￥34,500</h1>
-                    <p>交易记录</p>
-                </div>
+                <a href="#" title="All Income">
+                    <div class="symbol blue">
+                        <i class="icon-bar-chart"></i>
+                    </div>
+                    <div class="value">
+                        <h1 th:text="${income}"></h1>
+                        <p>Income</p>
+                    </div>
+                </a>
             </section>
         </div>
     </div>
-    <!--实时交易记录-->
+    <!--实时反馈记录-->
     <div class="clearfix">
         <div class="t_Record">
-            <div id="main" style="height:300px; overflow:hidden; width:100%; overflow:auto"></div>
+            <div id="main" style="height:300px; overflow:hidden; width:100%; overflow:auto">123</div>
         </div>
         <div class="news_style">
-            <div class="title_name">最新消息</div>
+            <div class="title_name">New Feedbacks</div>
             <ul class="list">
-                <li><i class="icon-bell red"></i><a href="#">后台系统找那个是开通了。</a></li>
-                <li><i class="icon-bell red"></i><a href="#">6月共处理订单3451比，作废为...</a></li>
-                <li><i class="icon-bell red"></i><a href="#">后台系统找那个是开通了。</a></li>
-                <li><i class="icon-bell red"></i><a href="#">后台系统找那个是开通了。</a></li>
-                <li><i class="icon-bell red"></i><a href="#">后台系统找那个是开通了。</a></li>
+                <li th:each="f : ${feedbacks}">
+                    <i class="icon-bell red"></i>
+                    <a href="/reader_feedback" th:text="${f.reader.readerName}"></a>
+                </li>
             </ul>
         </div>
     </div>
@@ -131,6 +135,7 @@
                 echarts: '../static/assets/dist'
             }
         });
+
         require(
             [
                 'echarts',
@@ -142,14 +147,14 @@
                 var myChart = ec.init(document.getElementById('main'), theme);
                 option = {
                     title: {
-                        text: '月购买订单交易记录',
-                        subtext: '实时获取用户订单购买记录'
+                        text: '月读者借书记录',
+                        subtext: '实时获取读者借阅书籍记录'
                     },
                     tooltip: {
                         trigger: 'axis'
                     },
                     legend: {
-                        data: ['所有订单', '待付款', '已付款', '代发货']
+                        data: ['所有书籍', '在架上', '已借走', '已损坏', '正在购买', '已被预约']
                     },
                     toolbox: {
                         show: true,
@@ -165,7 +170,7 @@
                     xAxis: [
                         {
                             type: 'category',
-                            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+                            data: ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'June.', 'July.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.']
                         }
                     ],
                     yAxis: [
@@ -175,7 +180,7 @@
                     ],
                     series: [
                         {
-                            name: '所有订单',
+                            name: 'All Books',
                             type: 'bar',
                             data: [120, 49, 70, 232, 256, 767, 1356, 1622, 326, 200, 164, 133],
                             markPoint: {
