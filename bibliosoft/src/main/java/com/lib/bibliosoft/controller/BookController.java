@@ -3,6 +3,7 @@ package com.lib.bibliosoft.controller;
 import com.lib.bibliosoft.entity.*;
 import com.lib.bibliosoft.enums.ResultEnum;
 import com.lib.bibliosoft.repository.*;
+import com.lib.bibliosoft.service.impl.BookDelService;
 import com.lib.bibliosoft.service.impl.BookService;
 import com.lib.bibliosoft.utils.BarcodeUtil;
 import com.lib.bibliosoft.utils.FileNameUtil;
@@ -45,6 +46,9 @@ public class BookController {
     private BookService bookService;
 
     @Autowired
+    private BookDelService bookDelService;
+
+    @Autowired
     private BookDelRecordRepository bookDelRecordRepository;
 
     @Autowired
@@ -58,6 +62,9 @@ public class BookController {
 
     @Autowired
     private BookPositionRepository bookPositionRepository;
+
+    @Autowired
+    private BorrowRecordRepository borrowRecordRepository;
 
     private List<BookStatus> status;
 
@@ -133,23 +140,28 @@ public class BookController {
         /*先判断是否已不在数据库*/
         Book book = bookRepository.findById(id).get();
         Integer status = book.getBookStatus();
-        logger.info("status={}", status);
+        //logger.info("status={}", status);
         if(status == 5){
             map.put("msg", ResultEnum.BOOK_ALREADY_DEL.getMsg());
         }else if(status == 0){
             /*先在删除记录表里记录*/
             BookDelRecord bookDelRecord = new BookDelRecord();
             Librarian librarian = (Librarian) session.getAttribute("librarian");
+            if(librarian == null){
+                map.put("msg", "please login.");
+                return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+            }
             Integer bookid = book.getBookId();
-            bookDelRecord.setBookId(bookid);
-            bookDelRecord.setLibId(librarian.getLibId());
+            //librarian与delrecord关联
+            bookDelRecord.setLibId(librarian);
             bookDelRecord.setTime(new java.util.Date());
+            bookDelRecord.setBookName(book.getBookName());
+            librarian.getBookDelRecordList().add(bookDelRecord);
             bookDelRecordRepository.save(bookDelRecord);
-            /*然后删除book表，这里用改变状态替代删除*/
-//        bookRepository.deleteById(id);
-
-            /*5: 已删除，但没从数据库删除记录*/
+            /*5: 先将状态改为5，表示已删除*/
             bookRepository.updateBookStatus(5, bookid);
+            /*然后删除book表中的条目*/
+            bookRepository.deleteById(id);
             map.put("msg", ResultEnum.BOOK_DEL_SUCCESS.getMsg());
         }else{
             map.put("msg", ResultEnum.BOOK_DEL_FAILED.getMsg());
@@ -743,5 +755,74 @@ public class BookController {
     }
 
     /*------------------------------图书位置管理结束--------------------------------------*/
+
+    /*----------------------------------图书删除记录--------------------------------------*/
+
+    /**
+     * 首次进入页面显示第一页
+     * @title BookController.java
+     * @param model
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name gotoBookDelRdc
+     * @date 3:26 PM. 10/25/2018
+     */
+    @GetMapping("/bookDelRecord")
+    public String gotoBookDelRdc(Model model){
+        Integer currpage = 1;
+        totalcount = bookDelRecordRepository.findAll().size();
+        model.addAttribute("totalcount", totalcount);
+        Integer totalPages = (totalcount + pagesize - 1)/pagesize;
+        model.addAttribute("totalpages", totalPages);
+
+        List<BookDelRecord> bookDelRecords = bookDelService.getPageSort(currpage, pagesize).getContent();
+        model.addAttribute("deleteRecord", bookDelRecords);
+        if(totalcount == 0)
+            currpage = 0;
+        model.addAttribute("currpage", currpage);
+        return "book_deleteRecord";
+    }
+
+    /**
+     * 分页显示删除记录
+     * @title BookController.java
+     * @param currpage, model
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name delRecordPaging
+     * @date 3:30 PM. 10/25/2018
+     */
+    @GetMapping("/bookdelrecord_page")
+    public String delRecordPaging(@RequestParam(value = "currpage") Integer currpage, Model model){
+        totalcount = bookDelRecordRepository.findAll().size();
+        model.addAttribute("totalcount", totalcount);
+        Integer totalPages = (totalcount + pagesize - 1)/pagesize;
+        model.addAttribute("totalpages", totalPages);
+
+        if(currpage == 0)
+            currpage = 1;
+        if(currpage == totalPages+1)
+            currpage = totalPages;
+        //获得每页的数据
+        List<BookDelRecord> bookDelRecords = bookDelService.getPageSort(currpage, pagesize).getContent();
+        //logger.info("currpage={}",currpage);
+
+        //放在model
+        model.addAttribute("deleteRecord", bookDelRecords);
+        model.addAttribute("currpage",currpage);
+        return "book_deleteRecord";
+    }
+
+    /*----------------------------------图书删除记录--------------------------------------*/
+
+
+    /*---------------图书借阅详情------------------------------*/
+
+    @GetMapping("/bookBorrowRecord")
+    public String gotoDetail(Integer bookid, Model model){
+        List<BorrowRecord> bookRecords = borrowRecordRepository.findAllByBookId(bookid);
+        model.addAttribute("borrowRecords", bookRecords);
+        return "borrowBookList";
+    }
 }
 

@@ -66,7 +66,7 @@ public class BulletinController {
             currpage = totalPages;
         //获得每页的数据
         List<Notices> noticesList = iBulletinService.getPage(currpage, pagesize).getContent();
-        logger.info("currpage={}",currpage);
+        //logger.info("currpage={}",currpage);
 
         //放在model
         model.addAttribute("notices", noticesList);
@@ -97,7 +97,6 @@ public class BulletinController {
 
         //放在model
         model.addAttribute("notices", noticesList);
-        model.addAttribute("currpage",currpage);
         if(totalcount == 0)
             currpage = 0;
         model.addAttribute("currpage", currpage);

@@ -136,20 +136,20 @@
             <!--页码-->
             <ul class="pager">
 
-                <li th:if="${currpage eq 1}" style="margin: 0 5px;" class="disabled">
+                <li th:if="${currpage eq 1 or currpage eq 0}" style="margin: 0 5px;" class="disabled">
                     <a href="javascript:return false;">
                         index
                     </a>
                 </li>
-                <li th:if="${currpage ne 1}" style="margin: 0 5px;">
+                <li th:if="${currpage ne 1 and currpage ne 0}" style="margin: 0 5px;">
                     <a th:href="@{'/bulletin_page?currpage=1'}">
                         index
                     </a>
                 </li>
-                <li th:if="${currpage ne 1}" style="margin: 0 5px;">
+                <li th:if="${currpage ne 1 and currpage ne 0}" style="margin: 0 5px;">
                     <a th:href="@{/bulletin_page(currpage=${currpage}-1)}">&larr; Older</a>
                 </li>
-                <li th:if="${currpage eq 1}" style="margin: 0 5px;" class="disabled">
+                <li th:if="${currpage eq 1 or currpage eq 0}" style="margin: 0 5px;" class="disabled">
                     <a href="javascript:return false;">&larr; Older</a>
                 </li>
                 <li style="margin: 0 5px;">
