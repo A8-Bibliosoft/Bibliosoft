@@ -3,6 +3,7 @@ package com.lib.bibliosoft.entity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @Author: 毛文杰
@@ -20,7 +21,7 @@ public class Feedback {
     private String content;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private String date;
+    private Date date;
 
     private String readerId;
 
@@ -57,11 +58,11 @@ public class Feedback {
         this.content = content;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

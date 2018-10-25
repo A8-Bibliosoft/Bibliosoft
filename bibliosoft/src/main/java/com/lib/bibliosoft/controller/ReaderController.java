@@ -696,6 +696,31 @@ public class ReaderController {
     /*---------------------reader feedback module---------------------------*/
 
     /**
+     * 胡皓
+     */
+    @RequestMapping("/goFeedBack")
+    public String goFeedBack(){
+        return "FeedBack";
+    }
+
+    @RequestMapping("/feedBack")
+    @ResponseBody
+    public String feedBack(HttpSession session,String content){
+        if(session.getAttribute("readerId")!=null){
+            String readerId=session.getAttribute("readerId").toString();
+            Feedback feedback=new Feedback();
+            feedback.setContent(content);
+            feedback.setDate(new Date());
+            feedback.setReaderId(readerId);
+            feedback.setIsView("no");
+            feedbackRepository.save(feedback);
+            return "success";
+        }else{
+            return "unlogin";
+        }
+    }
+
+    /**
      * @title ReaderController.java
      * @param model 默认进入的页面模型展示所有未读的反馈荐购，分页paging
      * @return java.lang.String

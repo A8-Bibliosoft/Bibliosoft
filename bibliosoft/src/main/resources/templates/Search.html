@@ -30,14 +30,6 @@
 	<!-- start-smoth-scrolling -->
 	<script type="text/javascript" th:src="@{/static/hujs/move-top.js}"></script>
 	<script type="text/javascript" th:src="@{/static/hujs/easing.js}"></script>
-	<script type="text/javascript">
-		jQuery(document).ready(function($) {
-			$(".scroll").click(function(event){
-				event.preventDefault();
-				$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
-			});
-		});
-	</script>
 	<!-- start-smoth-scrolling -->
 	<script type="text/javascript" th:src="@{/static/hujs/numscroller-1.0.js}"></script>
 	<style>
@@ -49,9 +41,12 @@
 			height: 150px;
 			width: 100%;
 		}
+		#readeronline a{
+			color: yellow;
+		}
 	</style>
 </head>
-<body>
+<body style="background-color: #f7f7f7">
 <!-- header -->
 <div id="home" class="banner w3l">
 	<div class="container">
@@ -73,11 +68,9 @@
 			<div class="collapse navbar-collapse nav-wil" id="bs-example-navbar-collapse-1">
 				<nav class="cl-effect-1">
 					<ul class="nav navbar-nav ">
-						<li><a class="scroll hvr-bounce-to-bottom active" href="#about">ABOUT</a></li>
-						<li><a class="scroll hvr-bounce-to-bottom" href="#ban-bot">SERVICES</a></li>
-						<li><a class="scroll hvr-bounce-to-bottom" href="#gallery">GALLERY</a></li>
-						<li><a class="scroll hvr-bounce-to-bottom" href="#team">TEAM</a></li>
-						<li><a class="scroll hvr-bounce-to-bottom" href="#contact">CONTACT</a></li>
+						<li><a class="scroll hvr-bounce-to-bottom" href="goHomePage">HomePage</a></li>
+						<li><a class="scroll hvr-bounce-to-bottom" href="goSearch">Search</a></li>
+						<li><a class="scroll hvr-bounce-to-bottom" href="goFeedBack">Advice</a></li>
 					</ul>
 				</nav>
 			</div><!-- /navbar-collapse -->
