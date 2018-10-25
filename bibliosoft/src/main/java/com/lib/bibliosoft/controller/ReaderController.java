@@ -732,8 +732,8 @@ public class ReaderController {
     public String gotoFeedbackPage(Model model){
         Integer currpage = 1;
         totalCount = feedbackRepository.findFeedbacksByIsView("no").size();
-        if(totalCount == 0)
-            model.addAttribute("currpage",0);
+//        if(totalCount == 0)
+//            model.addAttribute("currpage",0);
         model.addAttribute("totalcount", totalCount);
         Integer totalPages = (totalCount + pagesize - 1)/pagesize;
         model.addAttribute("totalpages", totalPages);

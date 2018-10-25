@@ -10,9 +10,13 @@ public class BookDelRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer bookId;
+//    private Integer bookId;
 
-    private String libId;
+    @ManyToOne()
+    @JoinColumn(name = "lib_id")
+    private Librarian libId;
+
+    private String bookName;
 
     private Date time;
 
@@ -24,23 +28,27 @@ public class BookDelRecord {
         this.id = id;
     }
 
-    public Integer getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(Integer bookId) {
-        this.bookId = bookId;
-    }
-
-    public void setLibId(String libId) {
-        this.libId = libId;
-    }
-
     public Date getTime() {
         return time;
     }
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public String getBookName() {
+        return bookName;
+    }
+
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
+    }
+
+    public Librarian getLibId() {
+        return libId;
+    }
+
+    public void setLibId(Librarian libId) {
+        this.libId = libId;
     }
 }

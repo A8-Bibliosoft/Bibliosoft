@@ -1,6 +1,8 @@
 package com.lib.bibliosoft.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author: 毛文杰
@@ -25,6 +27,17 @@ public class Librarian {
     private String phone;
 
     private String email;
+
+    public List<BookDelRecord> getBookDelRecordList() {
+        return bookDelRecordList;
+    }
+
+    public void setBookDelRecordList(List<BookDelRecord> bookDelRecordList) {
+        this.bookDelRecordList = bookDelRecordList;
+    }
+
+    @OneToMany(mappedBy = "libId", fetch = FetchType.EAGER)
+    private List<BookDelRecord> bookDelRecordList = new ArrayList<>();
 
     public Librarian() {
     }
@@ -77,15 +90,4 @@ public class Librarian {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "Librarian{" +
-                "id=" + id +
-                ", libName='" + libName + '\'' +
-                ", libId='" + libId + '\'' +
-                ", password='" + password + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
 }

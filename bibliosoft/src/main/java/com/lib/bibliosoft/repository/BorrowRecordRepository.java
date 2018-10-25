@@ -47,6 +47,7 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
 
     //所有未还记录
     List<BorrowRecord> findByReturntimeIsNull();
+
     //所有欠款记录
     @Transactional
     @Query(value = "select * from borrowrecord where borrowrecord.debt>0",nativeQuery = true)
@@ -96,5 +97,7 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
     @Modifying
     @Query(value = "update borrowrecord set lastday=?2 where book_id=?1",nativeQuery = true)
     void renew(Integer bookId,Integer lastday);
+
+    List<BorrowRecord> findAllByBookId(Integer bookid);
 }
 

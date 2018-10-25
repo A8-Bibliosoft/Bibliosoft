@@ -250,7 +250,8 @@
             var imgSrc = document.selection.createRange().text;
             var localImagId = document.getElementById("localImag"); //必须设置初始大小
             localImagId.style.width = "150px";
-            localImagId.style.height = "180px"; //图片异常的捕捉，防止用户修改后缀来伪造图片
+            localImagId.style.height = "180px";
+            //图片异常的捕捉，防止用户修改后缀来伪造图片
             try {
                 localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
                 localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
@@ -272,6 +273,7 @@
                 //window.location.href="/book_list";
             }
         };
+        //js插件验证表单
         $("#form-article-add").validate({
             submitHandler: function(form){
                 $(form).ajaxSubmit(options);
@@ -280,6 +282,7 @@
 
     });
 
+    //日期插件
     laydate({
         elem: '#start',
         event: 'focus'
