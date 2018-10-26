@@ -1,0 +1,17 @@
+.copy-right {
+    background: #262626;
+    padding: 24px 0;
+    text-align:center;
+}
+.copy-right p{
+    font-size:15px;
+    color:#fff;
+    line-height:1.8em;
+}
+.copy-right p a{
+    color:#fff;
+    text-decoration:none;
+}
+.copy-right p a:hover{
+    color:#F265B3;
+}

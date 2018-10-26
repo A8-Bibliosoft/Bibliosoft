@@ -8,6 +8,7 @@
     <link th:href="@{/static/hucss/bootstrap.css}" rel="stylesheet" type="text/css" media="all" />
     <script type="text/javascript" th:src="@{/static/hujs/jquery-2.1.4.min.js}"></script>
     <script type="text/javascript" th:src="@{/static/hujs/bootstrap-3.1.1.min.js}"></script>
+    <link th:href="@{/static/hucss/copyright.css}" rel="stylesheet" type="text/css" />
     <style>
         .imgsize img{
             width: 85px;
@@ -17,6 +18,15 @@
             height: 150px;
             width: 100%;
         }
+        .imgsize h4{
+            font-size: 1.2em;
+        }
+        .bookinfo{
+            padding: 10px;
+        }
+        .bookinfo span{
+            color: black;
+        }
     </style>
 </head>
 <body style="background-color: #f7f7f7">
@@ -24,10 +34,9 @@
     <div class="container-fluid">
         <ul class="nav navbar-nav">
             <li class="active"><a href="goHomePage" th:text="#{bookdetail.homepage}">首页</a></li>
-            <li><a href="#" th:text="#{bookdetail.allbooks}">所有藏书</a></li>
+            <li><a href="goSearch" th:text="#{bookdetail.allbooks}">所有藏书</a></li>
         </ul>
         <ul class="nav navbar-nav" style="float: right;">
-            <li><a href="#" th:text="#{readerinfo.mymessage}">我的消息</a></li>
             <li><a href="goReaderInfo"><span th:text="${session.loginname}"></span></a></li>
             <li><a href="goOut" th:text="#{homepage.logout}">退出登录</a></li>
         </ul>
@@ -73,7 +82,7 @@
                         <div class="col-md-12">
                             <input type="file" name="imgFile" id="file-btn" style="display:none;">
                             <br>
-                            <a href="#" onclick="UpLoad();return false;" class="fa fa-folder-open fa-lg" aria-hidden="true">点击选择文件</a>
+                            <a href="#" onclick="UpLoad();return false;" class="fa fa-folder-open fa-lg" aria-hidden="true" th:text="#{readerinfo.selectfile}">点击选择文件</a>
                         </div>
                     </div>
 
@@ -89,7 +98,20 @@
                         <div class="col-md-8">
                             <input type="text" class="form-control" id="email" name="eamil" th:value="${reader.email}" readonly="readonly">
                         </div>
-                        <button class="col-md-2 btn btn-warning" type="button" onclick="ChangeEmail()" th:text="#{readerinfo.changebinding}">更改绑定</button>
+                        <button class="col-md-2 btn btn-warning" type="button" onclick="GoChangeEmail()" th:text="#{readerinfo.changebinding}">更改绑定</button>
+                    </div>
+
+                    <div class="form-group has-success" hidden="hidden" id="reemail">
+                        <label class="col-md-2 control-label" >验证码</label>
+                        <div class="col-md-8">
+                            <input type="text" name="emailcode" id="emailcode" class="form-control">
+                        </div>
+                        <br><br>
+                        <label class="col-md-2 control-label" >新邮箱</label>
+                        <div class="col-md-8">
+                            <input type="text" name="newemail" id="newemail" class="form-control">
+                        </div>
+                        <button class="col-md-2 btn btn-primary" type="button" onclick="ChangeEmail()" th:text="#{readerinfo.confirm}">确认更改</button>
                     </div>
 
                     <div class="form-group has-success">
@@ -122,7 +144,7 @@
                         <a th:href="@{'goBookDetail?bookIsbn='+${borrow.book.bookIsbn}}" style="float: left">
                             <img th:src="@{${borrow.book.bookImg}}" alt="">
                         </a>
-                        <div>
+                        <div class="bookinfo">
                             <h4><span th:text="#{readerinfo.bookname}">书籍名称:</span><span th:text="${borrow.book.bookName}"></span></h4>
                             <h4><span th:text="#{readerinfo.borrdate}">借书时间:</span><span th:text="${borrow.borrowtime}"></span></h4>
                             <h4><span th:text="#{readerinfo.remaining}">剩余还书天数:</span><span th:text="${borrow.lastday}"></span></h4>
@@ -137,8 +159,7 @@
                         <a th:href="@{'goBookDetail?bookIsbn='+${appointment.book.bookIsbn}}" style="float: left">
                             <img th:src="@{${appointment.book.bookImg}}" alt="">
                         </a>
-                        <div>
-                            <br><br>
+                        <div class="bookinfo">
                             <h4><span th:text="#{readerinfo.bookname}">书籍名称:</span><span th:text="${appointment.book.bookName}"></span></h4>
                             <h4><span th:text="#{bookdetail.location}">书籍位置:</span><span th:text="${appointment.book.getBookPosition().getPlace()}"></span></h4>
                         </div>
@@ -151,7 +172,7 @@
                         <a th:href="@{'goBookDetail?bookIsbn='+${history.book.bookIsbn}}" style="float: left">
                             <img th:src="${history.book.bookImg}" alt="" >
                         </a>
-                        <div>
+                        <div class="bookinfo">
                             <h4><span th:text="#{readerinfo.bookname}">书籍名称:</span><span th:text="${history.book.bookName}"></span></h4>
                             <h4><span th:text="#{readerinfo.borrdate}">借书时间:</span><span th:text="${history.borrowtime}"></span></h4>
                             <h4><span th:text="#{readerinfo.returndate}">还书时间:</span><span th:text="${history.returntime}"></span></h4>
@@ -161,6 +182,11 @@
                 </ul>
             </div>
         </div>
+    </div>
+</div>
+<div class="copy-right" style="margin-top: 250px;">
+    <div class="container">
+        <p th:text="#{copyright}"></p>
     </div>
 </div>
 <script language='javascript' th:inline="javascript">
@@ -182,8 +208,56 @@
     function GoChangePassword(){
         $("#repassword").show();
     }
+    
+    function  GoChangeEmail(){
+        $.ajax({
+            type: "POST",
+            url: "/sendEmailCode",
+            data: null,
+            async: false,
+            cache: false,
+            success: function (data) {
+                if ("success" === data) {
+                    alert("已发送验证码到邮箱！");
+                } else if ("default" === data) {
+                    alert("验证码发送失败!请稍后再试！");
+                } else if ("error" === data) {
+                    alert("未知错误!");
+                }
+            },
+            fail: function (data) {
+                alert(data);
+            }
+        });
+        $("#reemail").show();
+    }
     function ChangeEmail(){
-
+        var emailcode=$('#emailcode').val();
+        var newemail=$('#newemail').val();
+        if(emailcode==null||emailcode==""||newemail==null||newemail==""){
+            alert("请输入正确的信息！");
+            return false;
+        }
+        var code="emailcode="+emailcode+"&&newemail="+newemail;
+        $.ajax({
+            type: "POST",
+            url: "/changeEmail",
+            data: code,
+            async: false,
+            cache: false,
+            success: function (data) {
+                if ("success" === data) {
+                    alert("更改邮箱成功！");
+                } else if ("erremailcode" === data) {
+                    alert("验证码错误！");
+                } else if ("error" === data) {
+                    alert("未知错误!");
+                }
+            },
+            fail: function (data) {
+                alert(data);
+            }
+        });
     }
     function UpLoad() {
         $("#file-btn").click();

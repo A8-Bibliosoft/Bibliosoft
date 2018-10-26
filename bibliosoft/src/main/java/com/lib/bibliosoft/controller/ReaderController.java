@@ -9,6 +9,7 @@ import com.lib.bibliosoft.service.IReaderService;
 import com.lib.bibliosoft.service.impl.BookSortService;
 import com.lib.bibliosoft.utils.FileNameUtil;
 import com.lib.bibliosoft.utils.FileUtil;
+import com.lib.bibliosoft.utils.SendEmail;
 import com.lib.bibliosoft.utils.VerifyCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -499,6 +500,41 @@ public class ReaderController {
         }
         return "redirect:goReaderInfo";
     }
+    //修改邮箱
+    //发送验证码
+    @RequestMapping("sendEmailCode")
+    @ResponseBody
+    public String sendEmailCode(HttpSession session) throws Exception{
+        String readerId=session.getAttribute("readerId").toString();
+        if(readerId!=null){
+            String emailcode=VerifyCode.getRandomCode(5);
+            Reader reader=readerRepository.findReaderByReaderId(readerId);
+            session.setAttribute("emailcode",emailcode);
+            //SendEmail.sendPassword(emailcode,reader.getEmail());
+            //logger.info(emailcode);
+            session.removeAttribute("emailcode");
+            return "success";
+        }else{
+            return "default";
+        }
+    }
+
+    //修改邮箱
+    @RequestMapping("/changeEmail")
+    @ResponseBody
+    public String changeEmail(HttpSession session,String emailcode,String newemail) throws Exception{
+        if(session.getAttribute("emailcode")!=null&&session.getAttribute("readerId")!=null&&emailcode!=null&&!emailcode.equals("")&&newemail!=null&&!newemail.equals("")){
+            String nowemailcode=session.getAttribute("emailcode").toString();
+            String readerId=session.getAttribute("readerId").toString();
+            if(!nowemailcode.equals(emailcode)){
+                return "erremailcode";
+            }else{
+                readerRepository.updateReaderEmail(readerId,newemail);
+                return "success";
+            }
+        }
+        return "error";
+    }
     //忘记密码
     @RequestMapping("/forgetPassword")
     @ResponseBody
@@ -518,8 +554,7 @@ public class ReaderController {
     //修改密码
     @RequestMapping("/changePassword")
     @ResponseBody
-    public String changePassword(HttpServletRequest request,String oldpassword,String newpassword) throws Exception{
-        HttpSession session=request.getSession();
+    public String changePassword(HttpSession session,String oldpassword,String newpassword) throws Exception{
         if(session.getAttribute("readerId")!=null&&oldpassword!=null&&!oldpassword.equals("")&&newpassword!=null&&!newpassword.equals("")){
             String readerId=session.getAttribute("readerId").toString();
             Reader reader=readerRepository.findReaderByReaderId(readerId);

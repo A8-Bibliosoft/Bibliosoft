@@ -11,7 +11,8 @@
 <link rel="stylesheet" th:href="@{/static/login/bootstrap_responsive.min.css}"/>
 <link rel="stylesheet" th:href="@{/static/login/matrix_login.css}"/>
 <link rel="stylesheet" th:href="@{/static/login/font_awesome.css}"/>
-	<link rel="shortcut icon" th:href="@{/static/images/favicon.ico}"/>
+<link th:href="@{/static/hucss/copyright.css}" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" th:href="@{/static/images/favicon.ico}"/>
 <script type="text/javascript" th:src="@{/static/login/js/jquery_1.5.1.min.js}"></script>
 <!-- 软键盘控件start -->
 <link th:href="@{/static/login/keypad/css/framework/form.css}" rel="stylesheet" type="text/css"/>
@@ -27,7 +28,6 @@
 <script type="text/javascript" th:src="@{/static/js/jQuery.md5.js}"></script>
 <script type="text/javascript" th:src="@{/static/js/jquery.tips.js}"></script>
 <script type="text/javascript" th:src="@{/static/js/jquery.cookie.js}"></script>
-
 <!-- 软键盘控件start -->
 <script type="text/javascript" th:src="@{/static/login/keypad/js/form/keypad.js}"></script>
 <script type="text/javascript" th:src="@{/static/login/keypad/js/framework.js}"></script>
@@ -89,6 +89,11 @@
 		<div id="windows1">
 		<div id="loginbox" >
 			<form action="" method="post" name="loginForm" id="loginForm">
+                <div class="control-group normal_text">
+                    <h3>
+                        <img th:src="@{/static/huimages/biglogo.png}"/>
+                    </h3>
+                </div>
 				<div class="control-group normal_text">
 					<!--<h3>-->
 						<!--<img th:src="@{/static/login/logo.png}" alt="Logo" />-->
@@ -140,11 +145,15 @@
 					</div>
 				</div>
 			</form>
-			<div class="controls">
-				<div class="main_input_box">
-					<font color="white"><span th:id="nameerr">Copyright © 图书科技 2018</span></font>
-				</div>
-			</div>
+            <div class="controls">
+                <div class="main_input_box">
+                    <font color="white">
+                        <span id="nameerr">Copyright © XD University 2018</span>
+                        <br>
+                        <span><a style="color:white;cursor: pointer" th:href="@{/goLogin(l='zh_CN')}">中文</a>&nbsp;&nbsp;<a th:href="@{/goLogin(l='en_US')}" style="color:white;cursor: pointer;">english</a></span>
+                    </font>
+                </div>
+            </div>
 		</div>
 		</div>
 		
