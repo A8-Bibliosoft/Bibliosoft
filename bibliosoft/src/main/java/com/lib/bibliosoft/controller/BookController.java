@@ -76,7 +76,7 @@ public class BookController {
     /*每页的大小*/
     private Integer pagesize = 6;
 
-//    /**
+//    /**a'd'd
 //     * Test
 //     * add a book
 //     * @return Result<Book>
@@ -553,7 +553,9 @@ public class BookController {
                 BarcodeUtil.generateFile(String.valueOf(b.getBookId()));
                 //提示语句
                 String name = "static/barcodeimages/"+String.valueOf(b.getBookId())+".png";
-                s = "<a target='view_window' href='http://localhost:8080/"+name+"'>"+b.getBookId()+"</a>;";
+//                s = "<a target='view_window' href='http://localhost:8080/"+name+"'>"+b.getBookId()+"</a>;";
+                //把图片附加到末尾，直接显示图片
+                s = "<img src='"+name+"'>";
                 bookids.append(s);
             }
 
@@ -564,7 +566,8 @@ public class BookController {
             return new ResponseEntity<Map<String,Object>>(map, HttpStatus.valueOf(500));
         }
         //http://localhost:8080/downloadImage
-        map.put("msg", ResultEnum.ADD_BOOK_SUCCESS.getMsg() + " bookid: " + bookids);
+//        map.put("msg", ResultEnum.ADD_BOOK_SUCCESS.getMsg() + " bookid: " + bookids);
+        map.put("msg", ResultEnum.ADD_BOOK_SUCCESS.getMsg() + bookids);
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
 
