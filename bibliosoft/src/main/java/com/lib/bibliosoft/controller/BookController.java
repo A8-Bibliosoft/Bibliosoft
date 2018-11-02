@@ -162,6 +162,11 @@ public class BookController {
             bookRepository.updateBookStatus(5, bookid);
             /*然后删除book表中的条目*/
             bookRepository.deleteById(id);
+            //bookSort表也要更新
+            List<BookSort> bookSort = bookSortRepository.findByBookIsbn(book.getBookIsbn());
+            if(bookSort.size()>0){
+                bookSortRepository.updateBookNumByisbn(-1,book.getBookIsbn());
+            }
             map.put("msg", ResultEnum.BOOK_DEL_SUCCESS.getMsg());
         }else{
             map.put("msg", ResultEnum.BOOK_DEL_FAILED.getMsg());
@@ -453,6 +458,10 @@ public class BookController {
 
         if(bookSortRepository.findByBookIsbn(bookisbn) != null){
             logger.info("已有ISBN编号为==={}的书籍，故不插入", bookisbn);
+//            List<BookSort> bookSort = bookSortRepository.findByBookIsbn(bookisbn);
+            //数量加一
+//            bookSort.get(0).setNum(bookSort.get(0).getNum()+1);
+            bookSortRepository.updateBookNumByisbn(1,bookisbn);
         }else{
             //书籍分类表
             BookSort bookSort = new BookSort();
@@ -460,6 +469,8 @@ public class BookController {
             bookSort.setBookIsbn(bookisbn);
             bookSort.setBookName(booktitle);
             bookSort.setTypeId(Integer.parseInt(typeid));
+            //第一本
+            bookSort.setNum(1);
             //关联
             bookSort.getBookList().add(book);
             book.setBookSort(bookSort);

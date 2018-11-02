@@ -9,7 +9,6 @@ import com.lib.bibliosoft.service.IReaderService;
 import com.lib.bibliosoft.service.impl.BookSortService;
 import com.lib.bibliosoft.utils.FileNameUtil;
 import com.lib.bibliosoft.utils.FileUtil;
-import com.lib.bibliosoft.utils.SendEmail;
 import com.lib.bibliosoft.utils.VerifyCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,8 +121,9 @@ public class ReaderController {
         List<String> legend = new ArrayList<String>(Arrays.asList(new String[] { "所有书籍", "在架上", "已借走", "已损坏","正在购买", "已被预约"}));
 
         List<Integer> data = new ArrayList<>();
-        List<Series> series = new ArrayList<Series>();
+        List<Series<Integer>> series = new ArrayList<Series<Integer>>();
 
+        //12个月
         for(int i=1;i<13;i++){
             data.add(bookRepository.findBookNumByMonth(2018, i).size());
         }
@@ -155,8 +155,42 @@ public class ReaderController {
         }
         series.add(new Series("已被预约","bar",data));
 
-        Echarts echarts = new Echarts(legend, series);
+        Echarts<Integer> echarts = new Echarts(legend, series);
         //解决中文乱码
+        response.setContentType("text/html;charset=utf-8");
+        PrintWriter out;
+        try{
+            out = response.getWriter();
+            String str=JSON.toJSONString(echarts);
+            out.print(str);
+            out.flush();
+            out.close();
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @PostMapping("/alltypedata")
+    @ResponseBody
+    public void showbooktypeDataChart(HttpServletResponse response){
+        List<String> legend = new ArrayList<>();
+        List<Series<BookNum>> series = new ArrayList<>();
+        List<BookNum> bookNumList = new ArrayList<>();
+        Integer totalnum = 0;
+        //找出所有书籍类型
+        for(BookType s : bookTypeRepository.findAll()){
+            legend.add(s.getTypeName());
+            //按照书籍类型找到isbn，然后查处每个isbn书籍的数目，求和，即是一个类型的总数
+            for(Integer i : bookSortRepository.findBookNumByBookType(s.getTypeName())){
+                totalnum+=i;
+            }
+            BookNum bookNum = new BookNum(totalnum, s.getTypeName());
+            bookNumList.add(bookNum);
+        }
+        Series<BookNum> sbn = new Series<>("Number of books", "pie", bookNumList);
+        series.add(sbn);
+        //这里的series只有一个
+        Echarts<BookNum> echarts = new Echarts(legend, series);
         response.setContentType("text/html;charset=utf-8");
         PrintWriter out;
         try{

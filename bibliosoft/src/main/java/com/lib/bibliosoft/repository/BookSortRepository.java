@@ -1,6 +1,5 @@
 package com.lib.bibliosoft.repository;
 
-import com.lib.bibliosoft.entity.Book;
 import com.lib.bibliosoft.entity.BookSort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -40,5 +39,12 @@ public interface BookSortRepository extends JpaRepository<BookSort, Integer>,Jpa
     @Query(value = "select * from booksort ORDER BY book_isbn LIMIT 4  ",nativeQuery = true)
     List<BookSort> findHMBook();
 
+    @Query(value = "select booksort.num from booktype,booksort where booktype.type_name = ?1 and booksort.type_id = booktype.type_id",nativeQuery = true)
+    List<Integer> findBookNumByBookType(String booktypename);
+
+    @Query(value = "update num set num = num+?1 where book_isbn = ?2",nativeQuery = true)
+    @Modifying
+    @Transactional
+    void updateBookNumByisbn(Integer num, String isbn);
 }
 

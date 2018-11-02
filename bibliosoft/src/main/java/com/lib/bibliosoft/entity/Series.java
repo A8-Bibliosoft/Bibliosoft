@@ -10,13 +10,13 @@ import java.util.List;
  * @date Created in 8:55 PM. 10/25/2018
  * @modify By 毛文杰
  */
-public class Series {
+public class Series<T> {
 
     private String name;
 
     private String type;
 
-    private List<Integer> data = new ArrayList<>();
+    private List<T> data = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -34,17 +34,20 @@ public class Series {
         this.type = type;
     }
 
-    public List<Integer> getData() {
-        return data;
+    public Series() {
     }
 
-    public void setData(List<Integer> data) {
+    public Series(String name, String type, List<T> data) {
+        this.name = name;
+        this.type = type;
         this.data = data;
     }
 
-    public Series(String name, String type, List<Integer> data) {
-        this.name = name;
-        this.type = type;
+    public List<T> getData() {
+        return data;
+    }
+
+    public void setData(List<T> data) {
         this.data = data;
     }
 }

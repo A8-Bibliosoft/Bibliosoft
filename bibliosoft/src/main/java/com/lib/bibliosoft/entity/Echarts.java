@@ -10,14 +10,20 @@ import java.util.List;
  * @date Created in 9:08 PM. 10/25/2018
  * @modify By 毛文杰
  */
-public class Echarts {
+public class Echarts<T> {
 
     private List<String> legend = new ArrayList<>();
 
-    private List<Series> series = new ArrayList<>();
+    private List<Series<T>> series = new ArrayList<>();
 
-    public Echarts(List<String> legend, List<Series> series) {
-        this.legend = legend;
+    public Echarts() {
+    }
+
+    public List<Series<T>> getSeries() {
+        return series;
+    }
+
+    public void setSeries(List<Series<T>> series) {
         this.series = series;
     }
 
@@ -29,11 +35,8 @@ public class Echarts {
         this.legend = legend;
     }
 
-    public List<Series> getSeries() {
-        return series;
-    }
-
-    public void setSeries(List<Series> series) {
+    public Echarts(List<String> legend, List<Series<T>> series) {
+        this.legend = legend;
         this.series = series;
     }
 }

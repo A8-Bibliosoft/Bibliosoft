@@ -29,33 +29,33 @@
 <body>
 <div class="grading_style">
     <div id="category">
-        <div id="scrollsidebar" class="left_Treeview">
-            <div class="show_btn" id="rightArrow"><span></span></div>
-            <div class="widget-box side_content">
-                <div class="side_title"><a title="隐藏" class="close_btn"><span></span></a></div>
-                <div class="side_list">
-                    <div class="widget-header header-color-green2">
-                        <h4 class="lighter smaller">Book type</h4>
-                    </div>
-                    <div class="widget-body">
-                        <ul class="b_P_Sort_list">
-                            <li><i class="orange  fa fa-user-secret"></i><a href="#">All(235)</a></li>
-                            <!--<li><i class="fa fa-diamond pink "></i> <a href="#">Science(235)</a></li>-->
-                            <!--<li><i class="fa fa-diamond pink "></i> <a href="#">Biology(2215)</a></li>-->
-                            <!--<li><i class="fa fa-diamond pink "></i> <a href="#">Mechanics(3456)</a></li>-->
-                            <!--<li><i class="fa fa-diamond pink "></i> <a href="#">Architecture(4332)</a></li>-->
-                            <!--<li><i class="fa fa-diamond pink "></i> <a href="#">Computer science(1332)</a></li>-->
-                            <!--<li><i class="fa fa-diamond grey"></i> <a href="#">Astronautics(4543)</a></li>-->
-                            <!--<li><i class="fa fa-diamond red"></i> <a href="#">Oceanography(343)</a></li>-->
-                            <!--<li><i class="fa fa-diamond blue"></i> <a href="#">Chemistry(2343)</a></li>-->
-                            <!--<li><i class="fa fa-diamond grey"></i> <a href="#">Literature(53)</a></li>-->
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!--<div id="scrollsidebar" class="left_Treeview">-->
+            <!--<div class="show_btn" id="rightArrow"><span></span></div>-->
+            <!--<div class="widget-box side_content">-->
+                <!--<div class="side_title"><a title="隐藏" class="close_btn"><span></span></a></div>-->
+                <!--<div class="side_list">-->
+                    <!--<div class="widget-header header-color-green2">-->
+                        <!--<h4 class="lighter smaller">Book type</h4>-->
+                    <!--</div>-->
+                    <!--<div class="widget-body">-->
+                        <!--<ul class="b_P_Sort_list">-->
+                            <!--<li><i class="orange  fa fa-user-secret"></i><a href="#Statistic_pie" th:onclick="'javascript:checkbook()'">All(235)</a></li>-->
+                            <!--&lt;!&ndash;<li><i class="fa fa-diamond pink "></i> <a href="#">Science(235)</a></li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li><i class="fa fa-diamond pink "></i> <a href="#">Biology(2215)</a></li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li><i class="fa fa-diamond pink "></i> <a href="#">Mechanics(3456)</a></li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li><i class="fa fa-diamond pink "></i> <a href="#">Architecture(4332)</a></li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li><i class="fa fa-diamond pink "></i> <a href="#">Computer science(1332)</a></li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li><i class="fa fa-diamond grey"></i> <a href="#">Astronautics(4543)</a></li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li><i class="fa fa-diamond red"></i> <a href="#">Oceanography(343)</a></li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li><i class="fa fa-diamond blue"></i> <a href="#">Chemistry(2343)</a></li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li><i class="fa fa-diamond grey"></i> <a href="#">Literature(53)</a></li>&ndash;&gt;-->
+                        <!--</ul>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
         <!--右侧样式-->
-        <div class="page_right_style right_grading">
+        <div class="page_right_style right_grading" style="left:0">
             <div class="Statistics_style" id="Statistic_pie">
                 <div class="type_title">Book statistics
                     <span class="top_show_btn Statistic_btn">Show</span>
@@ -69,11 +69,12 @@
 </body>
 </html>
 <script type="text/javascript">
+
+
     $(function () {
         $("#category").fix({
             float: 'left',
-            //minStatue : true,
-            skin: 'green',
+            skin: 'red',
             durationTime: false,
             spacingw: 20,
             spacingh: 240,
@@ -100,14 +101,12 @@
 <script type="text/javascript">
     //初始化宽度、高度
     $(".widget-box").height($(window).height());
-    $(".page_right_style").width($(window).width() - 220);
-    //$(".table_menu_list").width($(window).width()-240);
+    $(".page_right_style").width($(window).width());
     //当文档窗口发生改变时 触发
     $(window).resize(function () {
         $(".widget-box").height($(window).height());
-        $(".page_right_style").width($(window).width() - 220);
-        //$(".table_menu_list").width($(window).width()-240);
-    })
+        $(".page_right_style").width($(window).width());
+    });
 
     require.config({
         paths: {
@@ -138,7 +137,8 @@
 
                     x: 'center',
                     y: 'bottom',
-                    data: ['Science', 'Biology', 'Mechanics', 'Architecture', 'Computer', 'Astronautics', 'Oceanography', 'Chemistry','Literature']
+                    // data: ['Science', 'Biology', 'Mechanics', 'Architecture', 'Computer', 'Astronautics', 'Oceanography', 'Chemistry','Literature']
+                    data:[]
                 },
 
                 toolbox: {
@@ -170,59 +170,41 @@
                         radius: '55%',
                         center: ['50%', '60%'],
                         data: [
-                            {value: 1200, name: 'Science'},
-                            {value: 1100, name: 'Biology'},
-                            {value: 1300, name: 'Mechanics'},
-                            {value: 1000, name: 'Architecture'},
-                            {value: 980, name: 'Computer'},
-                            {value: 850, name: 'Astronautics'},
-                            {value: 550, name: 'Oceanography'},
-                            {value: 220, name: 'Chemistry'},
-                            {value: 500, name: 'Literature'},
+                            // {value: 1, name: 'Science'},
+                            // {value: 5, name: 'Biology'},
+                            // {value: 1, name: 'Mechanics'},
+                            // {value: 1, name: 'Architecture'},
+                            // {value: 3, name: 'Computer'},
+                            // {value: 4, name: 'Astronautics'},
+                            // {value: 2, name: 'Oceanography'},
+                            // {value: 1, name: 'Chemistry'},
+                            // {value: 1, name: 'Literature'},
                         ]
                     }
                 ]
             };
-            myChart.setOption(option);
+            $.ajax({
+                type : "post",
+                url : "/alltypedata",
+                async: false, //同步执行
+                dataType: "json", //返回数据形式为json
+                success : function(result) {
+                    //将从后台接收的json字符串转换成json对象
+                    var jsonobj = eval(result);
+                    //给图标标题赋值
+                    option.legend.data = jsonobj.legend;
+                    var series_arr = jsonobj.series[0].data;
+                    //驱动图表生成的数据内容，数组中每一项代表一个系列的特殊选项及数据
+                    for(var i = 0; i < series_arr.length; i++) {
+                        //这里的坑，series是个数组，要取[0]
+                        option.series[0].data[i] = series_arr[i];
+                    }
+                    //过渡控制，隐藏loading（读取中）
+                    myChart.hideLoading();
+                    // 为echarts对象加载数据
+                    myChart.setOption(option);
+                }
+            });
         }
     );
-</script>
-<script type="text/javascript">
-    $(function ($) {
-        var oTable1 = $('#sample-table').dataTable({
-            "aaSorting": <![CDATA[1, "desc"]]>,//默认第几个排序
-            "bStateSave": true,//状态保存
-            "aoColumnDefs": [
-                //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-                {"orderable": false, "aTargets": [0, 2, 3, 4, 5, 6, 7, 9]}// 制定列不参与排序
-            ]
-        });
-
-
-        $('table th input:checkbox').on('click', function () {
-            var that = this;
-            $(this).closest('table').find('tr > td:first-child input:checkbox')
-                .each(function () {
-                    this.checked = that.checked;
-                    $(this).closest('tr').toggleClass('selected');
-                });
-
-        });
-
-
-        $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
-
-        function tooltip_placement(context, source) {
-            var $source = $(source);
-            var $parent = $source.closest('table')
-            var off1 = $parent.offset();
-            var w1 = $parent.width();
-
-            var off2 = $source.offset();
-            var w2 = $source.width();
-
-            if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
-            return 'left';
-        }
-    });
 </script>

@@ -3,7 +3,6 @@ package com.lib.bibliosoft.entity;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 /**
  *@Title: BookSort.java
@@ -28,6 +27,10 @@ public class BookSort {
     @ManyToOne()
     @JoinColumn(name = "type_id")
     private BookType bookType;
+
+    //相同isbn书籍的数目
+    @Column(columnDefinition = "int default 1")
+    private Integer num;
 
     public String getBookName() {
         return bookName;
@@ -85,14 +88,24 @@ public class BookSort {
         this.bookType = bookType;
     }
 
-    @Override
-    public String toString() {
-        return "BookSort{" +
-                "bookIsbn='" + bookIsbn + '\'' +
-                ", bookName='" + bookName + '\'' +
-                ", bookAuthor='" + bookAuthor + '\'' +
-                ", typeId=" + typeId +
-                ", bookType=" + bookType +
-                '}';
+    public BookSort(String bookIsbn, String bookName, String bookAuthor, Integer typeId, List<Book> bookList, BookType bookType, Integer num) {
+        this.bookIsbn = bookIsbn;
+        this.bookName = bookName;
+        this.bookAuthor = bookAuthor;
+        this.typeId = typeId;
+        this.bookList = bookList;
+        this.bookType = bookType;
+        this.num = num;
+    }
+
+    public BookSort() {
+    }
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
     }
 }
