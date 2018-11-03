@@ -39,8 +39,8 @@ public interface BookSortRepository extends JpaRepository<BookSort, Integer>,Jpa
     @Query(value = "select * from booksort ORDER BY book_isbn LIMIT 4  ",nativeQuery = true)
     List<BookSort> findHMBook();
 
-    @Query(value = "select booksort.num from booktype,booksort where booktype.type_name = ?1 and booksort.type_id = booktype.type_id",nativeQuery = true)
-    List<Integer> findBookNumByBookType(String booktypename);
+    @Query(value = "select num from booksort where type_id = ?1 order by type_id asc",nativeQuery = true)
+    List<Integer> findBookNumByBookType(Integer booktypeid);
 
     @Query(value = "update num set num = num+?1 where book_isbn = ?2",nativeQuery = true)
     @Modifying

@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -40,26 +42,28 @@ public class LibrarianController {
 
     /**
      * index Page of Librarian used system
+     *
      * @return
      */
     @RequestMapping("/lib_index")
     @ResponseBody
-    public ModelAndView gotoIndex(){
+    public ModelAndView gotoIndex() {
         ModelAndView mv = new ModelAndView("lib_index");
         //find unseen
         List<Comment> commentList = iLibrarianSerivce.findAllMessageForLibrarian();
         //mv.addObject("commentList", commentList);
-        mv.addObject("commentNum",commentList.size());
+        mv.addObject("commentNum", commentList.size());
 
         //find unseen
         List<Feedback> feedbackList = iLibrarianSerivce.findAllFeedbackForLibrarian();
         //mv.addObject("feedbackList", feedbackList);
-        mv.addObject("feedbackNum",feedbackList.size());
+        mv.addObject("feedbackNum", feedbackList.size());
         return mv;
     }
 
     /**
      * Librarian login the system he is using
+     *
      * @param loginname
      * @param password
      * @param code
@@ -84,20 +88,20 @@ public class LibrarianController {
 
         Librarian librarian = iLibrarianSerivce.findByLibrarianName(loginname);
 
-        if (!code.equals(key)){
+        if (!code.equals(key)) {
             logger.info("codeerror");
             return "codeerror";
-        }else if (librarian == null){
+        } else if (librarian == null) {
             logger.info("This username={} does not exist", loginname);
             return "usererror";
-        }else if(password.equals(librarian.getPassword())){
+        } else if (password.equals(librarian.getPassword())) {
             logger.info("login success");
             //Put the info into the session
             session.setAttribute("librarian", librarian);
-            session.setAttribute("logintype","librarian");
+            session.setAttribute("logintype", "librarian");
             session.setAttribute("islogin", true);
             return "success";
-        }else{
+        } else {
             logger.info("usererror");
             return "usererror";
         }
@@ -105,26 +109,47 @@ public class LibrarianController {
 
     /**
      * go to info page
+     *
      * @return
      */
     @GetMapping("/librarian_info")
-    public String info_lib(Model model, HttpSession session){
-        if(session.getAttribute("librarian") != null){
+    public String info_lib(Model model, HttpSession session) {
+        if (session.getAttribute("librarian") != null) {
             Librarian lib = (Librarian) session.getAttribute("librarian");
             model.addAttribute("lib", lib);
             return "librarian_info";
-        }else
-            return "lib_login";
+        } else
+            return "/lib_login";
     }
+
+    @GetMapping("/lib_login")
+    public String changeSessionLanauage(HttpServletRequest request, String l) {
+        if("".equals(l)){
+            request.getSession().setAttribute(
+                    SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale("en", "US"));
+        }
+        else if ("zh".equals(l)) {
+            //代码中即可通过以下方法进行语言设置
+            request.getSession().setAttribute(
+                    SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale("zh", "CN"));
+        } else if ("en".equals(l)) {
+            //代码中即可通过以下方法进行语言设置
+            request.getSession().setAttribute(
+                    SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale("en", "US"));
+        }
+        return "lib_login";
+    }
+
 
     /**
      * logout the system
+     *
      * @param request
      * @param response
      * @return String
      */
     @GetMapping("lib_logout")
-    public String lib_logout(HttpServletRequest request,HttpServletResponse response){
+    public String lib_logout(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
         return "/lib_login";
     }

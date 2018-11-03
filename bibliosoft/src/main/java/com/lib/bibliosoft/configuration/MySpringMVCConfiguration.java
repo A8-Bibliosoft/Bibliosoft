@@ -90,7 +90,7 @@ public class MySpringMVCConfiguration extends WebMvcConfigurationSupport {
 //        registry.addViewController( "/" ).setViewName( "/goHomePage");
         registry.addViewController("/404").setViewName("/error/404");
         registry.addViewController("/500").setViewName("/error/500");
-        registry.addViewController("/lib_login").setViewName("lib_login");
+//        registry.addViewController("/lib_login").setViewName("lib_login");
 //        registry.addViewController("/home").setViewName("home");
         registry.addViewController("/book_grading").setViewName("book_grading");
         registry.addViewController("/reader_comment").setViewName("reader_comment");

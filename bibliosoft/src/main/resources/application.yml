@@ -65,8 +65,10 @@ spring:
 
   #设置国际化的基础名称
   messages:
-    basename: i18n.message
+    basename: i18n.messages
     fallback-to-system-locale: false
+    #设定Message bundles的编码，默认: UTF-8
+    #spring.messages.encoding=UTF-8
   #设置上传文件的配置
   servlet:
     multipart:
