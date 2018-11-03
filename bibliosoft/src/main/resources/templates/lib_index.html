@@ -133,17 +133,32 @@
                 <li class="light-blue">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                         <!--<span  class="time"><em id="time"></em></span>-->
-                        <span th:if="${session.librarian} ne null" th:text="'Welcome: '+ ${session.librarian.getLibName()}">
+                        <span th:if="${session.librarian} ne null" th:text="#{lib_index.right.wel}+ ${session.librarian.getLibName()}">
                         </span>
-                        <span th:if="${session.librarian} eq null" th:text="'Hello, Visitor'">
+                        <span th:if="${session.librarian} eq null" th:text="#{lib_index.right.hello}">
                         </span>
                         <i class="icon-caret-down"></i>
                     </a>
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                        <li><a href="javascript:void(0)" class="iframeurl" title="go setting" name="/system_setting"><i class="icon-cog"></i>Settings</a></li>
-                        <li><a href="javascript:void(0)" class="iframeurl" title="view my info" name="/librarian_info"><i class="icon-user"></i>Personal Info</a></li>
+                        <li>
+                            <a href="javascript:void(0)" class="iframeurl" th:title="#{lib_index.right.title.set}" name="/system_setting">
+                                <i class="icon-cog"></i>
+                                <p th:text="#{lib_index.right.title.set}" style="left: 30px;position: absolute;top: 9px;"></p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" class="iframeurl" th:title="#{lib_index.right.title.info}" name="/librarian_info" >
+                                <i class="icon-user"></i>
+                                <p th:text="#{lib_index.right.vmi}" style="left: 30px;position: absolute;top: 36px;"></p>
+                            </a>
+                        </li>
                         <li class="divider"></li>
-                        <li><a href="javascript:void(0)" id="Exit_system"><i class="icon-off"></i>Exit</a></li>
+                        <li>
+                            <a href="javascript:void(0)" id="Exit_system">
+                                <i class="icon-off"></i>
+                                <p th:text="#{lib_index.right.exit}" style="left: 34px;position: absolute;top: 81px;"></p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <!-- 显示消息数目 -->
@@ -165,7 +180,7 @@
                             <i th:if="${feedbackNum} eq 0" class="icon-warning-sign">&nbsp;0</i>
                             &nbsp;
                             <i th:if="${feedbackNum} gt 0" class="icon-warning-sign" th:text="${feedbackNum}"></i>
-                            notifications
+                            <p th:text="#{lib_index.right.tz}" style="position: absolute;right: 40px;top: 0px;"></p>
                         </li>
                         <!--<li>-->
                             <!--&lt;!&ndash;th:href="${'/reader_comment'}"&ndash;&gt;-->
@@ -183,10 +198,10 @@
                         <li>
                             <a href="javascript:void(0)" name="/reader_feedback" class="iframeurl" title="view feedback">
                                 <div class="clearfix">
-											<span class="pull-left">
-												<i class="btn btn-xs no-hover btn-success icon-shopping-cart"></i>
-												Readers' Feedback
-											</span>
+                                    <span class="pull-left">
+                                        <i class="btn btn-xs no-hover btn-success icon-shopping-cart" ></i>
+                                        <p  style="position: absolute;top: 54px;right: 40px" th:text="#{lib_index.right.fb}"></p>
+                                    </span>
                                     <span th:if="${feedbackNum} eq 0" class="pull-right badge badge-success"></span>
                                     <span th:if="${feedbackNum} gt 0" class="pull-right badge badge-success" th:text="${feedbackNum}"></span>
                                 </div>
@@ -223,8 +238,7 @@
                 }
             </script>
             <div class="sidebar-shortcuts" id="sidebar-shortcuts">
-                <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-                    Bibliosoft Librarian
+                <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large" th:text="#{lib_index.items.top}">
                 </div>
                 <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
                     <span class="btn btn-success">1</span>
@@ -235,97 +249,105 @@
             </div><!-- #sidebar-shortcuts -->
             <ul class="nav nav-list" id="nav_list">
                 <li class="home">
-                    <a href="javascript:void(0)" name="/home" class="iframeurl" title="">
+                    <a href="javascript:void(0)" name="/home" class="iframeurl" title="home">
                         <i class="icon-dashboard"></i>
-                        <span class="menu-text">To Home</span>
+                        <span class="menu-text" th:text="#{lib_index.items.th}"></span>
                     </a>
                 </li>
-                <li><a href="#" class="dropdown-toggle"><i class="icon-desktop"></i><span
-                        class="menu-text">Book Manage</span><b class="arrow icon-angle-down"></b></a>
+                <li>
+                    <a href="#" class="dropdown-toggle"><i class="icon-desktop"></i>
+                        <span class="menu-text" th:text="#{lib_index.items.bkm}"></span>
+                        <b class="arrow icon-angle-down"></b>
+                    </a>
                     <ul class="submenu">
                         <li class="home">
-                            <a href="javascript:void(0)" name="/book_list" title="booklist"
-                                            class="iframeurl">
-                                <i class="icon-double-angle-right"></i>Book List
+                            <a href="javascript:void(0)" name="/book_list" th:title="#{lib_index.items.title.bl}"
+                               class="iframeurl" th:text="#{lib_index.items.blist}">
+                                <i class="icon-double-angle-right"></i>
                             </a>
                         </li>
                         <li class="home">
-                            <a href="javascript:void(0)" name="/book_addByIsbn" title="addbookbyisbn"
-                               class="iframeurl">
-                                <i class="icon-double-angle-right"></i>Add ByISBN
+                            <a href="javascript:void(0)" name="/book_addByIsbn" th:title="#{lib_index.items.title.isbn}"
+                               class="iframeurl" th:text="#{lib_index.items.isbn}">
+                                <i class="icon-double-angle-right"></i>
                             </a>
                         </li>
                         <li class="home">
-                            <a href="javascript:void(0)" name="/goBorrowBook" title="borrowbook"
-                               class="iframeurl">
-                                <i class="icon-double-angle-right"></i>Borrow Book
+                            <a href="javascript:void(0)" name="/goBorrowBook" th:title="#{lib_index.items.title.brbook}"
+                               class="iframeurl" th:text="#{lib_index.items.borbook}">
+                                <i class="icon-double-angle-right"></i>
                             </a>
                         </li>
                         <li class="home">
-                            <a href="javascript:void(0)" name="/goReturnBook" title="returnbook"
-                               class="iframeurl">
-                                <i class="icon-double-angle-right"></i>Return Book
+                            <a href="javascript:void(0)" name="/goReturnBook" th:title="#{lib_index.items.title.rebook}"
+                               class="iframeurl" th:text="#{lib_index.items.rebook}">
+                                <i class="icon-double-angle-right"></i>
                             </a>
                         </li>
                         <li class="home">
-                            <a href="javascript:void(0)" name="/book_position" title="manageposition"
-                               class="iframeurl">
-                                <i class="icon-double-angle-right"></i>Position Manage
+                            <a href="javascript:void(0)" name="/book_position" th:title="#{lib_index.items.title.posi}"
+                               class="iframeurl" th:text="#{lib_index.items.position}">
+                                <i class="icon-double-angle-right"></i>
                             </a>
                         </li>
                         <li class="home">
-                            <a href="javascript:void(0)" name="/book_category_add" title="addbookcategory"
-                                            class="iframeurl">
-                                <i class="icon-double-angle-right"></i>Category Manage
+                            <a href="javascript:void(0)" name="/book_category_add" th:title="#{lib_index.items.title.categ}"
+                                            class="iframeurl" th:text="#{lib_index.items.categ}">
+                                <i class="icon-double-angle-right"></i>
                             </a>
                         </li>
                         <li class="home">
-                            <a href="javascript:void(0)" name="/bookDelRecord" title="bookdelrecord"
-                               class="iframeurl">
-                                <i class="icon-double-angle-right"></i>Book DelRecord
+                            <a href="javascript:void(0)" name="/bookDelRecord" th:title="#{lib_index.items.title.bookdelRecord}"
+                               class="iframeurl" th:text="#{lib_index.items.bookdelrec}">
+                                <i class="icon-double-angle-right"></i>
                             </a>
                         </li>
                         <li class="home">
-                            <a href="javascript:void(0)" name="/book_grading" title="Statistics" class="iframeurl">
-                                <i class="icon-double-angle-right"> </i>Book Statistics
+                            <a href="javascript:void(0)" name="/book_grading" th:title="#{lib_index.items.title.tatistics}" class="iframeurl" th:text="#{lib_index.items.bookstatistics}">
+                                <i class="icon-double-angle-right"></i>
                             </a>
                         </li>
 
                     </ul>
                 </li>
                 <li>
-                    <a href="#" class="dropdown-toggle"><i class="icon-user"></i><span
-                            class="menu-text">Reader Manage </span><b
-                            class="arrow icon-angle-down"></b></a>
+                    <a href="#" class="dropdown-toggle">
+                        <i class="icon-user"></i>
+                        <span class="menu-text" th:text="#{lib_index.items.rm}"></span>
+                        <b class="arrow icon-angle-down"></b>
+                    </a>
                     <ul class="submenu">
                         <li class="home">
-                            <a href="javascript:void(0)" name="/reader_list" title="Readers" class="iframeurl"><i
-                                    class="icon-double-angle-right">
-                            </i>Reader List</a></li>
-                        <!--<li class="home">-->
-                            <!--<a href="javascript:void(0)" name="/reader_grading" title="Statistics" class="iframeurl">-->
-                                <!--<i class="icon-double-angle-right">-->
-                                <!--</i>-->
-                                <!--Book Statistics-->
-                            <!--</a>-->
-                        <!--</li>-->
+                            <a href="javascript:void(0)" name="/reader_list" th:title="#{lib_index.items.title.r}" class="iframeurl" th:text="#{lib_index.items.rl}">
+                                <i class="icon-double-angle-right"></i>
+                            </a>
+                        </li>
                     </ul>
                 </li>
-                <li><a href="#" class="dropdown-toggle"><i class="icon-edit"></i><span
-                        class="menu-text">Message Manage</span><b
-                        class="arrow icon-angle-down"></b></a>
+                <li>
+                    <a href="#" class="dropdown-toggle">
+                        <i class="icon-edit"></i>
+                        <span class="menu-text" th:text="#{lib_index.items.mssm}"></span>
+                        <b class="arrow icon-angle-down"></b>
+                    </a>
                     <ul class="submenu">
                         <!--<li class="home"><a href="javascript:void(0)" name="/reader_comment" title="commentlist"-->
                                             <!--class="iframeurl"><i class="icon-double-angle-right"></i>Comment List</a>-->
                         <!--</li>-->
-                        <li class="home"><a href="javascript:void(0)" name="/reader_feedback" title="feedbacklist"
-                                            class="iframeurl"><i class="icon-double-angle-right"></i>Feedback List</a>
+                        <li class="home">
+                            <a href="javascript:void(0)" name="/reader_feedback" th:title="#{lib_index.items.title.fl}"
+                               class="iframeurl" th:text="#{lib_index.items.fl}">
+                                <i class="icon-double-angle-right"></i>
+                            </a>
                         </li>
                     </ul>
                 </li>
-                <li><a href="#" class="dropdown-toggle"><i class="icon-cogs"></i><span
-                        class="menu-text">System Settings</span><b
-                        class="arrow icon-angle-down"></b></a>
+                <li>
+                    <a href="#" class="dropdown-toggle">
+                        <i class="icon-cogs"></i>
+                        <span class="menu-text" th:text="#{lib_index.items.ss}"></span>
+                        <b class="arrow icon-angle-down"></b>
+                    </a>
                     <ul class="submenu">
                         <!--<li class="home">-->
                             <!--<a href="javascript:;" name="/system_setting" title="settings"-->
@@ -334,19 +356,24 @@
                             <!--</a>-->
                         <!--</li>-->
                         <li class="home">
-                            <a href="javascript:;" name="/bulletin_list" title="managebulletin"
-                               class="iframeurl">
-                                <i class="icon-double-angle-right"></i>Bulletin Manage
+                            <a href="javascript:;" name="/bulletin_list" th:title="#{lib_index.items.title.bm}"
+                               class="iframeurl" th:text="#{lib_index.items.bm}">
+                                <i class="icon-double-angle-right"></i>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li><a href="#" class="dropdown-toggle"><i class="icon-group"></i><span class="menu-text">Librarian Manage</span><b
-                        class="arrow icon-angle-down"></b></a>
+                <li>
+                    <a href="#" class="dropdown-toggle">
+                        <i class="icon-group"></i>
+                            <span class="menu-text" th:text="#{lib_index.items.libm}"></span>
+                            <b class="arrow icon-angle-down"></b>
+                    </a>
                     <ul class="submenu">
                         <li class="home">
-                            <a href="javascript:void(0)" name="/librarian_info" title="Personal" class="iframeurl">
-                                <i class="icon-double-angle-right"></i>Personal Info</a>
+                            <a href="javascript:void(0)" name="/librarian_info" th:title="#{lib_index.right.title.info}" class="iframeurl" th:text="#{lib_index.right.vmi}">
+                                <i class="icon-double-angle-right"></i>
+                            </a>
                         </li>
                     </ul>
                 </li>
@@ -373,7 +400,7 @@
                 <ul class="breadcrumb">
                     <li>
                         <i class="icon-home home-icon"></i>
-                        <a href="/lib_index">index page</a>
+                        <a href="/lib_index" th:text="#{lib_index.indpag}"></a>
                     </li>
                     <li class="active"><span class="Current_page iframeurl"></span></li>
                     <li class="active" id="parentIframe"><span class="parentIframe iframeurl"></span></li>
@@ -403,18 +430,17 @@
                             <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
                         </select>
                     </div>
-                    <span>&nbsp; Choose Skin</span>
+                    <span th:text="#{lib_index.chos}">&nbsp; </span>
                 </div>
 
                 <div>
                     <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl"/>
-                    <label class="lbl" for="ace-settings-rtl">Switch to the left</label>
+                    <label class="lbl" for="ace-settings-rtl" th:text="#{lib_index.swtr}"></label>
                 </div>
 
                 <div>
                     <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container"/>
-                    <label class="lbl" for="ace-settings-add-container">
-                        Switch narrow screen
+                    <label class="lbl" for="ace-settings-add-container" th:text="#{lib_index.swns}">
                         <b></b>
                     </label>
                 </div>

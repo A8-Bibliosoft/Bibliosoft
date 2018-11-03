@@ -34,16 +34,16 @@
 <div class=" page-content clearfix">
     <div id="products_style">
         <div class="search_style">
-            <div class="title_names">Search Query</div>
+            <div class="title_names" th:text="#{search.name}"></div>
 
                 <ul class="search_content clearfix">
                     <form action="/book_search" method="post" id="search" onsubmit="return search_check()">
                         <li>
                             <input name="bookname" id="bookname" type="text" class="text_add"
-                                   placeholder="Enter book name to search." style=" width:240px"/>
+                                   th:placeholder="#{search.ph.sbname}" style=" width:240px"/>
                         </li>
                         <li>
-                            <input class="inline laydate-icon" placeholder="Add Time" name="bookaddtime" id="start" style="margin-left:10px;padding-left: 4px;">
+                            <input class="inline laydate-icon" th:placeholder="#{search.ph.sbtime}" name="bookaddtime" id="start" style="margin-left:10px;padding-left: 4px;">
                         </li>
                         <li style="width:90px;">
                             <button type="button" class="btn_search" th:onclick="'javascript:submit()'">
@@ -55,10 +55,9 @@
                     <form action="/book_sBybid" class="bs-example bs-example-form" role="form" id="mysform" onsubmit="return searchByBookid()">
                             <div class="col-lg-3">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" name="bookid" id="sbookid" placeholder="enter bookid to search.">
+                                    <input type="text" class="form-control" name="bookid" id="sbookid" th:placeholder="#{search.ph.sbbid}">
                                     <span class="input-group-btn">
-                                    <button class="btn btn-default" type="submit">
-                                        Search!
+                                    <button class="btn btn-default" type="submit" th:text="#{search.button}">
                                     </button>
 					            </span>
                                 </div><!-- /input-group -->
@@ -67,10 +66,9 @@
                     <form action="/book_sBybisbn" id="mysform2" onsubmit="return searchByisbn()">
                             <div class="col-lg-3">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" name="isbn" id="sbookisbn" placeholder="enter isbn to search.">
+                                    <input type="text" class="form-control" name="isbn" id="sbookisbn" th:placeholder="#{search.ph.sbisbn}">
                                     <span class="input-group-btn">
-                                    <button class="btn btn-default" type="submit">
-                                        Search!
+                                    <button class="btn btn-default" type="submit" th:text="#{search.button}">
                                     </button>
 					            </span>
                                 </div><!-- /input-group -->
@@ -80,12 +78,12 @@
         </div>
         <div class="border clearfix">
             <span class="l_f">
-                <a href="/bookadd_detail" title="addbook" class="btn btn-warning Order_form">
-                    <i class="icon-plus"></i>Add Book
+                <a href="/bookadd_detail" th:title="#{book.add}" class="btn btn-warning Order_form">
+                    <i class="icon-plus" th:text="#{book.add}"></i>
                 </a>
             </span>
             <span class="r_f">
-                Total:&nbsp;<b th:text="${totalcount}"></b>&nbsp;Items
+                <span th:text="#{total.t}" style="float: left"></span>&nbsp;<b th:text="${totalcount}"></b>&nbsp;<span th:text="#{total.i}" style="float: right"></span>
             </span>
         </div>
         <!--书籍列表展示-->
@@ -94,16 +92,16 @@
                 <thead>
                 <tr>
                     <!-- 按照ID排序 -->
-                    <th width="40">ID</th>
-                    <th width="80">Book ID</th>
-                    <th width="180">Book Name</th>
-                    <th width="120">ISBN</th>
-                    <th width="120">Author</th>
-                    <th width="100">Price</th>
-                    <th width="200">Position</th>
-                    <th width="200">Add Time</th>
-                    <th width="70">Status</th>
-                    <th width="160">Operation</th>
+                    <th width="40" th:text="#{category.id}">ID</th>
+                    <th width="80" th:text="#{book.bookid}">Book ID</th>
+                    <th width="180" th:text="#{bookdetail.name}">Book Name</th>
+                    <th width="120" th:text="#{bookdetail.ISBN}">ISBN</th>
+                    <th width="120" th:text="#{search.author}">Author</th>
+                    <th width="100" th:text="#{bookdetail.price}">Price</th>
+                    <th width="200" th:text="#{book.position}">Position</th>
+                    <th width="200" th:text="#{search.ph.sbtime}">Add Time</th>
+                    <th width="70" th:text="#{book.status}">Status</th>
+                    <th width="160" th:text="#{table.operation}">Operation</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -144,20 +142,19 @@
                 <ul class="pager">
 
                     <li th:if="${currpage eq 1}" style="margin: 0 5px;" class="disabled">
-                        <a href="javascript:return false;">
+                        <a href="javascript:return false;" th:text="#{page.index}">
                             index
                         </a>
                     </li>
                     <li th:if="${currpage ne 1}" style="margin: 0 5px;">
-                        <a th:href="@{'/book_page?currpage=1'}">
-                            index
+                        <a th:href="@{'/book_page?currpage=1'}" th:text="#{page.index}">
                         </a>
                     </li>
                     <li th:if="${currpage ne 1}" style="margin: 0 5px;">
-                        <a th:href="@{/book_page(currpage=${currpage}-1)}">&larr; Older</a>
+                        <a th:href="@{/book_page(currpage=${currpage}-1)}" th:text="#{page.old}">&larr; Older</a>
                     </li>
                     <li th:if="${currpage eq 1}" style="margin: 0 5px;" class="disabled">
-                        <a href="javascript:return false;">&larr; Older</a>
+                        <a href="javascript:return false;" th:text="#{page.old}">&larr; Older</a>
                     </li>
                     <li style="margin: 0 5px;">
                         the&nbsp;<em style="color: mediumvioletred;" th:text="${currpage}"></em>&nbsp;page
@@ -166,18 +163,18 @@
                         total:&nbsp;<em style="color: mediumvioletred;" th:text="${totalpages}"></em>&nbsp;pages
                     </li>
                     <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
-                        <a href="javascript:return false;">Newer &rarr;</a>
+                        <a href="javascript:return false;" th:text="#{page.new}">Newer &rarr;</a>
                     </li>
                     <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                        <a th:href="@{/book_page(currpage=${currpage}+1)}">Newer &rarr;</a>
+                        <a th:href="@{/book_page(currpage=${currpage}+1)}" th:text="#{page.new}">Newer &rarr;</a>
                     </li>
                     <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
-                        <a href="javascript:return false;">
+                        <a href="javascript:return false;" th:text="#{page.index}">
                             index
                         </a>
                     </li>
                     <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                        <a th:href="@{/book_page(currpage=${totalpages})}">
+                        <a th:href="@{/book_page(currpage=${totalpages})}" th:text="#{page.last}">
                             &nbsp;last&nbsp;
                         </a>
                     </li>
@@ -245,13 +242,17 @@
 </div>
 </body>
 </html>
-<script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var message1 = [[#{alert.empty}]];
+    var message2 = [[#{confirm.delete}]]
+    /*]]>*/
     function searchByBookid(){
         var bookid = $("#sbookid").val();
         if(bookid != "" && bookid != null){
             return true;
         }else{
-            layer.alert("please input something to search!");
+            layer.alert(message1);
             return false;
         }
     }
@@ -261,7 +262,7 @@
         if(isbn != "" && isbn != null){
             return true;
         }else{
-            layer.alert("please input something to search!");
+            layer.alert(message1);
             return false;
         }
     }
@@ -278,7 +279,7 @@
         var bookaddtime = $("#bookaddtime").val();
         //alert(searchvalue);
         if ((bookname == null && bookaddtime == null) || (bookname == "" && bookaddtime == "")) {
-            layer.msg("You should input somthing to search!", {icon: 5, time: 1000});
+            layer.msg(message1, {icon: 5, time: 1000});
             return false;
         } else {
             return true;
@@ -289,43 +290,6 @@
         $("#search").submit();
     }
 
-    // jQuery(function ($) {
-        // var oTable1 = $('#sample-table').dataTable({
-        //     "aaSorting": [CDATA[1, "desc"]],//默认第几个排序
-        //     "bStateSave": true,//状态保存
-        //     "aoColumnDefs": [
-        //         //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
-        //         {"orderable": false, "aTargets": [0, 2, 3, 4, 5, 8, 9]}// 制定列不参与排序
-        //     ]
-        // });
-
-
-        // $('table th input:checkbox').on('click', function () {
-        //     var that = this;
-        //     $(this).closest('table').find('tr > td:first-child input:checkbox')
-        //         .each(function () {
-        //             this.checked = that.checked;
-        //             $(this).closest('tr').toggleClass('selected');
-        //         });
-        //
-        // });
-
-
-        // $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
-
-        // function tooltip_placement(context, source) {
-        //     var $source = $(source);
-        //     var $parent = $source.closest('table')
-        //     var off1 = $parent.offset();
-        //     var w1 = $parent.width();
-        //
-        //     var off2 = $source.offset();
-        //     var w2 = $source.width();
-        //
-        //     if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
-        //     return 'left';
-        // }
-    // });
     $(function () {
         $("#products_style").fix({
             float: 'left',
@@ -404,7 +368,7 @@
 
     /*书籍-删除*/
     function member_del(obj, id) {
-        layer.confirm('确认要删除吗？', function (index) {
+        layer.confirm(message2, function (index) {
             $.post("/book/" + id, {}, function (data) {
                 if (data.msg == "the book was deleted successfully!") {
                     $(obj).parents("tr").remove();

@@ -1,5 +1,5 @@
 <!DOCTYPE>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
@@ -59,7 +59,7 @@
             <div class="Statistics_style" id="Statistic_pie">
                 <div class="type_title">Book statistics
                     <span class="top_show_btn Statistic_btn">Show</span>
-                    <span class="Statistic_title Statistic_btn"><a title="Hide" class="top_close_btn">Hide</a></span>
+                    <span class="Statistic_title Statistic_btn"><a th:title="#{tools.hide}" class="top_close_btn">Hide</a></span>
                 </div>
                 <div id="Statistics" class="Statistics"></div>
             </div>
@@ -99,6 +99,9 @@
 
 </script>
 <script type="text/javascript">
+    /*<![CDATA[*/
+    var message1 = [[#{book.statistics}]];
+    /*]]>*/
     //初始化宽度、高度
     $(".widget-box").height($(window).height());
     $(".page_right_style").width($(window).width());

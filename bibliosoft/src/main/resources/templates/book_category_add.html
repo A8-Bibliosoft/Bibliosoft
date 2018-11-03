@@ -19,22 +19,24 @@
     <![endif]-->
     <script src="/static/js/jquery-1.9.1.min.js"></script>
     <script src="/static/assets/js/bootstrap.min.js"></script>
-    <title>添加产品分类</title>
+    <title>书籍类型管理</title>
 </head>
 <body>
 <div class="type_style">
-    <div class="type_title">书籍类型管理</div>
+    <div class="type_title" th:text="#{lib_index.items.categ}"></div>
     <div class="type_content">
         <div class="Operate_btn" style="border: 0px;padding-bottom: 0px;">
             <ul id="pro-info" class="nav nav-tabs">
                 <li class="active">
                     <a href="#info-1" data-toggle="tab">
-                        <i class="icon-edit align-top bigger-125"></i>新增子类型
+                        <i class="icon-edit align-top bigger-125"></i>
+                        <span th:text="#{category.add}"></span>
                     </a>
                 </li>
                 <li>
                     <a href="#info-2" data-toggle="tab">
-                        <i class="icon-ok align-top bigger-125"></i>查看所有类型
+                        <i class="icon-ok align-top bigger-125"></i>
+                        <span th:text="#{category.view}"></span>
                     </a>
                 </li>
             </ul>
@@ -45,24 +47,17 @@
                 <form class="form form-horizontal" id="addtypeform">
                     <div class="Operate_cont clearfix">
                         <label class="form-label">
-                            <span style="color: red">*</span>分类名称：
+                            <span style="color: red">*</span>
+                            <span th:text="#{category.name}"></span>
                         </label>
                         <div class="formControls ">
-                            <input type="text" class="input-text" value="" placeholder="" id="categoryname"
+                            <input type="text" class="input-text" id="categoryname"
                                    name="categoryname">
                         </div>
                     </div>
-                    <!--<div class="Operate_cont clearfix">-->
-                        <!--<label class="form-label">备注：</label>-->
-                        <!--<div class="formControls">-->
-                        <!--<textarea style="width: 380px" class="textarea" placeholder="说点什么...最少输入10个字符" datatype="*10-100"-->
-                                  <!--dragonfly="true" nullmsg="备注不能为空！" onKeyUp="textarealength(this,100)"></textarea>-->
-                            <!--<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>-->
-                        <!--</div>-->
-                    <!--</div>-->
                     <div class="">
                         <div class="" style=" text-align:center">
-                            <input class="btn btn-primary radius" onclick="submitform()" type="button" value="submit">
+                            <input class="btn btn-primary radius" onclick="submitform()" type="button" th:value="#{search.submit}">
                         </div>
                     </div>
                 </form>
@@ -84,11 +79,11 @@
                             <td th:text="${t.typeName}"></td>
 
                             <td class="td-manage">
-                                <a th:onclick="'javascript:type_edit('+this+','+${t.typeId}+')'" title="edit" href="javascript:;"
+                                <a th:onclick="'javascript:type_edit('+this+','+${t.typeId}+')'" th:title="#{table.title.edit}" href="javascript:;"
                                    class="btn btn-xs btn-info">
                                     <i class="icon-edit bigger-120"></i>
                                 </a>
-                                <a href="javascript:;" th:onclick="'javascript:type_del('+this+','+${t.typeId}+')'" title="delete" class="btn btn-xs btn-warning">
+                                <a href="javascript:;" th:onclick="'javascript:type_del('+this+','+${t.typeId}+')'" th:title="#{table.title.delete}" class="btn btn-xs btn-warning">
                                     <i class="icon-trash  bigger-120"></i>
                                 </a>
                             </td>
@@ -106,15 +101,16 @@
 <div class="add_menber" id="add_menber_style" style="display:none">
     <form action="/edit_category" method="post" id="edittype">
         <ul class=" page-content">
-            <li><label class="label_name">ID：</label>
+            <li><label class="label_name" th:text="#{category.id}">ID：</label>
                 <span class="add_name">
-                        <input value="" name="typeid" type="text" class="text_add" id="typeid"/>
+                        <input name="typeid" type="text" class="text_add" id="typeid"/>
                 </span>
                 <div class="prompt l_f"></div>
             </li>
-            <li><label class="label_name">Name：</label>
+            <li>
+                <label class="label_name" th:text="#{category.name}">Name：</label>
                 <span class="add_name">
-                        <input value="" name="typename" type="text" class="text_add" id="typename"/>
+                        <input name="typename" type="text" class="text_add" id="typename"/>
                 </span>
                 <div class="prompt l_f"></div>
             </li>
@@ -124,14 +120,19 @@
 <script type="text/javascript" src="/static/assets/layer/layer.js"></script>
 <script type="text/javascript" src="/static/js/H-ui.js"></script>
 <script type="text/javascript" src="/static/js/H-ui.admin.js"></script>
-<script type="text/javascript">
-
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var message1 = [[#{alert.catename}]];
+    var message2 = [[#{confirm.delete}]];
+    var submit = [[#{search.submit}]];
+    var cancel = [[#{button.cancel}]];
+    /*]]>*/
     /*目前的不足之处：提交之后切换回第二个面板不会立即刷新类型列表*/
     /*增加-书籍类型*/
     function submitform(){
         var catename = $("#categoryname").val();
         if(catename == ""){
-            layer.msg("please enter the category name!");
+            layer.msg(message1);
         }else{
             var data="categoryname="+catename;
             $.ajax({
@@ -152,7 +153,7 @@
 
     /*书籍类型-删除*/
     function type_del(obj, id) {
-        layer.confirm('are you sure to delete？', function (index) {
+        layer.confirm(message2, function (index) {
             $(obj).parents("tr").remove();
             $.post("/bookcategory/" + id, {}, function (data) {
                 if (data.msg == "success") {
@@ -177,7 +178,7 @@
             shadeClose: false, //点击遮罩关闭层
             area: ['800px', '200px'],
             content: $('#add_menber_style'),
-            btn: ['Submit', 'Cancel'],
+            btn: [submit, cancel],
             yes: function (index, layero) {
                 var num = 0;
                 var str = "";

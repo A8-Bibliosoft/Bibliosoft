@@ -29,58 +29,58 @@
     <div class="alert alert-block alert-success">
         <button type="button" class="close" data-dismiss="alert"><i class="icon-remove"></i></button>
         <i class="icon-ok green"></i>Welcome to <strong class="green">Bibliosoft System
-        <small>(v0.0.1)</small>
+        <small>(v1.0.2)</small>
     </strong>, The time you landed is: <em id="time"></em>，login IP: <em id="ip"></em>.
     </div>
     <div class="state-overview clearfix">
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <a href="/reader_list" title="All Readers">
+                <a href="/reader_list" th:title="#{home.title.readers}">
                     <div class="symbol terques">
                         <i class="icon-user"></i>
                     </div>
                     <div class="value">
                         <h1 th:text="${totalReaders}"></h1>
-                        <p>Readers</p>
+                        <p th:text="#{home.readers}"></p>
                     </div>
                 </a>
             </section>
         </div>
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <a href="/book_list" title="All Books">
+                <a href="/book_list" th:title="#{home.title.books}">
                     <div class="symbol red">
                         <i class="icon-book"></i>
                     </div>
                     <div class="value">
                         <h1 th:text="${totalBooks}"></h1>
-                        <p>Books</p>
+                        <p th:text="#{home.books}"></p>
                     </div>
                 </a>
             </section>
         </div>
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <a href="/reader_feedback" title="Feedbacks">
+                <a href="/reader_feedback" th:title="#{home.title.feedbacks}">
                     <div class="symbol yellow">
                         <i class="icon-comment"></i>
                     </div>
                     <div class="value">
                         <h1 th:text="${totalfeedbacks}"></h1>
-                        <p>Feedbacks</p>
+                        <p th:text="#{home.feedbacks}"></p>
                     </div>
                 </a>
             </section>
         </div>
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <a href="#" title="All Income">
+                <a href="#" th:title="#{home.title.income}">
                     <div class="symbol blue">
                         <i class="icon-bar-chart"></i>
                     </div>
                     <div class="value">
                         <h1 th:text="${income}"></h1>
-                        <p>Income</p>
+                        <p th:text="#{home.income}"></p>
                     </div>
                 </a>
             </section>
@@ -90,9 +90,10 @@
     <div class="clearfix">
         <div class="t_Record">
             <div id="main" style="height:300px; overflow:hidden; width:100%; overflow:auto"></div>
+            <p style="text-align: center; width: 100%" th:text="#{home.chart.bellow}"></p>
         </div>
         <div class="news_style">
-            <div class="title_name">New Feedbacks</div>
+            <div class="title_name" th:text="#{home.newfeed}"></div>
             <ul class="list">
                 <li th:each="f : ${feedbacks}">
                     <i class="icon-bell red"></i>
@@ -100,12 +101,13 @@
                 </li>
             </ul>
         </div>
+
     </div>
 
     <!-- 获取当前IP地址 -->
     <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
 
-    <script type="text/javascript">
+    <script type="text/javascript" th:inline="javascript">
         //时间设置
         function currentTime() {
             var d = new Date(), str = '';
@@ -144,15 +146,22 @@
                 'echarts/chart/bar'
             ],
             function (ec, theme) {
+                /*<![CDATA[*/
+                var text = [[#{home.chart.name}]];
+                var text1 = [[#{home.chart.loading}]];
+                var subtext = [[#{home.chart.subname}]]
+                /*]]>*/
                 var myChart = ec.init(document.getElementById('main'), theme);
                 //图表显示提示信息
                 myChart.showLoading({
-                    text: "chart data is trying to load..."
+                    text: text1
                 });
+
                 var option = {
                     title: {
-                        text: 'library book status',
-                        subtext: 'list book status records monthly'
+                        // text: 'library book status',
+                        text: text,
+                        subtext: subtext
                     },
                     tooltip: {
                         trigger: 'axis'

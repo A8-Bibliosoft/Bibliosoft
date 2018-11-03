@@ -19,14 +19,14 @@
 </head>
 <body>
 <div class="type_style">
-    <div class="type_title">Borrow Book</div>
+    <div class="type_title" th:text="#{lib_index.items.borbook}"></div>
     <div class="type_content" style="width: 50%;">
         <div class="Operate_btn" style="border: 0px;padding-bottom: 0px;">
             <ul id="pro-info" class="nav nav-tabs">
                 <li class="active">
                     <a href="#info-1" data-toggle="tab">
                         <i class="icon-edit align-top bigger-125"></i>
-                        BorrowBook
+                        <span th:text="#{lib_index.items.borbook}"></span>
                     </a>
                 </li>
             </ul>
@@ -37,16 +37,18 @@
             <div class="tab-pane fade in active" id="info-1" >
                 <form class="form form-horizontal" method="post" id="borrowbookform">
                     <div class="Operate_cont clearfix">
-                        <label class="form-label">
-                            <span style="color: red">*</span>ReaderId：
+                        <label style="float: left;text-align: right">
+                            <span style="color: red">*</span>
+                            <span th:text="#{reader.rid}"></span>
                         </label>
                         <div class="formControls ">
                             <input type="text" class="input-text" id="readerId" name="readerId">
                         </div>
                     </div>
                     <div class="Operate_cont clearfix">
-                        <label class="form-label">
-                            <span style="color: red">*</span>BookId：
+                        <label style="float: left;text-align: right">
+                            <span style="color: red">*</span>
+                            <span th:text="#{book.bookid}"></span>
                         </label>
                         <div class="formControls ">
                             <input type="text" class="input-text" id="bookId" name="bookId">
@@ -54,7 +56,7 @@
                     </div>
                     <div>
                         <div style="text-align:center">
-                            <input class="btn btn-primary radius" onclick="submitform()" type="button" value="Borrow">
+                            <input class="btn btn-primary radius" onclick="submitform()" type="button" th:value="#{button.borrow}">
                         </div>
                     </div>
                 </form>
@@ -62,14 +64,16 @@
         </div>
     </div>
 </div>
-<script>
-
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var message2 = [[#{alert.brbidandrid}]];
+    /*]]>*/
     /*借书ajax提交*/
     function submitform(){
         var readerid = $("#readerId").val();
         var bookid = $("#bookId").val();
         if(readerid == '' || bookid == ''){
-            layer.msg("please enter bookid and reader id to borrow books!", {icon: 7});
+            layer.msg(message2, {icon: 7});
         } else{
             var data="readerId="+readerid+"&bookId="+bookid;
             $.ajax({

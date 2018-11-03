@@ -47,22 +47,18 @@
 <body>
 <div class="Competence_add_style clearfix">
     <div class="myclass">
-        <div class="title_name">Add Book</div>
+        <div class="title_name" th:text="#{book.add}"></div>
         <form id="myform">
             <div class="Competence_add">
                 <div class="form-group">
-                    <!--<label class="col-sm-2 control-label no-padding-right" for="form-field-1">-->
-                    <!--Book ISBN-->
-                    <!--</label>-->
                     <div class="myinput">
-                        <input type="text" placeholder="book ISBN" name="bookisbn" id="bookisbn" class="form-control">
+                        <input type="text" th:placeholder="#{book.isbn}" name="bookisbn" id="bookisbn" class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="myinput">
-                        <!--<input type="text" placeholder="book Position" name="bookposition" id="bookposition" class="form-control">-->
                         <span class="select-box">
-                            <select class="form-control" title="Select Position" name="bookposition" id="bookposition">
+                            <select class="form-control" th:title="#{select.pos}" name="bookposition" id="bookposition">
                                 <option th:each="p : ${place}" th:value="${p.id}" th:text="${p.place}"></option>
                             </select>
                         </span>
@@ -71,25 +67,20 @@
                 <div class="form-group">
                     <div class="myinput">
                         <!-- default one -->
-                        <input type="text" placeholder="book Number(default 1)" value="1" name="booknumber" id="booknumber" class="form-control">
+                        <input type="text" th:placeholder="#{book.addbnum}" value="1" name="booknumber" id="booknumber" class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
-                    <!--<label class="col-sm-2 control-label no-padding-right" for="form-field-1">-->
-                        <!--Register Time：-->
-                    <!--</label>-->
                     <div class="myinput">
                         <input class="inline laydate-icon form-control" name="bookaddtime"
-                               placeholder="Register time" id="bookaddtime">
+                               th:placeholder="#{search.ph.sbtime}" id="bookaddtime">
+                        <!-- 这里借用了搜索框的placeholder -->
                     </div>
                 </div>
                 <div class="form-group">
-                    <!--<label class="col-sm-2 control-label no-padding-right" for="form-field-1">-->
-                        <!--Status：-->
-                    <!--</label>-->
                     <div class="myinput">
                         <span class="select-box">
-                            <select class="form-control" title="Select Status"  name="bookstatus" id="bookstatus">
+                            <select class="form-control" th:title="#{select.status}"  name="bookstatus" id="bookstatus">
                                 <option th:each="s : ${status}" th:value="${s.getStatus()}" th:text="${s.getDesc()}"></option>
                             </select>
                         </span>
@@ -99,7 +90,7 @@
                 <div class="form-group">
                     <div class="myinput">
                         <span class="select-box">
-                            <select class="form-control" title="Select Type"  name="booktype" id="booktype">
+                            <select class="form-control" th:title="#{select.type}"  name="booktype" id="booktype">
                                 <option th:each="t : ${types}" th:value="${t.getTypeId()}" th:text="${t.getTypeName()}"></option>
                             </select>
                         </span>
@@ -109,14 +100,16 @@
                 <!--按钮操作-->
                 <div class="mybutton">
                     <button onclick="book_save_submit();" class="btn btn-primary radius" type="button">
-                        <i class="fa fa-save "></i> Save&Submit
+                        <i class="fa fa-save "></i>
+                        <span th:text="#{button.save}"></span>
                     </button>
                     &nbsp;&nbsp;
                     <button onclick="window.location.href='/book_list'" class="btn btn-secondary  btn-warning" type="button">
                         <i class="fa fa-reply"></i> Return
+                        <span th:text="#{button.return}"></span>
                     </button>
                     &nbsp;&nbsp;
-                    <button class="btn btn-default radius" type="reset">&nbsp;&nbsp;Cancel&nbsp;&nbsp;
+                    <button class="btn btn-default radius" type="reset" th:text="#{button.cancel}">&nbsp;&nbsp;Cancel&nbsp;&nbsp;
                     </button>
                 </div>
             </div>

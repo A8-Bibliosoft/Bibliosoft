@@ -15,14 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 
 /**
@@ -122,23 +120,23 @@ public class LibrarianController {
             return "/lib_login";
     }
 
-    @GetMapping("/lib_login")
-    public String changeSessionLanauage(HttpServletRequest request, String l) {
-        if("".equals(l)){
-            request.getSession().setAttribute(
-                    SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale("en", "US"));
-        }
-        else if ("zh".equals(l)) {
-            //代码中即可通过以下方法进行语言设置
-            request.getSession().setAttribute(
-                    SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale("zh", "CN"));
-        } else if ("en".equals(l)) {
-            //代码中即可通过以下方法进行语言设置
-            request.getSession().setAttribute(
-                    SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale("en", "US"));
-        }
-        return "lib_login";
-    }
+//    @GetMapping("/lib_login")
+//    public String changeSessionLanauage(HttpServletRequest request, String l) {
+//        if("".equals(l)){
+//            request.getSession().setAttribute(
+//                    SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale("en", "US"));
+//        }
+//        else if ("zh_CN".equals(l)) {
+//            //代码中即可通过以下方法进行语言设置
+//            request.getSession().setAttribute(
+//                    SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale("zh", "CN"));
+//        } else if ("en_US".equals(l)) {
+//            //代码中即可通过以下方法进行语言设置
+//            request.getSession().setAttribute(
+//                    SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale("en", "US"));
+//        }
+//        return "lib_login";
+//    }
 
 
     /**

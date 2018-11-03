@@ -38,17 +38,17 @@
 <body>
 
 <div class="type_style">
-    <div class="type_title">Delete Record</div>
+    <div class="type_title" th:text="#{lib_index.items.title.bookdelRecord}"></div>
 
     <!--删除记录列表-->
     <div class="delrecord">
         <table class="table table-striped table-bordered table-hover" id="sample-table">
             <thead>
             <tr>
-                <th width="80">ID</th>
-                <th width="150px">BookName</th>
-                <th width="300">Librarian</th>
-                <th width="200px">Time</th>
+                <th width="80" th:text="#{category.id}">ID</th>
+                <th width="150px" th:text="#{bookdetail.name}">BookName</th>
+                <th width="300" th:text="#{homepage.librarian}">Librarian</th>
+                <th width="200px" th:text="#{bulletin.time}">Time</th>
             </tr>
             </thead>
             <tbody>
@@ -68,21 +68,21 @@
         <ul class="pager">
 
             <li th:if="${currpage eq 1 or currpage eq 0}" style="margin: 0 5px;" class="disabled">
-                <a href="javascript:return false;">
+                <a href="javascript:return false;" th:text="#{page.index}">
                     index
                 </a>
             </li>
             <!--<a th:href="@{'/book_page?currpage=1'}">-->
             <li th:if="${currpage ne 1 and currpage ne 0}" style="margin: 0 5px;">
-                <a th:href="@{'/bookdelrecord_page?currpage=1'}">
+                <a th:href="@{'/bookdelrecord_page?currpage=1'}" th:text="#{page.index}">
                     index
                 </a>
             </li>
             <li th:if="${currpage ne 1 and currpage ne 0}" style="margin: 0 5px;">
-                <a th:href="@{/bulletin_page(currpage=${currpage}-1)}">&larr; Older</a>
+                <a th:href="@{/bulletin_page(currpage=${currpage}-1)}" th:text="#{page.old}">&larr; Older</a>
             </li>
             <li th:if="${currpage eq 1 or currpage eq 0}" style="margin: 0 5px;" class="disabled">
-                <a href="javascript:return false;">&larr; Older</a>
+                <a href="javascript:return false;" th:text="#{page.old}">&larr; Older</a>
             </li>
             <li style="margin: 0 5px;">
                 the&nbsp;<em style="color: mediumvioletred;" th:text="${currpage}"></em>&nbsp;page
@@ -91,18 +91,18 @@
                 total:&nbsp;<em style="color: mediumvioletred;" th:text="${totalpages}"></em>&nbsp;pages
             </li>
             <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
-                <a href="javascript:return false;">Newer &rarr;</a>
+                <a href="javascript:return false;" th:text="#{page.new}">Newer &rarr;</a>
             </li>
             <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                <a th:href="@{/bulletin_page(currpage=${currpage}+1)}">Newer &rarr;</a>
+                <a th:href="@{/bulletin_page(currpage=${currpage}+1)}" th:text="#{page.new}">Newer &rarr;</a>
             </li>
             <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
-                <a href="javascript:return false;">
+                <a href="javascript:return false;" th:text="#{page.index}">
                     index
                 </a>
             </li>
             <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                <a th:href="@{/bulletin_page(currpage=${totalpages})}">
+                <a th:href="@{/bulletin_page(currpage=${totalpages})}" th:text="#{page.index}">
                     &nbsp;last&nbsp;
                 </a>
             </li>

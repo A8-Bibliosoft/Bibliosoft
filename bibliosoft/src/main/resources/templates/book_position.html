@@ -23,20 +23,20 @@
 </head>
 <body>
 <div class="type_style">
-    <div class="type_title">Book Location Management</div>
+    <div class="type_title" th:text="#{lib_index.items.position}"></div>
     <div class="type_content" style="width: 50%;">
         <div class="Operate_btn" style="border: 0px;padding-bottom: 0px;">
             <ul id="pro-info" class="nav nav-tabs">
                 <li class="active">
                     <a href="#info-1" data-toggle="tab">
                         <i class="icon-edit align-top bigger-125"></i>
-                        新增位置信息
+                        <span th:text="#{position.add}"></span>
                     </a>
                 </li>
                 <li>
                     <a href="#info-2" data-toggle="tab">
                         <i class="icon-ok align-top bigger-125"></i>
-                        查看位置信息
+                        <span th:text="#{position.edit}"></span>
                     </a>
                 </li>
             </ul>
@@ -48,8 +48,9 @@
             <div class="tab-pane fade in active" id="info-1" >
                 <form class="form form-horizontal" id="addpositionform">
                     <div class="Operate_cont clearfix">
-                        <label class="form-label">
-                            <span style="color: red">*</span>位置名称：
+                        <label style="float: left;text-align: right">
+                            <span style="color: red">*</span>
+                            <span th:text="#{position.info}"></span>
                         </label>
                         <div class="formControls ">
                             <input type="text" class="input-text" id="positionname" name="positionname">
@@ -65,7 +66,7 @@
                     <!--</div>-->
                     <div class="">
                         <div style="text-align:center">
-                            <input class="btn btn-primary radius" onclick="submitform()" type="button" value="submit">
+                            <input class="btn btn-primary radius" onclick="submitform()" type="button" th:value="#{search.submit}">
                         </div>
                     </div>
                 </form>
@@ -88,11 +89,11 @@
                             <td th:text="${p.place}"></td>
 
                             <td class="td-manage">
-                                <a th:onclick="'javascript:place_edit('+this+','+${p.id}+')'" title="edit" href="javascript:;"
+                                <a th:onclick="'javascript:place_edit('+this+','+${p.id}+')'" th:title="#{table.title.edit}" href="javascript:;"
                                    class="btn btn-xs btn-info">
                                     <i class="icon-edit bigger-120"></i>
                                 </a>
-                                <a href="javascript:;" th:onclick="'javascript:place_del('+this+','+${p.id}+')'" title="delete" class="btn btn-xs btn-warning">
+                                <a href="javascript:;" th:onclick="'javascript:place_del('+this+','+${p.id}+')'" th:title="#{table.title.edit}" class="btn btn-xs btn-warning">
                                     <i class="icon-trash  bigger-120"></i>
                                 </a>
                             </td>
@@ -129,13 +130,18 @@
 <script type="text/javascript" src="/static/js/H-ui.js"></script>
 <script type="text/javascript" src="/static/js/H-ui.admin.js"></script>
 
-<script type="text/javascript">
-
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var message1 = [[#{alert.addpos}]];
+    var message2 = [[#{confirm.delete}]];
+    var submit = [[#{search.submit}]];
+    var cancel = [[#{button.cancel}]];
+    /*]]>*/
     /*增加-书籍位置信息*/
     function submitform(){
         var placename = $("#positionname").val();
         if(placename == ""){
-            layer.msg("please enter a position to add!");
+            layer.msg(message1);
         }else{
             var data="placename="+placename;
             $.ajax({
@@ -156,7 +162,7 @@
 
     /*书籍位置信息-删除*/
     function place_del(obj, id) {
-        layer.confirm('are you sure to delete？', function (index) {
+        layer.confirm(message2, function (index) {
             $(obj).parents("tr").remove();
             $.post("/bookposition/" + id, {}, function (data) {
                 if (data.msg == "success") {
@@ -181,7 +187,7 @@
             shadeClose: false, //点击遮罩关闭层
             area: ['800px', '200px'],
             content: $('#add_menber_style'),
-            btn: ['Submit', 'Cancel'],
+            btn: [submit, cancel],
             yes: function (index, layero) {
                 var num = 0;
                 var str = "";
@@ -214,7 +220,6 @@
         $('#placeid').val('');
         $('#placeid').removeAttr("readonly");
     }
-
 </script>
 </body>
 </html>

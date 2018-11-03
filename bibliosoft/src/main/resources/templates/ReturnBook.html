@@ -19,14 +19,14 @@
 </head>
 <body>
 <div class="type_style">
-    <div class="type_title">Borrow Book</div>
+    <div class="type_title" th:text="#{return.Book}"></div>
     <div class="type_content" style="width: 50%;">
         <div class="Operate_btn" style="border: 0px;padding-bottom: 0px;">
             <ul id="pro-info" class="nav nav-tabs">
                 <li class="active">
                     <a href="#info-1" data-toggle="tab">
                         <i class="icon-edit align-top bigger-125"></i>
-                        ReturnBook
+                        <span th:text="#{return.Book}"></span>
                     </a>
                 </li>
             </ul>
@@ -38,8 +38,9 @@
             <div class="tab-pane fade in active" id="info-1">
                 <form class="form form-horizontal" id="returnbookform">
                     <div class="Operate_cont clearfix">
-                        <label class="form-label">
-                            <span style="color: red">*</span>BookId：
+                        <label style="float: left;text-align: right">
+                            <span style="color: red">*</span>
+                            <span th:text="#{book.bookid}"></span>
                         </label>
                         <div class="formControls ">
                             <input type="text" class="input-text" id="bookId" name="bookId">
@@ -47,7 +48,7 @@
                     </div>
                     <div>
                         <div style="text-align:center">
-                            <input class="btn btn-primary radius" onclick="submitform()" type="button" value="ReturnBook">
+                            <input class="btn btn-primary radius" onclick="submitform()" type="button" th:value="#{button.rbook}">
                         </div>
                     </div>
                 </form>
@@ -55,13 +56,15 @@
         </div>
     </div>
 </div>
-<script>
-
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var message1 = [[#{alert.rebid}]];
+    /*]]>*/
     /*借书ajax提交*/
     function submitform() {
         var bookid = $("#bookId").val();
         if (bookid == '') {
-            layer.msg("please enter bookid to return book!",{icon: 7});
+            layer.msg(message1,{icon: 7});
         } else {
             var data = "bookid=" + bookid;
             $.ajax({
