@@ -48,20 +48,20 @@
 <div class="add_menber" id="add_menber_style" style="display:none">
     <form action="/editadd_bulletin" method="post" id="addbulletin">
         <ul class=" page-content">
-            <li><label class="label_name">ID：</label>
+            <li><label class="label_name" th:text="#{category.id}">ID：</label>
                 <span class="add_name">
                         <input value="" name="bulletinid" type="text" class="text_add" id="bulletinid"/>
                 </span>
                 <div class="prompt l_f"></div>
             </li>
-            <li><label class="label_name">Title：</label>
+            <li><label class="label_name" th:text="#{bulletin.title}">Title：</label>
                 <span class="add_name">
                         <input value="" name="bulletintitle" type="text" class="text_add" id="bulletintitle"/>
                 </span>
                 <div class="prompt l_f"></div>
             </li>
             <li>
-                <label class="label_name">Content：</label>
+                <label class="label_name" th:text="#{bulletin.content}">Content：</label>
                 <!--<span class="add_name">-->
                         <!--<input name="bulletincontent" type="text" class="text_add" id="bulletincontent"/>-->
                 <!--</span>-->
@@ -88,12 +88,12 @@
 </div>
 
 <div class="type_style">
-        <div class="type_title">Bulletin Management</div>
+        <div class="type_title" th:text="#{lib_index.items.bm}"></div>
         <div class="type_content">
             <div class="Operate_btn">
                 <a href="javascript:;" id="addbulletinbutton" class="btn  btn-warning">
-                    <i class="icon-edit align-top bigger-125">
-                    </i>Add Bulletin
+                    <i class="icon-edit align-top bigger-125" th:text="#{bulletin.add}">
+                    </i>
                 </a>
             </div>
         </div>
@@ -103,11 +103,11 @@
             <table class="table table-striped table-bordered table-hover" id="sample-table">
                 <thead>
                     <tr>
-                        <th width="80">ID</th>
-                        <th width="150px">Title</th>
-                        <th width="300">Content</th>
-                        <th width="200px">Time</th>
-                        <th width="300">Operation</th>
+                        <th width="80" th:text="#{category.id}">ID</th>
+                        <th width="150px" th:text="#{bulletin.title}">Title</th>
+                        <th width="300" th:text="#{bulletin.content}">Content</th>
+                        <th width="200px" th:text="#{bulletin.time}">Time</th>
+                        <th width="300" th:text="#{table.operation}">Operation</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -137,20 +137,20 @@
             <ul class="pager">
 
                 <li th:if="${currpage eq 1 or currpage eq 0}" style="margin: 0 5px;" class="disabled">
-                    <a href="javascript:return false;">
+                    <a href="javascript:return false;" th:text="#{page.index}">
                         index
                     </a>
                 </li>
                 <li th:if="${currpage ne 1 and currpage ne 0}" style="margin: 0 5px;">
-                    <a th:href="@{'/bulletin_page?currpage=1'}">
+                    <a th:href="@{'/bulletin_page?currpage=1'}" th:text="#{page.index}">
                         index
                     </a>
                 </li>
                 <li th:if="${currpage ne 1 and currpage ne 0}" style="margin: 0 5px;">
-                    <a th:href="@{/bulletin_page(currpage=${currpage}-1)}">&larr; Older</a>
+                    <a th:href="@{/bulletin_page(currpage=${currpage}-1)}" th:text="#{page.old}">&larr; Older</a>
                 </li>
                 <li th:if="${currpage eq 1 or currpage eq 0}" style="margin: 0 5px;" class="disabled">
-                    <a href="javascript:return false;">&larr; Older</a>
+                    <a href="javascript:return false;" th:text="#{page.old}">&larr; Older</a>
                 </li>
                 <li style="margin: 0 5px;">
                     the&nbsp;<em style="color: mediumvioletred;" th:text="${currpage}"></em>&nbsp;page
@@ -159,18 +159,18 @@
                     total:&nbsp;<em style="color: mediumvioletred;" th:text="${totalpages}"></em>&nbsp;pages
                 </li>
                 <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
-                    <a href="javascript:return false;">Newer &rarr;</a>
+                    <a href="javascript:return false;" th:text="#{page.new}">Newer &rarr;</a>
                 </li>
                 <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                    <a th:href="@{/bulletin_page(currpage=${currpage}+1)}">Newer &rarr;</a>
+                    <a th:href="@{/bulletin_page(currpage=${currpage}+1)}" th:text="#{page.new}">Newer &rarr;</a>
                 </li>
                 <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
-                    <a href="javascript:return false;">
-                        index
+                    <a href="javascript:return false;" th:text="#{page.last}">
+                        last
                     </a>
                 </li>
                 <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                    <a th:href="@{/bulletin_page(currpage=${totalpages})}">
+                    <a th:href="@{/bulletin_page(currpage=${totalpages})}" th:text="#{page.last}">
                         &nbsp;last&nbsp;
                     </a>
                 </li>
@@ -178,7 +178,12 @@
         </div>
     </div>
 </body>
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var message2 = [[#{confirm.delete}]];
+    var submit = [[#{search.submit}]];
+    var cancel = [[#{button.cancel}]];
+    /*]]>*/
     /*公告-查看*/
     function bulletin_view(id) {
         var url = "/bulletin_show/" + id;
@@ -200,7 +205,7 @@
             shadeClose: false, //点击遮罩关闭层
             area: ['800px', '400px'],
             content: $('#add_menber_style'),
-            btn: ['Submit', 'Cancel'],
+            btn: [submit, cancel],
             yes: function (index, layero) {
                 var num = 0;
                 var str = "";
@@ -245,7 +250,7 @@
 
     /*公告-删除*/
     function bulletin_del(obj, id) {
-        layer.confirm('are you sure to delete？', function (index) {
+        layer.confirm(message2, function (index) {
             $(obj).parents("tr").remove();
             $.post("/bulletin/" + id, {}, function (data) {
                 if (data.msg == "success") {
@@ -272,7 +277,7 @@
             shadeClose: true, //点击遮罩关闭层
             area: ['800px', '400px'],
             content: $('#add_menber_style'),
-            btn: ['Submit', 'Cancel'],
+            btn: [submit, cancel],
             yes: function (index, layero) {
                 var num = 0;
                 var str = "";

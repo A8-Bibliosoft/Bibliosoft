@@ -92,15 +92,15 @@
                 <thead>
                 <tr>
                     <!-- 按照ID排序 -->
-                    <th width="40" th:text="#{category.id}">ID</th>
-                    <th width="80" th:text="#{book.bookid}">Book ID</th>
+                    <th width="60" th:text="#{category.id}">ID</th>
+                    <th width="00" th:text="#{book.bookid}">Book ID</th>
                     <th width="180" th:text="#{bookdetail.name}">Book Name</th>
                     <th width="120" th:text="#{bookdetail.ISBN}">ISBN</th>
                     <th width="120" th:text="#{search.author}">Author</th>
-                    <th width="100" th:text="#{bookdetail.price}">Price</th>
+                    <th width="70" th:text="#{bookdetail.price}">Price</th>
                     <th width="200" th:text="#{book.position}">Position</th>
                     <th width="200" th:text="#{search.ph.sbtime}">Add Time</th>
-                    <th width="70" th:text="#{book.status}">Status</th>
+                    <th width="60" th:text="#{book.status}">Status</th>
                     <th width="160" th:text="#{table.operation}">Operation</th>
                 </tr>
                 </thead>
@@ -124,11 +124,11 @@
                     </td>
                     <td class="td-manage">
                         <!-- th:onclick="'javascript:member_edit('+${book.getBookId()}+','+${book.getBookPosition()}+','+${book.getBookPrice()}+','+${book.getBookName()}+','+${book.getBookAuthor()}+','+${book.getBookIsbn()}+')'"  -->
-                        <a title="Edit" href="javascript:;"
+                        <a th:title="#{table.title.edit}" href="javascript:;"
                            th:onclick="'javascript:member_edit('+${book.getBookId()}+','+${book.getBookPosition().id}+','+${book.getBookStatus()}+','+${book.getBookPrice()}+','+'\''+${book.getBookName()}+'\''+','+'\''+${book.getBookAuthor()}+'\''+','+'\''+${book.getBookIsbn()}+'\''+')'"
                            class="btn btn-xs btn-info"> <i class="icon-edit bigger-120"></i>
                         </a>
-                        <a title="Delete" href="javascript:;"
+                        <a th:title="#{table.title.delete}" href="javascript:;"
                            th:onclick="'javascript:member_del(' + this + ',' +${book.getId()}+')'"
                            class="btn btn-xs btn-warning">
                             <i class="icon-trash  bigger-120"></i>
@@ -186,51 +186,51 @@
     <div class="add_menber" id="add_menber_style" style="display:none">
         <form action="/edit_book" method="post" id="addbook">
             <ul class=" page-content">
-                <li><label class="label_name">Book ID：</label>
+                <li><label class="label_name" th:text="#{book.bookid}">Book ID：</label>
                     <span class="add_name">
                         <input value="" name="bookId" type="text" class="text_add" id="book_id"/>
                     </span>
                     <div class="prompt l_f"></div>
                 </li>
                 <li>
-                    <label class="label_name">Book Name：</label>
+                    <label class="label_name" th:text="#{bookdetail.name}">Book Name：</label>
                     <span class="add_name">
                         <input name="bookName" type="text" class="text_add" id="book_name"/>
                     </span>
                     <div class="prompt r_f"></div>
                 </li>
                 <li>
-                    <label class="label_name">Position：</label>
+                    <label class="label_name" th:text="#{book.position}">Position：</label>
                     <span class="add_name">
                         <!--<input name="bookPosition" type="text" class="text_add" id="book_position"/>-->
-                        <select style="margin-left: 10px;width: 166px;" class="text_add" title="select status" name="bookPosition" id="book_position">
+                        <select style="margin-left: 10px;width: 166px;" class="text_add" th:title="#{select.status}" name="bookPosition" id="book_position">
                                 <option th:each="p : ${place}" th:text="${p.place}" th:value="${p.id}"></option>
                         </select>
                     </span>
                     <div class="prompt l_f"></div>
                 </li>
-                <li><label class="label_name">ISBN：</label>
+                <li><label class="label_name" th:text="#{bookdetail.ISBN}">ISBN：</label>
                     <span class="add_name">
                         <input name="isbn" type="text" class="text_add" id="book_isbn"/>
                     </span>
                     <div class="prompt r_f"></div>
                 </li>
-                <li><label class="label_name">Price：</label>
+                <li><label class="label_name" th:text="#{bookdetail.price}">Price：</label>
                     <span class="add_name">
                         <input name="price" type="text" class="text_add" id="book_price"/>
                     </span>
                     <div class="prompt l_f"></div>
                 </li>
-                <li><label class="label_name">Author：</label>
+                <li><label class="label_name" th:text="#{search.author}">Author：</label>
                     <span class="add_name">
                         <input name="author" type="text" class="text_add" id="book_author"/>
                     </span>
                     <div class="prompt r_f"></div>
                 </li>
                 <li>
-                    <label class="label_name">Status：</label>
+                    <label class="label_name" th:text="#{book.status}">Status：</label>
                     <span class="add_name">
-                        <select style="margin-left: 10px;width: 166px;" class="text_add" title="select status" name="bookstatus" id="book_status">
+                        <select style="margin-left: 10px;width: 166px;" class="text_add" th:title="#{select.status}" name="bookstatus" id="book_status">
                                 <option th:each="s : ${status}" th:text="${s.getDesc()}" th:value="${s.getStatus()}"></option>
                         </select>
                     </span>

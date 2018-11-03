@@ -180,7 +180,7 @@ public class ReaderController {
         //找出所有书籍类型
         for(BookType s : bookTypeRepository.findAll()){
             totalnum = 0;
-            logger.info("书籍类型分别为={}",s.getTypeName());
+            //logger.info("书籍类型分别为={}",s.getTypeName());
             legend.add(s.getTypeName());
             //按照书籍类型找到isbn，然后查处每个isbn书籍的数目，求和，即是一个类型的总数
             for(Integer i : bookSortRepository.findBookNumByBookType(s.getTypeId())){

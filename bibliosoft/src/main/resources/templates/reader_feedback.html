@@ -53,19 +53,22 @@
                 <!--<a href="javascript:void()" class="btn btn-success"><i class="fa fa-feed"></i>&nbsp;建议</a>-->
                 <!--<a href="javascript:void()" class="btn btn-success"><i class="fa fa-feed"></i>&nbsp;投诉</a>-->
            </span>
-           <span class="r_f">total：<em th:text="${totalcount}"></em>items</span>
+           <span class="r_f">
+               <!--total：<em th:text="${totalcount}"></em>items-->
+               <span th:text="#{total.t}" style="float: left"></span>&nbsp;<b th:text="${totalcount}"></b>&nbsp;<span th:text="#{total.i}" style="float: right"></span>
+           </span>
         </div>
         <div class="feedback">
             <table class="table table-striped table-bordered table-hover" id="sample-table">
                 <thead>
                     <tr>
-                        <th width="80">ID</th>
-                        <th width="100">Name</th>
-                        <th width="150px">Phone</th>
-                        <th width="">Content</th>
-                        <th width="180px">Date</th>
-                        <th width="70">status</th>
-                        <th width="250">Operation</th>
+                        <th width="80" th:text="#{category.id}">ID</th>
+                        <th width="100" th:text="#{readerinfo.name}">Name</th>
+                        <th width="150px" th:text="#{reader.phone}">Phone</th>
+                        <th width="" th:text="#{bulletin.content}">Content</th>
+                        <th width="180px" th:text="#{bulletin.time}">Date</th>
+                        <th width="70" th:text="#{book.status}">status</th>
+                        <th width="250" th:text="#{table.operation}">Operation</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -97,21 +100,21 @@
             <ul class="pager">
 
                 <li th:if="${currpage eq 1 or currpage eq 0}" style="margin: 0 5px;" class="disabled">
-                    <a href="javascript:return false;">
+                    <a href="javascript:return false;" th:text="#{page.index}">
                         index
                     </a>
                 </li>
                 <!--<a th:href="@{'/book_page?currpage=1'}">-->
                 <li th:if="${currpage ne 1 and currpage ne 0}" style="margin: 0 5px;">
-                    <a th:href="@{/book_page(currpage=1,flag=${flag})}">
+                    <a th:href="@{/book_page(currpage=1,flag=${flag})}" th:text="#{page.index}">
                         index
                     </a>
                 </li>
                 <li th:if="${currpage ne 1 and currpage ne 0}" style="margin: 0 5px;">
-                    <a th:href="@{/feedback_page(currpage=${currpage}-1,flag=${flag})}">&larr; Older</a>
+                    <a th:href="@{/feedback_page(currpage=${currpage}-1,flag=${flag})}" th:text="#{page.old}">&larr; Older</a>
                 </li>
                 <li th:if="${currpage eq 1 or currpage eq 0}" style="margin: 0 5px;" class="disabled">
-                    <a href="javascript:return false;">&larr; Older</a>
+                    <a href="javascript:return false;" th:text="#{page.old}">&larr; Older</a>
                 </li>
                 <li style="margin: 0 5px;">
                     the&nbsp;<em style="color: mediumvioletred;" th:text="${currpage}"></em>&nbsp;page
@@ -120,18 +123,18 @@
                     total:&nbsp;<em style="color: mediumvioletred;" th:text="${totalpages}"></em>&nbsp;pages
                 </li>
                 <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
-                    <a href="javascript:return false;">Newer &rarr;</a>
+                    <a href="javascript:return false;" th:text="#{page.new}">Newer &rarr;</a>
                 </li>
                 <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                    <a th:href="@{/feedback_page(currpage=${currpage}+1,flag=${flag})}">Newer &rarr;</a>
+                    <a th:href="@{/feedback_page(currpage=${currpage}+1,flag=${flag})}" th:text="#{page.new}">Newer &rarr;</a>
                 </li>
                 <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
-                    <a href="javascript:return false;">
-                        index
+                    <a href="javascript:return false;" th:text="#{page.last}">
+                        last
                     </a>
                 </li>
                 <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                    <a th:href="@{/feedback_page(currpage=${totalpages},flag=${flag})}">
+                    <a th:href="@{/feedback_page(currpage=${totalpages},flag=${flag})}" th:text="#{page.last}">
                         &nbsp;last&nbsp;
                     </a>
                 </li>
@@ -139,47 +142,12 @@
         </div>
     </div>
 </div>
-<!--留言详细-->
-<!--<div id="Guestbook" style="display:none">-->
-    <!--<div class="content_style">-->
-        <!--<div class="form-group">-->
-            <!--<label class="col-sm-2 control-label no-padding-right" for="form-field-1">留言用户：</label>-->
-            <!--<div class="col-sm-9" id="form-field-1">胡海天堂</div>-->
-        <!--</div>-->
-        <!--<div class="form-group">-->
-            <!--<label class="col-sm-2 control-label no-padding-right" for="form-field-2">联系电话：</label>-->
-            <!--<div class="col-sm-9" id="form-field-2">1234567787</div>-->
-        <!--</div>-->
-        <!--<div class="form-group">-->
-            <!--<label class="col-sm-2 control-label no-padding-right" for="form-field-3">联系邮箱：</label>-->
-            <!--<div class="col-sm-9" id="form-field-3">344665@qq.com</div>-->
-        <!--</div>-->
-        <!--<div class="form-group">-->
-            <!--<label class="col-sm-2 control-label no-padding-right" for="form-field-4">留言内容：</label>-->
-            <!--<div class="col-sm-9" id="form-field-4">-->
-                <!--三年同窗，一起沐浴了一片金色的阳光，一起度过了一千个日夜，我们共同谱写了多少友谊的篇章?愿逝去的那些闪亮的日子，都化作美好的记忆，永远留在心房。认识您，不论是生命中的一段插曲，还是永久的知已，我都会珍惜，当我疲倦或老去，不再拥有青春的时候，这段旋律会滋润我生命的每一刻。在此我只想说：有您真好!无论你身在何方，我的祝福永远在您身边!-->
-            <!--</div>-->
-        <!--</div>-->
-
-    <!--</div>-->
-<!--</div>-->
 </body>
 </html>
-<script type="text/javascript">
-
-    /*留言查看*/
-    // function Guestbook_iew(id) {
-    //     var index = layer.open({
-    //         type: 1,
-    //         title: '反馈信息',
-    //         maxmin: true,
-    //         shadeClose: false,
-    //         area: ['600px', ''],
-    //         content: $('#Guestbook'),
-    //         btn: ['确定', '取消'],
-    //     })
-    // };
-
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var message2 = [[#{confirm.delete}]];
+    /*]]>*/
     //设置已查看
     function feedback_view(obj, id){
         if(obj.title=='viewed'){
@@ -199,7 +167,7 @@
 
     /*留言-删除*/
     function feedback_delete(obj, id) {
-        layer.confirm('are you sure to delete?', function (index) {
+        layer.confirm(message2, function (index) {
             $(obj).parents("tr").remove();
             $.post("/feedback/" + id, {}, function (data) {
                 if (data.msg == "success") {

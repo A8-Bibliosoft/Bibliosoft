@@ -97,12 +97,12 @@
                 <a th:href="@{/bulletin_page(currpage=${currpage}+1)}" th:text="#{page.new}">Newer &rarr;</a>
             </li>
             <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
-                <a href="javascript:return false;" th:text="#{page.index}">
-                    index
+                <a href="javascript:return false;" th:text="#{page.last}">
+                    last
                 </a>
             </li>
             <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                <a th:href="@{/bulletin_page(currpage=${totalpages})}" th:text="#{page.index}">
+                <a th:href="@{/bulletin_page(currpage=${totalpages})}" th:text="#{page.last}">
                     &nbsp;last&nbsp;
                 </a>
             </li>

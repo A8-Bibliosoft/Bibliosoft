@@ -57,13 +57,16 @@
         <!--右侧样式-->
         <div class="page_right_style right_grading" style="left:0">
             <div class="Statistics_style" id="Statistic_pie">
-                <div class="type_title">Book statistics
+                <div class="type_title">
+                    <span th:text="#{book.statistics}"></span>
                     <span class="top_show_btn Statistic_btn">Show</span>
                     <span class="Statistic_title Statistic_btn"><a th:title="#{tools.hide}" class="top_close_btn">Hide</a></span>
                 </div>
                 <div id="Statistics" class="Statistics"></div>
             </div>
         </div>
+    </div>
+    <div style="width: 100%;height: 170px;position: absolute;bottom: 0px;background-color: #e1e1e8">
     </div>
 </div>
 </body>
@@ -98,7 +101,7 @@
     });
 
 </script>
-<script type="text/javascript">
+<script th:inline="javascript">
     /*<![CDATA[*/
     var message1 = [[#{book.statistics}]];
     /*]]>*/
