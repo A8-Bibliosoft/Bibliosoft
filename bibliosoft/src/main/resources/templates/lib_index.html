@@ -262,49 +262,57 @@
                     <ul class="submenu">
                         <li class="home">
                             <a href="javascript:void(0)" name="/book_list" th:title="#{lib_index.items.title.bl}"
-                               class="iframeurl" th:text="#{lib_index.items.blist}">
+                               class="iframeurl">
                                 <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.blist}"></span>
                             </a>
                         </li>
                         <li class="home">
                             <a href="javascript:void(0)" name="/book_addByIsbn" th:title="#{lib_index.items.title.isbn}"
-                               class="iframeurl" th:text="#{lib_index.items.isbn}">
+                               class="iframeurl">
                                 <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.isbn}"></span>
                             </a>
                         </li>
                         <li class="home">
                             <a href="javascript:void(0)" name="/goBorrowBook" th:title="#{lib_index.items.title.brbook}"
-                               class="iframeurl" th:text="#{lib_index.items.borbook}">
+                               class="iframeurl">
                                 <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.borbook}"></span>
                             </a>
                         </li>
                         <li class="home">
                             <a href="javascript:void(0)" name="/goReturnBook" th:title="#{lib_index.items.title.rebook}"
-                               class="iframeurl" th:text="#{lib_index.items.rebook}">
+                               class="iframeurl">
                                 <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.rebook}"></span>
                             </a>
                         </li>
                         <li class="home">
                             <a href="javascript:void(0)" name="/book_position" th:title="#{lib_index.items.title.posi}"
-                               class="iframeurl" th:text="#{lib_index.items.position}">
+                               class="iframeurl">
                                 <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.position}"></span>
                             </a>
                         </li>
                         <li class="home">
                             <a href="javascript:void(0)" name="/book_category_add" th:title="#{lib_index.items.title.categ}"
-                                            class="iframeurl" th:text="#{lib_index.items.categ}">
+                                            class="iframeurl">
                                 <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.categ}"></span>
                             </a>
                         </li>
                         <li class="home">
                             <a href="javascript:void(0)" name="/bookDelRecord" th:title="#{lib_index.items.title.bookdelRecord}"
-                               class="iframeurl" th:text="#{lib_index.items.bookdelrec}">
+                               class="iframeurl">
                                 <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.bookdelrec}"></span>
                             </a>
                         </li>
                         <li class="home">
-                            <a href="javascript:void(0)" name="/book_grading" th:title="#{lib_index.items.title.tatistics}" class="iframeurl" th:text="#{lib_index.items.bookstatistics}">
+                            <a href="javascript:void(0)" name="/book_grading" th:title="#{lib_index.items.title.tatistics}" class="iframeurl">
                                 <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.bookstatistics}"></span>
                             </a>
                         </li>
 
@@ -318,8 +326,9 @@
                     </a>
                     <ul class="submenu">
                         <li class="home">
-                            <a href="javascript:void(0)" name="/reader_list" th:title="#{lib_index.items.title.r}" class="iframeurl" th:text="#{lib_index.items.rl}">
+                            <a href="javascript:void(0)" name="/reader_list" th:title="#{lib_index.items.title.r}" class="iframeurl">
                                 <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.rl}"></span>
                             </a>
                         </li>
                     </ul>
@@ -331,13 +340,11 @@
                         <b class="arrow icon-angle-down"></b>
                     </a>
                     <ul class="submenu">
-                        <!--<li class="home"><a href="javascript:void(0)" name="/reader_comment" title="commentlist"-->
-                                            <!--class="iframeurl"><i class="icon-double-angle-right"></i>Comment List</a>-->
-                        <!--</li>-->
                         <li class="home">
                             <a href="javascript:void(0)" name="/reader_feedback" th:title="#{lib_index.items.title.fl}"
-                               class="iframeurl" th:text="#{lib_index.items.fl}">
+                               class="iframeurl">
                                 <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.fl}"></span>
                             </a>
                         </li>
                     </ul>
@@ -349,16 +356,18 @@
                         <b class="arrow icon-angle-down"></b>
                     </a>
                     <ul class="submenu">
-                        <!--<li class="home">-->
-                            <!--<a href="javascript:;" name="/system_setting" title="settings"-->
-                                            <!--class="iframeurl">-->
-                                <!--<i class="icon-double-angle-right"></i>settings-->
-                            <!--</a>-->
-                        <!--</li>-->
+                        <li class="home">
+                            <a href="javascript:;" name="/librarian_income" th:title="#{lib_index.items.income}"
+                                            class="iframeurl">
+                                <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.income}"></span>
+                            </a>
+                        </li>
                         <li class="home">
                             <a href="javascript:;" name="/bulletin_list" th:title="#{lib_index.items.title.bm}"
-                               class="iframeurl" th:text="#{lib_index.items.bm}">
+                               class="iframeurl">
                                 <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.bm}"></span>
                             </a>
                         </li>
                     </ul>
@@ -371,8 +380,9 @@
                     </a>
                     <ul class="submenu">
                         <li class="home">
-                            <a href="javascript:void(0)" name="/librarian_info" th:title="#{lib_index.right.title.info}" class="iframeurl" th:text="#{lib_index.right.vmi}">
+                            <a href="javascript:void(0)" name="/librarian_info" th:title="#{lib_index.right.title.info}" class="iframeurl">
                                 <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.right.vmi}"></span>
                             </a>
                         </li>
                     </ul>

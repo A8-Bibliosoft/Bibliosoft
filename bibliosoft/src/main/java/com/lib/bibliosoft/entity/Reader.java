@@ -1,6 +1,9 @@
 package com.lib.bibliosoft.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +28,17 @@ public class Reader {
     private String imgsrc;
     private String status;
     private Integer alldebt;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date registTime;
+
+    public Date getRegistTime() {
+        return registTime;
+    }
+
+    public void setRegistTime(Date registTime) {
+        this.registTime = registTime;
+    }
 
     @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
     @JoinColumn(name = "id")

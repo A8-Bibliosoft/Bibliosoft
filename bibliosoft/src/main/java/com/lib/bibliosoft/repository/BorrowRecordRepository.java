@@ -45,6 +45,8 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
 //    List<Integer> findBookIdByReaderId(String readerid);
 
 
+    List<BorrowRecord> findByReturntime(java.sql.Date date);
+
     //所有未还记录
     List<BorrowRecord> findByReturntimeIsNull();
 

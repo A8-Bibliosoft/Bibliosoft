@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -23,6 +24,9 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
      * @return
      */
     Reader findReaderByReaderName(String name);
+
+    List<Reader> findByRegistTime(Date day);
+
 
     /**
      * find a reader by reader_id not id
