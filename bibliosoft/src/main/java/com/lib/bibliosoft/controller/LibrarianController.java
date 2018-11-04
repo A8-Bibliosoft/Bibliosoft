@@ -1,8 +1,9 @@
 package com.lib.bibliosoft.controller;
 
-import com.lib.bibliosoft.entity.Comment;
-import com.lib.bibliosoft.entity.Feedback;
-import com.lib.bibliosoft.entity.Librarian;
+import com.lib.bibliosoft.entity.*;
+import com.lib.bibliosoft.repository.BorrowRecordRepository;
+import com.lib.bibliosoft.repository.DefSettingRepository;
+import com.lib.bibliosoft.repository.ReaderRepository;
 import com.lib.bibliosoft.service.ILibrarianSerivce;
 import com.lib.bibliosoft.utils.VerifyCode;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 
@@ -38,6 +40,14 @@ public class LibrarianController {
     @Autowired
     private ILibrarianSerivce iLibrarianSerivce;
 
+    @Autowired
+    private ReaderRepository readerRepository;
+
+    @Autowired
+    private DefSettingRepository defSettingRepository;
+
+    @Autowired
+    private BorrowRecordRepository borrowRecordRepository;
     /**
      * index Page of Librarian used system
      *
@@ -120,24 +130,30 @@ public class LibrarianController {
             return "/lib_login";
     }
 
-//    @GetMapping("/lib_login")
-//    public String changeSessionLanauage(HttpServletRequest request, String l) {
-//        if("".equals(l)){
-//            request.getSession().setAttribute(
-//                    SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale("en", "US"));
-//        }
-//        else if ("zh_CN".equals(l)) {
-//            //代码中即可通过以下方法进行语言设置
-//            request.getSession().setAttribute(
-//                    SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale("zh", "CN"));
-//        } else if ("en_US".equals(l)) {
-//            //代码中即可通过以下方法进行语言设置
-//            request.getSession().setAttribute(
-//                    SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale("en", "US"));
-//        }
-//        return "lib_login";
-//    }
+    /**
+     * 获取某一天的收入，包括罚金和押金收入
+     * @title LibrarianController.java
+     * @param day, model
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name sbday_totalincome
+     * @date 11:55 AM. 11/4/2018
+     */
+    @PostMapping("/income_sbday")
+    public String sbday_totalincome(String day, Model model){
+        Integer deposit=0,fine=0;
+        Date date = Date.valueOf(day);
+        List<Reader> readerList = readerRepository.findByRegistTime(date);
 
+        //获取这一天注册了多少个新读者，乘以押金
+        deposit = defSettingRepository.findById(2).get().getDefnumber()*readerList.size();
+        model.addAttribute("deposit", deposit);
+        List<BorrowRecord> borrowRecords = borrowRecordRepository.findByReturntime(date);
+        for(BorrowRecord b : borrowRecords)
+            fine+=b.getDebt();
+        model.addAttribute("fine", fine);
+        return "librarian_income";
+    }
 
     /**
      * logout the system

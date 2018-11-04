@@ -120,7 +120,7 @@ public class ReaderController {
     @PostMapping("/homedata")
     @ResponseBody
     public void showDataChart(HttpServletResponse response){
-        List<String> legend = new ArrayList<String>(Arrays.asList(new String[] { "所有书籍", "在架上", "已借走", "已损坏","正在购买", "已被预约"}));
+        List<String> legend = new ArrayList<String>(Arrays.asList(new String[] { "all books", "on the shelf", "borrowed", "damaged","buying", "reserved"}));
 
         List<Integer> data = new ArrayList<>();
         List<Series<Integer>> series = new ArrayList<Series<Integer>>();
@@ -129,33 +129,33 @@ public class ReaderController {
         for(int i=1;i<13;i++){
             data.add(bookRepository.findBookNumByMonth(2018, i).size());
         }
-        series.add(new Series("所有书籍","bar", data));
+        series.add(new Series("all books","bar", data));
 
         data = new ArrayList<>();
         for(int i=1;i<13;i++){
             data.add(bookRepository.findBookNumByMonthandStatus(2018, i, 0).size());
         }
-        series.add(new Series("在架上","bar",data));
+        series.add(new Series("on the shelf","bar",data));
         data = new ArrayList<>();
         for(int i=1;i<13;i++){
             data.add(bookRepository.findBookNumByMonthandStatus(2018, i, 1).size());
         }
-        series.add(new Series("已借走","bar",data));
+        series.add(new Series("borrowed","bar",data));
         data = new ArrayList<>();
         for(int i=1;i<13;i++){
             data.add(bookRepository.findBookNumByMonthandStatus(2018, i, 2).size());
         }
-        series.add(new Series("已损坏","bar",data));
+        series.add(new Series("damaged","bar",data));
         data = new ArrayList<>();
         for(int i=1;i<13;i++){
             data.add(bookRepository.findBookNumByMonthandStatus(2018, i, 3).size());
         }
-        series.add(new Series("正在购买","bar",data));
+        series.add(new Series("buying","bar",data));
         data = new ArrayList<>();
         for(int i=1;i<13;i++){
             data.add(bookRepository.findBookNumByMonthandStatus(2018, i, 4).size());
         }
-        series.add(new Series("已被预约","bar",data));
+        series.add(new Series("reserved","bar",data));
 
         Echarts<Integer> echarts = new Echarts(legend, series);
         //解决中文乱码
@@ -172,6 +172,15 @@ public class ReaderController {
         }
     }
 
+    /**
+     * 总的书籍类型统计图表
+     * @title ReaderController.java
+     * @param response
+     * @return void
+     * @author 毛文杰
+     * @method name showbooktypeDataChart
+     * @date 15:22 AM. 11/3/2018
+     */
     @PostMapping("/alltypedata")
     @ResponseBody
     public void showbooktypeDataChart(HttpServletResponse response){
@@ -324,8 +333,10 @@ public class ReaderController {
             reader.setEmail(email);
             reader.setStatus(status);
             reader.setPassword(password);
+            reader.setRegistTime(new Date());
+            reader.setAlldebt(0);
             iReaderDao.addReader(reader);
-            logger.info("Add reader={}", reader.toString());
+            //logger.info("Add reader={}", reader.toString());
         }
         return "redirect:/reader_list";
     }
