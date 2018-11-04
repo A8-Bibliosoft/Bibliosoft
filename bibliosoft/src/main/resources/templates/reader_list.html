@@ -323,6 +323,7 @@
     /*用户-添加*/
     $('#member_add').on('click', function () {
         $('#reader_id').val('');
+        // $('#reader_sex').find("input").removeAttr("checked");
         $('#reader_sex').find("input").removeAttr("checked");
         $("#reader_status").find("input").removeAttr("checked");
         $('#reader_name').val('');
@@ -429,15 +430,16 @@
     function member_edit(id, name, sex, phone, email, pwd, status) {
         $('#reader_id').val(id);
         $('#reader_id').attr("readonly","readonly");
-        $('#reader_sex').find("input").removeAttr("checked");
-        $("#reader_status").find("input").removeAttr("checked");
+        // $('#reader_sex').find("input").removeAttr("checked");
+        // $("#reader_status").find("input").removeAttr("checked");
         $('#reader_name').val(name);
-        $('#reader_sex').find("input[value='"+sex+"']").attr("checked", true);
+        $('#reader_sex').find("input[value='"+sex+"']").prop("checked", true);
+        //这里的prop不能改为attr，会出现bug，比如点击添加读者，点叉，再点击修改，那两个radio就会没有选中回显原来的状态
+        $('#reader_status').find("input[value='"+status+"']").prop("checked", true);
         $('#reader_phone').val(phone);
         $('#reader_phone').attr("readonly","readonly");
         $('#reader_email').val(email);
         $('#reader_pwd').val(pwd);
-        $('#reader_status').find("input[value='"+status+"']").attr("checked", true);
         $('#flag').val('edit');
         $('#reader_name').focus();
         layer.open({

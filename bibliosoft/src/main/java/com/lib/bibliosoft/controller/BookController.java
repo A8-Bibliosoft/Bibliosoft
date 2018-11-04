@@ -454,10 +454,12 @@ public class BookController {
 
         /*获得新的文件名*/
         String bookImg = FileNameUtil.getFileName(bookcover.getOriginalFilename());
-        book.setBookImg(upload.getAbsolutePath()+'/'+bookImg);
+        book.setBookImg("/static/bookimages"+'/'+bookImg);
 
-        if(bookSortRepository.findByBookIsbn(bookisbn) != null){
+        //booksort表插入数据
+        if(bookSortRepository.findByBookIsbn(bookisbn).size()>0){
             logger.info("已有ISBN编号为==={}的书籍，故不插入", bookisbn);
+//            logger.info("书籍={}",bookSortRepository.findByBookIsbn(bookisbn).toString());
 //            List<BookSort> bookSort = bookSortRepository.findByBookIsbn(bookisbn);
             //数量加一
 //            bookSort.get(0).setNum(bookSort.get(0).getNum()+1);
@@ -472,28 +474,15 @@ public class BookController {
             //第一本
             bookSort.setNum(1);
             //关联
-            bookSort.getBookList().add(book);
-            book.setBookSort(bookSort);
+//            bookSort.getBookList().add(book);
+//            book.setBookSort(bookSort);
+            bookSortRepository.save(bookSort);
+            bookSortRepository.insertTypeId(Integer.parseInt(typeid),bookisbn);
         }
         //保存到book表
         bookService.addBook(book);
         //插入book表中的sort关联的isbn号
         bookRepository.insertBookIsbn(bookisbn, Ibookid);
-
-        //booksort表插入数据
-        List<BookSort> bs = bookSortRepository.findByBookIsbn(bookisbn);
-        if(bs.size() != 0){
-            logger.info("BookSort表已有ISBN编号为==={}的书籍，故不插入", bookisbn);
-        }else{
-            //书籍分类表
-            BookSort bookSort = new BookSort();
-            bookSort.setBookAuthor(bookauthor);
-            bookSort.setBookIsbn(bookisbn);
-            bookSort.setBookName(booktitle);
-            bookSort.setTypeId(Integer.parseInt(typeid));
-            bookSortRepository.save(bookSort);
-            bookSortRepository.insertTypeId(Integer.parseInt(typeid),bookisbn);
-        }
 
         /*这是获取项目根目录*/
 //        String ph = ClassUtils.getDefaultClassLoader().getResource("").getPath();
@@ -509,7 +498,22 @@ public class BookController {
         // 显示图片
         //map.put("msg", msg);
         //map.put("fileName", file.getOriginalFilename());
-        return msg;
+        StringBuilder bookids = new StringBuilder();
+        String s = "";
+        try {
+                //生成条形码
+                BarcodeUtil.generateFile(bookid);
+                //提示语句
+                String name = "static/barcodeimages/"+bookid+".png";
+                //把图片附加到末尾，直接显示图片
+                s = "<br><img src='"+name+"'>";
+        }catch(Exception e){
+            logger.error("添加书籍出错！error = {}", e.getMessage());
+            msg = ResultEnum.ADD_BOOK_FAILED.getMsg();
+            e.printStackTrace();
+            return msg;
+        }
+        return msg+s;
     }
 
     /**

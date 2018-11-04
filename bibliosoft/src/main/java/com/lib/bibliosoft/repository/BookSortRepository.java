@@ -42,7 +42,7 @@ public interface BookSortRepository extends JpaRepository<BookSort, Integer>,Jpa
     @Query(value = "select num from booksort where type_id = ?1 order by type_id asc",nativeQuery = true)
     List<Integer> findBookNumByBookType(Integer booktypeid);
 
-    @Query(value = "update num set num = num+?1 where book_isbn = ?2",nativeQuery = true)
+    @Query(value = "update booksort set num = num+?1 where book_isbn = ?2",nativeQuery = true)
     @Modifying
     @Transactional
     void updateBookNumByisbn(Integer num, String isbn);
