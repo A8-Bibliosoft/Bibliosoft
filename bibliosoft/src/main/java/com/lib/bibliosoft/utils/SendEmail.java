@@ -6,7 +6,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 public class SendEmail {
-	 public static boolean sendPassword(String password, String toEmail) throws MessagingException {
+	 public static boolean sendMessage(String message, String toEmail) throws MessagingException {
 		 try {
 
 				Properties props = new Properties();  
@@ -28,12 +28,7 @@ public class SendEmail {
 				msg.setSubject("找回密码");
 				
 		        // 设置邮件内容  
-		        msg.setText("Bibliosoft-A8 官方验证邮件！\n"
-		        		+ "Hello, this is a email from Bibliosoft for you to get back your password.\n"
-		        		+ "Your Password:" + password + "\n"
-		        		+ "Please take care of your password to prevent it from being stolen by others."
-		        		+ "\n\n\n\n"
-		        		+ "Thinks, from Librarian");
+		        msg.setText(message);
 		        // 设置发件人  
 		        msg.setFrom(new InternetAddress("182********@163.com"));
 		          
