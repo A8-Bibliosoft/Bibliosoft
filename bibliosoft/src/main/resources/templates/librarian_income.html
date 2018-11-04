@@ -9,7 +9,7 @@
     <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="/static/css/style.css"/>
     <link rel="stylesheet" href="/static/assets/css/font-awesome.min.css"/>
-    <script src="/static/js/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="/static/js/jquery_1.7.2.js" type="text/javascript"></script>
     <script src="/static/assets/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="/static/assets/layer/layer.js" type="text/javascript"></script>
     <script src="/static/assets/laydate/laydate.js" type="text/javascript"></script>
@@ -24,10 +24,22 @@
                 <ul class="search_content clearfix">
                     <form action="/income_sbday" method="post" id="search" onsubmit="return search_check()">
                         <li>
-                            <input class="inline laydate-icon" th:placeholder="#{lib.income.sbDay}" name="day" id="start" style="margin-left:10px;padding-left: 4px;width: 200px">
+                            <input class="inline laydate-icon" th:placeholder="#{lib.income.sbDay}" name="day" id="start" style="margin-left:10px;padding-left: 4px;">
                         </li>
                         <li style="width:80px;">
-                            <button type="button" class="btn_search" th:onclick="'javascript:submit()'">
+                            <button type="button" class="btn_search" th:onclick="'javascript:submitt()'">
+                                <i class="icon-search"></i>
+                            </button>
+                        </li>
+                    </form>
+                    <hr>
+                    <br>
+                    <form action="/income_sbmonth" method="post" id="search2" onsubmit="return search_check2()">
+                        <li>
+                            <input class="inline laydate-icon" th:placeholder="#{lib.income.sbMonth}" name="month" id="start2" style="margin-left:10px;padding-left: 4px;">
+                        </li>
+                        <li style="width:80px;">
+                            <button type="button" class="btn_search" th:onclick="'javascript:submit2()'">
                                 <i class="icon-search"></i>
                             </button>
                         </li>
@@ -46,27 +58,46 @@
 
     </div>
 </body>
-<script type="text/javascript" th:inline="javascript">
+<script type="text/javascript">
     //date input
     laydate({
         elem: '#start',
+        event: 'focus'
+    });
+    laydate({
+        elem: '#start2',
         event: 'focus'
     });
 
     //check form before submit
     function search_check() {
         var day = $("#start").val();
-        //alert(searchvalue);
-        if (day == null || day == "" ) {
+        if (day == null || day == '' ) {
             layer.msg("please input something to search!", {icon: 5, time: 1000});
+            //$("#start").focus();
             return false;
         } else {
             return true;
         }
     }
 
-    function submit() {
+    function search_check2() {
+        var mon = $("#start2").val();
+        if (mon == null || mon == '' ) {
+            layer.msg("please input something to search!", {icon: 5, time: 1000});
+            //$("#start2").focus();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function submitt() {
         $("#search").submit();
+    }
+
+    function submit2() {
+        $("#search2").submit();
     }
 </script>
 </html>

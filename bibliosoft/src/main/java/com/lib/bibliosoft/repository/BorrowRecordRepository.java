@@ -47,6 +47,9 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
 
     List<BorrowRecord> findByReturntime(java.sql.Date date);
 
+    @Query(value = "select * from borrowrecord where month(returntime)=?1", nativeQuery = true)
+    List<BorrowRecord> findByMonthReturntime(String month);
+
     //所有未还记录
     List<BorrowRecord> findByReturntimeIsNull();
 

@@ -1,6 +1,9 @@
 package com.lib.bibliosoft.controller;
 
-import com.lib.bibliosoft.entity.*;
+import com.lib.bibliosoft.entity.BorrowRecord;
+import com.lib.bibliosoft.entity.Feedback;
+import com.lib.bibliosoft.entity.Librarian;
+import com.lib.bibliosoft.entity.Reader;
 import com.lib.bibliosoft.repository.BorrowRecordRepository;
 import com.lib.bibliosoft.repository.DefSettingRepository;
 import com.lib.bibliosoft.repository.ReaderRepository;
@@ -58,9 +61,9 @@ public class LibrarianController {
     public ModelAndView gotoIndex() {
         ModelAndView mv = new ModelAndView("lib_index");
         //find unseen
-        List<Comment> commentList = iLibrarianSerivce.findAllMessageForLibrarian();
+//        List<Comment> commentList = iLibrarianSerivce.findAllMessageForLibrarian();
         //mv.addObject("commentList", commentList);
-        mv.addObject("commentNum", commentList.size());
+//        mv.addObject("commentNum", commentList.size());
 
         //find unseen
         List<Feedback> feedbackList = iLibrarianSerivce.findAllFeedbackForLibrarian();
@@ -143,12 +146,37 @@ public class LibrarianController {
     public String sbday_totalincome(String day, Model model){
         Integer deposit=0,fine=0;
         Date date = Date.valueOf(day);
+        logger.info("date={}",date);
         List<Reader> readerList = readerRepository.findByRegistTime(date);
 
         //获取这一天注册了多少个新读者，乘以押金
         deposit = defSettingRepository.findById(2).get().getDefnumber()*readerList.size();
         model.addAttribute("deposit", deposit);
         List<BorrowRecord> borrowRecords = borrowRecordRepository.findByReturntime(date);
+        for(BorrowRecord b : borrowRecords)
+            fine+=b.getDebt();
+        model.addAttribute("fine", fine);
+        return "librarian_income";
+    }
+
+    /**
+     * 通过月份搜索总收入
+     * @title LibrarianController.java
+     * @param month, model
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name sbmonth_totalincome
+     * @date 1:51 PM. 11/4/2018
+     */
+    @PostMapping("/income_sbmonth")
+    public String sbmonth_totalincome(String month, Model model){
+        Integer deposit=0,fine=0;
+        String []m = month.split("-");
+        List<Reader> readerList = readerRepository.findByMonthRegistTime(m[1]);
+        //获取这一天注册了多少个新读者，乘以押金
+        deposit = defSettingRepository.findById(2).get().getDefnumber()*readerList.size();
+        model.addAttribute("deposit", deposit);
+        List<BorrowRecord> borrowRecords = borrowRecordRepository.findByMonthReturntime(m[1]);
         for(BorrowRecord b : borrowRecords)
             fine+=b.getDebt();
         model.addAttribute("fine", fine);

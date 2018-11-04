@@ -27,6 +27,8 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
 
     List<Reader> findByRegistTime(Date day);
 
+    @Query(value = "select * from reader where month(regist_time)=?1",nativeQuery = true)
+    List<Reader> findByMonthRegistTime(String month);
 
     /**
      * find a reader by reader_id not id
@@ -42,7 +44,6 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
     @Transactional
     @Query(value = "select r from Reader r where r.readerName like %?1% or r.phone like %?1%")
     List<Reader> searchReaderByPhoneOrName(String string);
-
 
     @Transactional
     @Modifying
