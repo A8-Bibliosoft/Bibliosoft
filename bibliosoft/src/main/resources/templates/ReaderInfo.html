@@ -248,6 +248,7 @@
             success: function (data) {
                 if ("success" === data) {
                     alert("更改邮箱成功！");
+                    window.location.href="/goReaderInfo";
                 } else if ("erremailcode" === data) {
                     alert("验证码错误！");
                 } else if ("error" === data) {

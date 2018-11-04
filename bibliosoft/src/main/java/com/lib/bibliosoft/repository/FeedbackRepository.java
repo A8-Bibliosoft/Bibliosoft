@@ -30,6 +30,11 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Integer>, Jp
     @Query(value = "update feedback set is_view='yes' where id=?", nativeQuery = true)
     void updateStatusById(Integer id);
 
+    @Transactional
+    @Modifying
+    @Query(value = "update feedback set reader_id=?2 where id=?1", nativeQuery = true)
+    void updateReaderIdById(Integer id,String readerId);
+
     List<Feedback> findFeedbacksByIsView(String yesorno);
 
 }

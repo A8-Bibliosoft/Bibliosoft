@@ -3,6 +3,7 @@ package com.lib.bibliosoft.entity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -14,19 +15,28 @@ import java.util.List;
  */
 @Entity
 @Table(name="reader")
-public class Reader {
+public class Reader implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "reader_id")
     private String readerId;
+
     private String phone;
+
     private String email;
+
     private String readerName;
+
     private String password;
+
     private String sex;
+
     private String imgsrc;
+
     private String status;
+
     private Integer alldebt;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -40,12 +50,11 @@ public class Reader {
         this.registTime = registTime;
     }
 
-    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private List<Comment> commentList;
+//    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+//    @JoinColumn(name = "id")
+//    private List<Comment> commentList;
 
-    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @OneToMany(mappedBy = "reader",fetch = FetchType.EAGER)
     private List<Feedback> feedbackList;
 
     public Reader() {
@@ -123,13 +132,13 @@ public class Reader {
         this.imgsrc = imgsrc;
     }
 
-    public List<Comment> getCommentList() {
-        return commentList;
-    }
-
-    public void setCommentList(List<Comment> commentList) {
-        this.commentList = commentList;
-    }
+//    public List<Comment> getCommentList() {
+//        return commentList;
+//    }
+//
+//    public void setCommentList(List<Comment> commentList) {
+//        this.commentList = commentList;
+//    }
 
     public List<Feedback> getFeedbackList() {
         return feedbackList;

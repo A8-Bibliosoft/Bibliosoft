@@ -23,10 +23,11 @@ public class Feedback {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date;
 
+    @Column(name = "reader_id",insertable = false,updatable = false)
     private String readerId;
 
-    @ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-    @JoinColumn(name="id", insertable = false,updatable = false)
+    @ManyToOne()
+    @JoinColumn(name="reader_id",referencedColumnName = "reader_id")
     private Reader reader;
 
     private String isView;

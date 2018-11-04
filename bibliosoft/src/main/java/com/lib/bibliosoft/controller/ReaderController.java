@@ -559,14 +559,13 @@ public class ReaderController {
             String emailcode=VerifyCode.getRandomCode(5);
             Reader reader=readerRepository.findReaderByReaderId(readerId);
             session.setAttribute("emailcode",emailcode);
-//            String message="Bibliosoft-A8 官方验证邮件！\n"
-//                    + "Hello, this is a email from Bibliosoft for you to get code.\n"
-//                    + "Your Code:" + emailcode
-//                    + "\n\n\n\n"
-//                    + "Thinks, from Librarian";
-//            SendEmail.sendMessage(message,reader.getEmail());
+            String message="Bibliosoft-A8 官方验证邮件！\n"
+                    + "Hello, this is a email from Bibliosoft for you to get code.\n"
+                    + "Your Code:" + emailcode
+                    + "\n\n\n\n"
+                    + "Thinks, from Librarian";
+            SendEmail.sendMessage(message,reader.getEmail());
             logger.info(emailcode);
-            session.removeAttribute("emailcode");
             return "success";
         }else{
             return "default";
@@ -584,6 +583,7 @@ public class ReaderController {
                 return "erremailcode";
             }else{
                 readerRepository.updateReaderEmail(readerId,newemail);
+                session.removeAttribute("emailcode");
                 return "success";
             }
         }
@@ -597,13 +597,13 @@ public class ReaderController {
             if(readerRepository.findReaderByReaderId(readerId)!=null){
                 Reader reader=readerRepository.findReaderByReaderId(readerId);
                 if(reader.getEmail()!=null&&reader.getPassword()!=null){
-//                    String message="Bibliosoft-A8 官方验证邮件！\n"
-//                            + "Hello, this is a email from Bibliosoft for you to get back your password.\n"
-//                            + "Your Password:" + reader.getPassword() + "\n"
-//                            + "Please take care of your password to prevent it from being stolen by others."
-//                            + "\n\n\n\n"
-//                            + "Thinks, from Librarian";
-//                    SendEmail.sendMessage(message,reader.getEmail());
+                    String message="Bibliosoft-A8 官方验证邮件！\n"
+                            + "Hello, this is a email from Bibliosoft for you to get back your password.\n"
+                            + "Your Password:" + reader.getPassword() + "\n"
+                            + "Please take care of your password to prevent it from being stolen by others."
+                            + "\n\n\n\n"
+                            + "Thinks, from Librarian";
+                    SendEmail.sendMessage(message,reader.getEmail());
                     return "success";
                 }
             }
@@ -840,18 +840,18 @@ public class ReaderController {
         List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByLastday();
         if(borrowRecordList.size()>0){
             logger.info("发邮件啦!!");
-//            for(int i=0;i<borrowRecordList.size();i++){
-//                String readerId=borrowRecordList.get(i).getReaderId();
-//                String bookname=borrowRecordList.get(i).getBook().getBookName();
-//                Reader reader=readerRepository.findReaderByReaderId(readerId);
-//                String message="Bibliosoft-A8 官方验证邮件！\n"
-//                        + "Hello, this is a email from Bibliosoft for you to return book.\n"
-//                        + "Your book " + bookname + " must return in 7 days!\n"
-//                        + "Please return the book quickly!."
-//                        + "\n\n\n\n"
-//                        + "Thinks, from Librarian";
-//                SendEmail.sendMessage(message,reader.getEmail());
-//            }
+            for(int i=0;i<borrowRecordList.size();i++){
+                String readerId=borrowRecordList.get(i).getReaderId();
+                String bookname=borrowRecordList.get(i).getBook().getBookName();
+                Reader reader=readerRepository.findReaderByReaderId(readerId);
+                String message="Bibliosoft-A8 官方验证邮件！\n"
+                        + "Hello, this is a email from Bibliosoft for you to return book.\n"
+                        + "Your book " + bookname + " must return in 7 days!\n"
+                        + "Please return the book quickly!."
+                        + "\n\n\n\n"
+                        + "Thinks, from Librarian";
+                SendEmail.sendMessage(message,reader.getEmail());
+            }
         }
         //logger.info("还书日期减一天");
     }
@@ -914,6 +914,7 @@ public class ReaderController {
             feedback.setReaderId(readerId);
             feedback.setIsView("no");
             feedbackRepository.save(feedback);
+            feedbackRepository.updateReaderIdById(feedback.getId(),readerId);
             return "success";
         }else{
             return "unlogin";
