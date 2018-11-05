@@ -46,7 +46,7 @@
                             <input class="inline laydate-icon" th:placeholder="#{search.ph.sbtime}" name="bookaddtime" id="start" style="margin-left:10px;padding-left: 4px;">
                         </li>
                         <li style="width:90px;">
-                            <button type="button" class="btn_search" th:onclick="'javascript:submit()'">
+                            <button type="button" class="btn_search" th:onclick="'javascript:submitt()'">
                                 <i class="icon-search"></i>
                             </button>
                         </li>
@@ -287,7 +287,7 @@
         }
     }
 
-    function submit() {
+    function submitt() {
         $("#search").submit();
     }
 

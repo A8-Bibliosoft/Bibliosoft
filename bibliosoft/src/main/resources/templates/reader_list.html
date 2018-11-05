@@ -78,7 +78,7 @@
                     </form>
                     <li>
                     <li style="width:90px;">
-                        <button type="button" class="btn_search" th:onclick="'javascript:submit()'">
+                        <button type="button" class="btn_search" th:onclick="'javascript:submitt()'">
                             <i class="icon-search"></i>
                         </button>
                     </li>
@@ -308,7 +308,7 @@
         }
     }
 
-    function submit(){
+    function submitt(){
         $("#search").submit();
     }
 
@@ -342,7 +342,7 @@
             shadeClose: true, //点击遮罩关闭层
             area: ['800px', ''],
             content: $('#add_menber_style'),
-            btn: ['Submit', 'Cancel'],
+            btn: [submit, cancel],
             yes: function (index, layero) {
                 var num = 0;
                 var str = "";
