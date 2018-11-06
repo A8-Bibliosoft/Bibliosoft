@@ -294,6 +294,7 @@ public class AdminController {
     @ResponseBody
     @PostMapping("/find_pass")
     public String findPass(String id){
+        logger.info(librarianRepository.findByLibId(id).getPassword());
         String password=librarianRepository.findByLibId(id).getPassword();
         String mail=librarianRepository.findByLibId(id).getEmail();
         SimpleMailMessage mailMessage=new SimpleMailMessage();

@@ -85,14 +85,14 @@
 			</div>
 		</div>
 		<!-- 搜索框-->
-        <h1 style="text-align: center;margin-top: 150px;color: white;">书籍建购</h1>
+        <h1 style="text-align: center;margin-top: 150px;color: white;">Advice</h1>
         <br><br><br>
 	</div>
     <div class="container">
         <div style="text-align: center">
             <textarea style="width: 80%;height: 300px;resize: none;border-radius: 5px;background-color: #f7f7f7" id="content"></textarea>
             <br>
-            <a href="#" onclick="feedback()" class="btn btn-success">提交建议</a>
+            <a href="#" onclick="feedback()" class="btn btn-success">Submit</a>
         </div>
     </div>
 </div>
@@ -119,7 +119,7 @@
     function feedback() {
         var content=$("#content").val();
         if(content==null||content==""){
-            alert("请输入正确的内容！");
+            alert("Input valid content!");
             return false;
         }else{
             var code="content="+content;
@@ -131,12 +131,12 @@
                 cache: false,
                 success: function (data) {
                     if ("success" === data) {
-                        alert("提交成功！");
+                        alert("Submit success！");
                         window.location.href="goFeedBack";
                     } else if ("unlogin" === data) {
                         window.location.href="goLogin";
                     } else {
-                        alert("预约失败！未知错误！");
+                        alert("Reservation Failure！Unknown Mistake！");
                     }
                 },
                 fail: function (data) {
