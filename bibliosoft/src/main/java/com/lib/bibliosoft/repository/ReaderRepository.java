@@ -27,9 +27,11 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
 
     List<Reader> findByRegistTime(Date day);
 
-    @Query(value = "select * from reader where month(regist_time)=?1",nativeQuery = true)
-    List<Reader> findByMonthRegistTime(String month);
+    @Query(value = "select * from reader where year(regist_time)=?1 and month(regist_time)=?2",nativeQuery = true)
+    List<Reader> findByMonthRegistTime(String year,String month);
 
+    @Query(value = "select * from reader where regist_time>=?1 and regist_time<=?2",nativeQuery = true)
+    List<Reader> findByWeek(Date startdate,Date enddate);
     /**
      * find a reader by reader_id not id
      * @param id

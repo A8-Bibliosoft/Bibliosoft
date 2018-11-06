@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -148,11 +150,53 @@ public class LibrarianController {
         Date date = Date.valueOf(day);
         logger.info("date={}",date);
         List<Reader> readerList = readerRepository.findByRegistTime(date);
-
         //获取这一天注册了多少个新读者，乘以押金
         deposit = defSettingRepository.findById(2).get().getDefnumber()*readerList.size();
         model.addAttribute("deposit", deposit);
         List<BorrowRecord> borrowRecords = borrowRecordRepository.findByReturntime(date);
+        for(BorrowRecord b : borrowRecords)
+            fine+=b.getDebt();
+        model.addAttribute("fine", fine);
+        return "librarian_income";
+    }
+
+    /**
+     * 获取某一周的收入，包括罚金和押金收入
+     * @title LibrarianController.java
+     * @param week, model
+     * @return java.lang.String
+     * @author huhao
+     * @method name sbweek_totalincome
+     * @date 11:55 AM. 11/6/2018
+     */
+    @PostMapping("/income_sbweek")
+    public String sbweek_totalincome(String week, Model model) throws Exception{
+        Integer deposit=0,fine=0;
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); //设置时间格式
+        Calendar cal=Calendar.getInstance();
+        java.util.Date time=sdf.parse(week);
+        cal.setTime(time);
+        //判断要计算的日期是否是周日，如果是则减一天计算周六的
+        int dayWeek = cal.get(Calendar.DAY_OF_WEEK);
+        if(1 == dayWeek) {
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+        }
+        cal.setFirstDayOfWeek(Calendar.SUNDAY);
+        int day = cal.get(Calendar.DAY_OF_WEEK);//获得当前日期是一个星期的第几天
+        cal.add(Calendar.DATE, cal.getFirstDayOfWeek()-day);//根据日历的规则，给当前日期减去星期几与一个星期第一天的差值
+        Date startdate=Date.valueOf(sdf.format(cal.getTime()));
+        System.out.println("所在周星期日的日期："+startdate);
+        cal.add(Calendar.DATE, 6);
+        Date enddate=Date.valueOf(sdf.format(cal.getTime()));
+        System.out.println("所在周星期六的日期："+enddate);
+
+
+
+        //获取这一天注册了多少个新读者，乘以押金
+        List<Reader> readerList = readerRepository.findByWeek(startdate,enddate);
+        deposit = defSettingRepository.findById(2).get().getDefnumber()*readerList.size();
+        model.addAttribute("deposit", deposit);
+        List<BorrowRecord> borrowRecords = borrowRecordRepository.findByWeek(startdate,enddate);
         for(BorrowRecord b : borrowRecords)
             fine+=b.getDebt();
         model.addAttribute("fine", fine);
@@ -172,11 +216,11 @@ public class LibrarianController {
     public String sbmonth_totalincome(String month, Model model){
         Integer deposit=0,fine=0;
         String []m = month.split("-");
-        List<Reader> readerList = readerRepository.findByMonthRegistTime(m[1]);
+        List<Reader> readerList = readerRepository.findByMonthRegistTime(m[0],m[1]);
         //获取这一天注册了多少个新读者，乘以押金
         deposit = defSettingRepository.findById(2).get().getDefnumber()*readerList.size();
         model.addAttribute("deposit", deposit);
-        List<BorrowRecord> borrowRecords = borrowRecordRepository.findByMonthReturntime(m[1]);
+        List<BorrowRecord> borrowRecords = borrowRecordRepository.findByYearAndMonthReturntime(m[0],m[1]);
         for(BorrowRecord b : borrowRecords)
             fine+=b.getDebt();
         model.addAttribute("fine", fine);

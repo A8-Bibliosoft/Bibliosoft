@@ -47,14 +47,17 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
 
     List<BorrowRecord> findByReturntime(java.sql.Date date);
 
-    @Query(value = "select * from borrowrecord where month(returntime)=?1", nativeQuery = true)
-    List<BorrowRecord> findByMonthReturntime(String month);
+    @Query(value = "select * from borrowrecord where returntime>=?1 and returntime<=?2", nativeQuery = true)
+    List<BorrowRecord> findByWeek(java.sql.Date startdate, java.sql.Date enddate);
+
+    @Query(value = "select * from borrowrecord where year(returntime)=?1 and month(returntime)=?2", nativeQuery = true)
+    List<BorrowRecord> findByYearAndMonthReturntime(String year,String month);
 
     //所有未还记录
     List<BorrowRecord> findByReturntimeIsNull();
 
     //已还欠款的书的总缴纳欠款
-    @Query(value = "select * from borrowrecord where borrowtime is not null and debt > 0", nativeQuery = true)
+    @Query(value = "select * from borrowrecord where returntime is not null and debt > 0", nativeQuery = true)
     List<BorrowRecord> findAllIncome();
 
 
