@@ -34,6 +34,18 @@
                     </form>
                     <hr>
                     <br>
+                    <form action="/income_sbweek" method="post" id="search3" onsubmit="return search_check3()">
+                        <li>
+                            <input class="inline laydate-icon" th:placeholder="#{lib.income.sbWeek}" name="week" id="start3" style="margin-left:10px;padding-left: 4px;">
+                        </li>
+                        <li style="width:80px;">
+                            <button type="button" class="btn_search" th:onclick="'javascript:submit3()'">
+                                <i class="icon-search"></i>
+                            </button>
+                        </li>
+                    </form>
+                    <hr>
+                    <br>
                     <form action="/income_sbmonth" method="post" id="search2" onsubmit="return search_check2()">
                         <li>
                             <input class="inline laydate-icon" th:placeholder="#{lib.income.sbMonth}" name="month" id="start2" style="margin-left:10px;padding-left: 4px;">
@@ -68,7 +80,10 @@
         elem: '#start2',
         event: 'focus'
     });
-
+    laydate({
+        elem: '#start3',
+        event: 'focus'
+    });
     //check form before submit
     function search_check() {
         var day = $("#start").val();
@@ -92,12 +107,26 @@
         }
     }
 
+    function search_check3() {
+        var week = $("#start3").val();
+        if (week == null || week == '' ) {
+            layer.msg("please input something to search!", {icon: 5, time: 1000});
+            //$("#start3").focus();
+            return false;
+        } else {
+            return true;
+        }
+    }
     function submitt() {
         $("#search").submit();
     }
 
     function submit2() {
         $("#search2").submit();
+    }
+
+    function submit3() {
+        $("#search3").submit();
     }
 </script>
 </html>
