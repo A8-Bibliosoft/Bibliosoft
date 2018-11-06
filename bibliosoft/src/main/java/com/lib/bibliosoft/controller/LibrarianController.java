@@ -148,7 +148,7 @@ public class LibrarianController {
     public String sbday_totalincome(String day, Model model){
         Integer deposit=0,fine=0;
         Date date = Date.valueOf(day);
-        logger.info("date={}",date);
+        //logger.info("date={}",date);
         List<Reader> readerList = readerRepository.findByRegistTime(date);
         //获取这一天注册了多少个新读者，乘以押金
         deposit = defSettingRepository.findById(2).get().getDefnumber()*readerList.size();
@@ -185,10 +185,10 @@ public class LibrarianController {
         int day = cal.get(Calendar.DAY_OF_WEEK);//获得当前日期是一个星期的第几天
         cal.add(Calendar.DATE, cal.getFirstDayOfWeek()-day);//根据日历的规则，给当前日期减去星期几与一个星期第一天的差值
         Date startdate=Date.valueOf(sdf.format(cal.getTime()));
-        System.out.println("所在周星期日的日期："+startdate);
+        //System.out.println("所在周星期日的日期："+startdate);
         cal.add(Calendar.DATE, 6);
         Date enddate=Date.valueOf(sdf.format(cal.getTime()));
-        System.out.println("所在周星期六的日期："+enddate);
+        //System.out.println("所在周星期六的日期："+enddate);
 
 
 
