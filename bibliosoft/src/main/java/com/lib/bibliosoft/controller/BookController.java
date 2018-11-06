@@ -228,14 +228,6 @@ public class BookController {
 
         //获得每页的数据
         List<Book> bookList = bookService.getPage(currpage, pagesize).getContent();
-
-//        logger.info("currpage={}",currpage);
-//        List<Book> list = new ArrayList<>();
-//        while(bookIterator.hasNext()) {
-//            list.add(bookIterator.next());
-//        }
-//        logger.info("list.size = {}",list.size());
-//        logger.info("list[0]={}", list.get(0));
         //放在model
         model.addAttribute("books", bookList);
         model.addAttribute("currpage",currpage);
@@ -842,6 +834,25 @@ public class BookController {
         List<BorrowRecord> bookRecords = borrowRecordRepository.findAllByBookId(bookid);
         model.addAttribute("borrowRecords", bookRecords);
         return "borrowBookList";
+    }
+
+    /***************展示barcode****************/
+    /**
+     * 展示图书barcode的controller
+     * @title ReaderController.java
+     * @param
+     * @return
+     * @author 毛文杰
+     * @method name
+     * @date 12:16 PM. 11/6/2018
+     */
+    @PostMapping("/view_barcode/{bookid}")
+    @ResponseBody
+    public String show_barcodeimg(@PathVariable("bookid") Integer bookid){
+        String name = "static/barcodeimages/"+String.valueOf(bookid)+".png";
+        //把图片附加到末尾，直接显示图片
+        String img = "this book's barcode is: <br><img alt='barcode' src='"+name+"'>";
+        return img;
     }
 }
 
