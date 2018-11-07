@@ -58,10 +58,7 @@
                         <input name="libname" id="libname" type="text" class="text_add"
                                placeholder="Enter librarian name to search." style=" width:250px"/>
                     </li>
-                    <!--<li>-->
-                        <!--<label class="l_f">Add Time</label>-->
-                        <!--<input class="inline laydate-icon" name="bookaddtime" id="start" style=" margin-left:10px;">-->
-                    <!--</li>-->
+
                     <li style="width:90px;">
                         <button type="button" class="btn_search" th:onclick="'javascript:submitt()'">
                             <i class="icon-search"></i>
@@ -81,6 +78,10 @@
                    class="btn btn-warning Order_form">
                     <i class="icon-plus"></i>Add Librarian
                 </a>
+                 <a href="javascript:;" title="changepass" th:onclick="'javascript:change_pass('+ this +')'"
+                    class="btn btn-warning Order_form">
+                    <i class="icon-align-justify"></i>Change Password
+                </a>
             </span>
             <span class="r_f">
                 Total:&nbsp;<b th:text="${totalcount}"></b>&nbsp;Items
@@ -98,9 +99,6 @@
                     <th width="180">Phone</th>
                     <th width="120">FindPassword</th>
                     <!--<th width="100">Price</th>-->
-                    <!--<th width="200">Position</th>-->
-                    <!--<th width="200">Add Time</th>-->
-                    <!--<th width="70">Status</th>-->
                     <th width="160">Operation</th>
                 </tr>
                 </thead>
@@ -111,8 +109,6 @@
                     <td th:text="${lib.getEmail()}"></td>
                     <td th:text="${lib.getPhone()}"></td>
                     <!--<td th:text="${book.getBookPrice()}"></td>-->
-                    <!--<td th:text="${book.getBookPosition()}"></td>-->
-                    <!--<td th:text="${book.getRegisterTime()}"></td>-->
 
                     <td class="td-status">
                         <a title="Find Password" th:onclick="'javascript:find_pass('+ this +','+${lib.getLibId()}+')'"
@@ -217,14 +213,7 @@
                     <span class="add_name">
                         <input name="phone" type="text" class="text_add" id="phone"/>
                     </span>
-                    <!--<span class="add_name">-->
-                         <!--<label><input name="form-field-radio" type="radio" checked="checked" class="ace" value="male">-->
-                             <!--<span class="lbl">male</span></label>&nbsp;&nbsp;&nbsp;-->
-                         <!--<label><input name="form-field-radio" type="radio" class="ace" value="famle">-->
-                             <!--<span class="lbl">famle</span></label>&nbsp;&nbsp;&nbsp;-->
-                         <!--<label><input name="form-field-radio" type="radio" class="ace" value="secret">-->
-                             <!--<span class="lbl">secret</span></label>-->
-                    <!--</span>-->
+
                     <div class="prompt l_f"></div>
                 </li>
                 <li><label class="label_name">Email：</label>
@@ -235,36 +224,6 @@
                     <span class="add_name"><input name="password" type="password" class="text_add"/></span>
                     <div class="prompt l_f"></div>
                 </li>
-                <!--<li><label class="label_name">Author：</label>-->
-                    <!--<span class="add_name"><input name="author" type="text" class="text_add"/></span>-->
-                    <!--<div class="prompt r_f"></div>-->
-                <!--</li>-->
-                <!--<li>-->
-                    <!--<label class="label_name">Status：</label>-->
-                    <!--<span class="add_name">-->
-                        <!--<label>-->
-                            <!--<input name="form-field-radio1" type="radio" checked="checked" class="ace" value="0">-->
-                            <!--<span class="lbl">在架上</span>-->
-                        <!--</label>-->
-                        <!--<label>-->
-                            <!--<input name="form-field-radio1" type="radio" class="ace" value="1">-->
-                            <!--<span class="lbl">已被借走</span>-->
-                        <!--</label>-->
-                        <!--<label>-->
-                            <!--<input name="form-field-radio1" type="radio" class="ace" value="2">-->
-                            <!--<span class="lbl">已损坏</span>-->
-                        <!--</label>-->
-                        <!--<label>-->
-                            <!--<input name="form-field-radio1" type="radio" class="ace" value="3">-->
-                            <!--<span class="lbl">正在购买</span>-->
-                        <!--</label>-->
-                        <!--<label>-->
-                            <!--<input name="form-field-radio1" type="radio" class="ace" value="4">-->
-                            <!--<span class="lbl">已被预约</span>-->
-                        <!--</label>-->
-                    <!--</span>-->
-                    <!--<div class="prompt l_f"></div>-->
-                <!--</li>-->
                 <li>
                     <input name="flag" id="flag" type="text" hidden="hidden"/>
                 </li>
@@ -295,13 +254,43 @@
                         <input name="deposit" type="text" class="text_add" id="deposit"/>
                     </span>
                     <div class="prompt l_f"></div>
-                    <!--<li>-->
-                    <!--<input name="flag" id="flag" type="text" hidden="hidden"/>-->
-                    <!--</li>
-               -->
+
+
             </ul>
         </form>
     </div>
+
+    <!--修改密码图层-->
+    <div class="edit_threshold" id="change_pass" style="display:none">
+        <form   id="change_password">
+            <ul class=" page-content">
+                <li><label class="label_name">Old Password:</label>
+                    <span class="add_name">
+                        <input value="" name="old_pass" type="password" class="text_add" id="old_pass" />
+                    </span>
+                    <div class="prompt l_f"></div>
+                </li>
+                <li>
+                </li>
+                <li>
+                    <label class="label_name">New Password:</label>
+                    <span class="add_name">
+                        <input name="new_pass" type="password" class="text_add" id="new_pass"/>
+                    </span>
+                    <div class="prompt l_f"></div>
+                </li>
+                <li>
+                    <label class="label_name">Enter again:</label>
+                    <span class="add_name">
+                        <input name="new_pass" type="password" class="text_add" id="new_pass_chack"/>
+                    </span>
+                    <div class="prompt l_f"></div>
+                </li>
+
+            </ul>
+        </form>
+    </div>
+
 </div>
 </body>
 </html>
@@ -376,101 +365,13 @@
     });
 </script>
 <script type="text/javascript">
-    //初始化宽度、高度
-    // $(".widget-box").height($(window).height() - 215);
-    // $(".table_menu_list").width($(window).width());
-    // $(".table_menu_list").height($(window).height());
+
     //当文档窗口发生改变时 触发
     $(window).resize(function () {
-        // $(".widget-box").height($(window).height() - 215);
-        // $(".table_menu_list").width($(window).width());
-        // $(".table_menu_list").height($(window).height());
+
     })
 
-    /*******树状图*******/
-    var setting = {
-        view: {
-            dblClickExpand: false,
-            showLine: false,
-            selectedMulti: false
-        },
-        data: {
-            simpleData: {
-                enable: true,
-                idKey: "id",
-                pIdKey: "pId",
-                rootPId: ""
-            }
-        },
-        callback: {
-            beforeClick: function (treeId, treeNode) {
-                var zTree = $.fn.zTree.getZTreeObj("tree");
-                if (treeNode.isParent) {
-                    zTree.expandNode(treeNode);
-                    return false;
-                } else {
-                    demoIframe.attr("src", treeNode.file + ".html");
-                    return true;
-                }
-            }
-        }
-    };
 
-    var zNodes = [
-        {id: 1, pId: 0, name: "商城分类列表", open: true},
-        {id: 11, pId: 1, name: "蔬菜水果"},
-        {id: 111, pId: 11, name: "蔬菜"},
-        {id: 112, pId: 11, name: "苹果"},
-        {id: 113, pId: 11, name: "大蒜"},
-        {id: 114, pId: 11, name: "白菜"},
-        {id: 115, pId: 11, name: "青菜"},
-        {id: 12, pId: 1, name: "手机数码"},
-        {id: 121, pId: 12, name: "手机 "},
-        {id: 122, pId: 12, name: "照相机 "},
-        {id: 13, pId: 1, name: "电脑配件"},
-        {id: 131, pId: 13, name: "手机 "},
-        {id: 122, pId: 13, name: "照相机 "},
-        {id: 14, pId: 1, name: "服装鞋帽"},
-        {id: 141, pId: 14, name: "手机 "},
-        {id: 42, pId: 14, name: "照相机 "},
-    ];
-
-    var code;
-
-    function showCode(str) {
-        if (!code) code = $("#code");
-        code.empty();
-        code.append("<li>" + str + "</li>");
-    }
-
-    $(document).ready(function () {
-        var t = $("#treeDemo");
-        t = $.fn.zTree.init(t, setting, zNodes);
-        demoIframe = $("#testIframe");
-        demoIframe.bind("load", loadReady);
-        var zTree = $.fn.zTree.getZTreeObj("tree");
-        zTree.selectNode(zTree.getNodeByParam("id", '11'));
-    });
-
-    // /*产品-停用*/
-    // function member_stop(obj, id) {
-    //     layer.confirm('确认要停用吗？', function (index) {
-    //         $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs " onClick="member_start(this,id)" href="javascript:;" title="启用"><i class="icon-ok bigger-120"></i></a>');
-    //         $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已停用</span>');
-    //         $(obj).remove();
-    //         layer.msg('已停用!', {icon: 5, time: 1000});
-    //     });
-    // }
-    //
-    // /*产品-启用*/
-    // function member_start(obj, id) {
-    //     layer.confirm('确认要启用吗？', function (index) {
-    //         $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs btn-success" onClick="member_stop(this,id)" href="javascript:;" title="停用"><i class="icon-ok bigger-120"></i></a>');
-    //         $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
-    //         $(obj).remove();
-    //         layer.msg('已启用!', {icon: 6, time: 1000});
-    //     });
-    // }
 
     function find_pass(obj,id) {
         $.ajax({
@@ -623,7 +524,7 @@
         $.ajax({
             type: "GET",
             url: '/get_threshold',
-            data: null,
+            data: "old_pass="+$('#old_pass'),
             dataType: "json",
             async: false,
             cache: false,
@@ -678,6 +579,54 @@
         });
     }
 
+    function change_pass(obj) {
+        layer.open({
+            type: 1,
+            title: 'Change Password',
+            maxmin: true,
+            shadeClose: false, //点击遮罩关闭层
+            area: ['800px', '260px'],
+            content: $('#change_pass'),
+            btn: ['Submit', 'Cancel'],
+            yes: function (index, layero) {
+
+               if($('#old_pass').val()==""){
+                   alert("请输入旧密码");
+                   return false;
+               }
+               if ($('#new_pass').val()=="") {
+                   alert("请输入新密码");
+                    return false;
+               }
+               if ($('#new_pass_chack').val()=="") {
+                    alert("请再次输入新密码");
+                    return false;
+               }
+               else {
+                   $.ajax({
+                       type: "POST",
+                       url: '/change_pass',
+                       data: "old_pass="+$('#old_pass').val()+"&new_pass="+$('#new_pass').val()+"&new_pass_check="+$('#new_pass_chack').val(),
+                       // dataType: "json",
+                       async: false,
+                       cache: false,
+                       success: function (result) {
+                           if(result!="success"){
+                               alert(result);
+                               return false;
+                           }else {
+                               $('#change_pass').submit();
+                               layer.close(index);
+                           }
+                       },
+                   });
+
+                }
+            }
+        });
+    }
+
+
     /*删除图书管理员*/
     function member_del(obj, id) {
         layer.confirm('确认要删除吗？', function (index) {
@@ -697,24 +646,5 @@
         });
     }
 
-    //面包屑返回值
-    var index = parent.layer.getFrameIndex(window.name);
-    parent.layer.iframeAuto(index);
-    $('.Order_form').on('click', function () {
-        var cname = $(this).attr("title");
-        var chref = $(this).attr("href");
-        var cnames = parent.$('.Current_page').html();
-        var herf = parent.$("#iframe").attr("src");
-        parent.$('#parentIframe').html(cname);
-        parent.$('#iframe').attr("src", chref).ready();
-        ;
-        parent.$('#parentIframe').css("display", "inline-block");
-        parent.$('.Current_page').attr({"name": herf, "href": "javascript:void(0)"}).css({
-            "color": "#4c8fbd",
-            "cursor": "pointer"
-        });
-        //parent.$('.Current_page').html("<a href='javascript:void(0)' name="+herf+" class='iframeurl'>" + cnames + "</a>");
-        parent.layer.close(index);
 
-    });
 </script>

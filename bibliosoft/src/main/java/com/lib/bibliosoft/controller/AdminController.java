@@ -311,4 +311,22 @@ public class AdminController {
         }
         return "success";
     }
+
+    @ResponseBody
+    @PostMapping("/change_pass")
+    public String change_pass(String old_pass, String new_pass, String new_pass_check){
+        if(!adminRepository.findByAdminName("admin").getPassword().equals(old_pass)){
+            return "wrong password";
+        }
+        else if(!new_pass.equals(new_pass_check)){
+            return "input inconsistency";
+        }
+        else{
+            Admin admin= adminRepository.findByAdminName("admin");
+            admin.setPassword(new_pass);
+            adminRepository.save(admin);
+            return "success";
+        }
+
+    }
 }
