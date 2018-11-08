@@ -120,7 +120,7 @@
 			<li th:each="book:${booklist}" >
                 <div th:if="${book.getOneBook() ne null}">
 					<a th:href="@{'goBookDetail?bookIsbn='+${book.bookIsbn}}">
-                        <img th:src="${book.getOneBook().bookImg}" alt="bookImage" style="float: left">
+                        <img th:src="'https://images.weserv.nl/?url='+${book.getOneBook().bookImg}" alt="bookImage" style="float: left">
 						<br>
                         <div style="margin-left: 100px;">
                             <h4>书名: <span th:text="${book.bookName}"></span></h4>

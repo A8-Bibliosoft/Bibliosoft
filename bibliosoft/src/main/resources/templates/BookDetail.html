@@ -41,7 +41,7 @@
         <div class="col-md-12">
             <div class="col-md-6">
                 <h2 style="text-align: center" th:text="#{bookdetail.bookcover}">书籍封面</h2><br>
-                <img th:src="${book.bookImg}" alt="书籍封面" style="width: 85%;height: 600px;margin-left: 50px;" >
+                <img th:src="'https://images.weserv.nl/?url='+${book.bookImg}" alt="书籍封面" style="width: 85%;height: 600px;margin-left: 50px;" >
             </div>
             <div class="col-md-6">
                 <h2 style="text-align: center" th:text="#{bookdetail.description}">书籍简介</h2>
@@ -59,7 +59,7 @@
             </div>
             <div class="col-md-6" style="text-align: center">
                 <ul class="nav">
-                    <li><span th:text="#{bookdetail.location}">位置:</span><p th:text="${book.getBookPosition().getPlace()}"></p></li>
+                    <li><span th:text="#{bookdetail.press}">出版社:</span><p th:text="${book.getBookPublisher()}"></p></li>
                     <li><span th:text="#{bookdetail.borrowed}">已借出:</span><p th:text="${bookStatus1}"></p></li>
                     <li><span th:text="#{bookdetail.ordered}">已预约:</span><p th:text="${bookStatus4}"></p></li>
                     <li><span th:text="#{bookdetail.available}">在架上:</span><p th:text="${bookStatus0}"></p></li>
@@ -67,6 +67,29 @@
             </div>
             <br><br>
             <hr>
+            <div class="col-md-12">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th th:text="#{bookdetail.status}">书籍状态</th>
+                            <th th:text="#{bookdetail.bookid}">书籍编号</th>
+                            <th th:text="#{bookdetail.location}">书籍位置</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="onebook:${allbook}">
+                            <td th:if="${onebook.getBookStatus()} eq 0" th:text="#{bookdetail.status0}">在架上</td>
+                            <td th:if="${onebook.getBookStatus()} eq 1" th:text="#{bookdetail.status1}">已借走</td>
+                            <td th:if="${onebook.getBookStatus()} eq 2" th:text="#{bookdetail.status2}">已损坏</td>
+                            <td th:if="${onebook.getBookStatus()} eq 3" th:text="#{bookdetail.status3}">正在购买</td>
+                            <td th:if="${onebook.getBookStatus()} eq 4" th:text="#{bookdetail.status4}">已被预约</td>
+                            <td th:if="${onebook.getBookStatus()} eq 5" th:text="#{bookdetail.status5}" >已删除</td>
+                            <td th:text="${onebook.getBookId()}"></td>
+                            <td th:text="${onebook.getBookPosition().getPlace()}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div style="text-align: center;"><a onclick="bookresult()" class="flip-link btn btn-info" th:text="#{bookdetail.order}">预约</a></div>
         </div>
     </div>

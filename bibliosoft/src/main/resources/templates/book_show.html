@@ -25,7 +25,7 @@
     <div class="member_jbxx clearfix">
         <!--<img class="img" src="../static/images/book.png">-->
         <img class="img" th:if="${book.bookImg eq null}" src="../static/images/book.png" th:src="@{../static/images/reader.png}" />
-        <img class="img" th:if="${book.bookImg ne null}" th:src="@{${book.bookImg}}" />
+        <img class="img" th:if="${book.bookImg ne null}" th:src="@{'https://images.weserv.nl/?url='+${book.bookImg}}" />
         <dl class="right_xxln">
             <dt>
                 <span th:text="${book.getBookName()}"></span>

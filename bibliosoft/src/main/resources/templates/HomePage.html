@@ -86,7 +86,7 @@
 		</nav>
 		<div id="readeronline" style="float: right" >
 			<a th:if="${session.loginname} eq null" href="/lib_login">Librarian</a>
-			<a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}">登录</a>
+			<a th:if="${session.loginname} eq null" href="/goLogin" th:text="#{homepage.login}">登录</a>
             &nbsp;
 			<div th:if="${session.loginname} ne null">
                 <a href="goReaderInfo"><span th:text="${session.loginname}"></span></a>
@@ -122,7 +122,7 @@
 					<li th:each="notice:${noticelist}">
 						<div class="banner-text">
 							<h3 th:text="${notice.getTitle()}"></h3>
-							<p th:text="${notice.getContent()}"></p>
+                            <p th:text="${notice.getContent()}"></p>
 						</div>
 					</li>
 				</ul>
@@ -147,23 +147,23 @@
 	</div>
 	<div class="col-md-3 bottom-grid3 wow flipInY" data-wow-duration="1.5s" data-wow-delay="0.2s">
 		<script>
-						// You can also use "$(window).load(function() {"
-						$(function () {
-						 // Slideshow 4
-						$("#slider4").responsiveSlides({
-							auto: true,
-							pager: true,
-							nav: false,
-							speed: 500,
-							namespace: "callbacks",
-							before: function () {
-						$('.events').append("<li>before event fired.</li>");
-						},
-						after: function () {
-							$('.events').append("<li>after event fired.</li>");
-							}
-							});
-						});
+			// You can also use "$(window).load(function() {"
+			$(function () {
+			 // Slideshow 4
+			$("#slider4").responsiveSlides({
+				auto: true,
+				pager: true,
+				nav: false,
+				speed: 500,
+				namespace: "callbacks",
+				before: function () {
+			$('.events').append("<li>before event fired.</li>");
+			},
+			after: function () {
+				$('.events').append("<li>after event fired.</li>");
+				}
+				});
+			});
 		</script>
 		<div class="callbacks_container">
 				<ul class="rslides" id="slider4">
