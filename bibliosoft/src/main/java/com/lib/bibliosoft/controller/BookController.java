@@ -913,7 +913,7 @@ public class BookController {
     public String show_barcodeimg(@PathVariable("bookid") Integer bookid){
         String name = "static/barcodeimages/"+String.valueOf(bookid)+".png";
         //把图片附加到末尾，直接显示图片
-        String img = "this book's barcode is: <br><!--startprint--><img id='barcodeimg' alt='barcode' src='"+name+"'><!--endprint--><br><button class='btn btn-default radius' onclick='doPrint()'>p r i n t</button>";
+        String img = "this book's barcode is: <input class='btn smaller-30' type='button' value='print' onclick='doPrint()'><br><br><!--startprint--><img id='barcodeimg' alt='barcode' src='"+name+"'><!--endprint-->";
         return img;
     }
 }
