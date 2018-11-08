@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/static/assets/css/ace.min.css"/>
     <link rel="stylesheet" href="/static/Widget/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
     <link rel="stylesheet" href="/static/assets/css/font-awesome.min.css"/>
+    <script src="/static/js/jquery-1.9.1.min.js"></script>
     <!--[if IE 7]-->
     <link rel="stylesheet" href="/static/assets/css/font-awesome-ie7.min.css"/>
     <!--[endif]-->
@@ -54,6 +55,18 @@
         label.error {
             color: #EA5200;
         }
+        #form-article-add{
+            width:70%;
+            margin-left: 20px;
+        }
+        .mybarcodeimgdiv{
+            width: 300px;
+            /*height: 200px;*/
+            position: absolute;
+            right: 10px;
+            top: 134px;
+            border: 1px solid lightcyan;
+        }
     </style>
 </head>
 <body>
@@ -74,33 +87,59 @@
     <!--</div>-->
     <form method="post" enctype="multipart/form-data" class="form form-horizontal" id="form-article-add">
         <div class=" clearfix cl">
-            <label class="form-label col-2">
-                <span class="c-red" th:text="#{book.title}">Title：</span><em style="color: red;">*</em>
-            </label>
-            <div class="formControls col-10">
-                <input type="text" class="input-text required" value="" th:placeholder="#{book.title}" name="booktitle" id="booktitle">
+            <div class="Add_p_s">
+                <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.title}">Title：</label>
+                <!--<label class="form-label col-2">-->
+                    <!--<span class="c-red" th:text="#{book.title}">Title：</span><em style="color: red;">*</em>-->
+                <!--</label>-->
+                <div class="formControls col-2">
+                    <input type="text" class="input-text required" value="" th:placeholder="#{book.title}" name="booktitle" id="booktitle">
+                </div>
+            </div>
+            <div class="Add_p_s">
+                <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.cover}">Cover：</label>
+                <!--<label class="form-label col-2">-->
+                <!--<span class="c-red" th:text="#{book.cover}">Cover：</span><em style="color: red;">*</em>-->
+                <!--</label>-->
+                <!--<div class="formControls col-10">-->
+                <!--<input type="file" name="file" style="float: left"/>-->
+                <!--<img src="" name="" alt="Book Cover">&lt;!&ndash; th:src &ndash;&gt;-->
+                <!--</div>-->
+                <div class="upload_cover">
+                    <span th:text="#{book.uploadcover}">Upload Cover：</span>
+                    <!-- 文件 -->
+                    <input tabindex="3" size="3" class="file-prew required" type="file" onchange="document.getElementById('textName').value=this.value;setImagePreview();" name="bookcover" id="bookcover">
+                </div>
+                <!-- 展示文件名称 -->
+                <input type="text" id="textName" style="height: 28px;border:1px solid #f1f1f1;position:absolute;" readonly="readonly"/>
+                <div id="localImag" style="float: right;position: absolute;top: 0;right: -400px;">
+                    <img src="" alt="Book Cover" id="coverimg" style="margin-left: 10px">
+                </div>
             </div>
         </div>
         <!-- Cover Upload -->
-        <div class="clearfix cl">
-            <label class="form-label col-2">
-                <span class="c-red" th:text="#{book.cover}">Cover：</span><em style="color: red;">*</em>
-            </label>
-            <!--<div class="formControls col-10">-->
-                <!--<input type="file" name="file" style="float: left"/>-->
-                <!--<img src="" name="" alt="Book Cover">&lt;!&ndash; th:src &ndash;&gt;-->
+        <!--<div class="clearfix cl">-->
+            <!--<div class="Add_p_s">-->
+                <!--<em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.cover}">Cover：</label>-->
+                <!--&lt;!&ndash;<label class="form-label col-2">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span class="c-red" th:text="#{book.cover}">Cover：</span><em style="color: red;">*</em>&ndash;&gt;-->
+                <!--&lt;!&ndash;</label>&ndash;&gt;-->
+                <!--&lt;!&ndash;<div class="formControls col-10">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<input type="file" name="file" style="float: left"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<img src="" name="" alt="Book Cover">&lt;!&ndash; th:src &ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--<div class="upload_cover">-->
+                    <!--<span th:text="#{book.uploadcover}">Upload Cover：</span>-->
+                    <!--&lt;!&ndash; 文件 &ndash;&gt;-->
+                    <!--<input tabindex="3" size="3" class="file-prew required" type="file" onchange="document.getElementById('textName').value=this.value;setImagePreview();" name="bookcover" id="bookcover">-->
+                <!--</div>-->
+                <!--&lt;!&ndash; 展示文件名称 &ndash;&gt;-->
+                <!--<input type="text" id="textName" style="height: 28px;border:1px solid #f1f1f1;float: left;" readonly="readonly"/>-->
+                <!--<div id="localImag" style="float: left">-->
+                    <!--<img src="" alt="Book Cover" id="coverimg" style="margin-left: 10px">-->
+                <!--</div>-->
             <!--</div>-->
-            <div class="upload_cover">
-                <span th:text="#{book.uploadcover}">Upload Cover：</span>
-                <!-- 文件 -->
-                <input tabindex="3" size="3" class="file-prew required" type="file" onchange="document.getElementById('textName').value=this.value;setImagePreview();" name="bookcover" id="bookcover">
-            </div>
-            <!-- 展示文件名称 -->
-            <input type="text" id="textName" style="height: 28px;border:1px solid #f1f1f1;float: left;" readonly="readonly"/>
-            <div id="localImag" style="float: left">
-                <img src="" alt="Book Cover" id="coverimg" style="margin-left: 10px">
-            </div>
-        </div>
+        <!--</div>-->
 
         <div class=" clearfix cl">
             <div class="Add_p_s">
@@ -109,12 +148,14 @@
                     <input type="text" class="input-text required" value="" th:placeholder="#{book.isbn}" name="bookisbn" id="bookisbn">
                 </div>
             </div>
+            <!--作者-->
             <div class="Add_p_s">
                 <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.author}">Author：</label>
                 <div class="formControls col-2">
                     <input type="text" class="input-text required"  value="" th:placeholder="#{book.author}" name="bookauthor" id="bookauthor">
                 </div>
             </div>
+            <!--位置-->
             <div class="Add_p_s">
                 <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.position}">Position：</label>
                 <div class="formControls col-2">
@@ -126,18 +167,36 @@
                     </span>
                 </div>
             </div>
+            <!--价格-->
             <div class="Add_p_s">
                 <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.price}">Price：</label>
                 <em style="color: red;">*</em><div class="formControls col-2">
                     <input type="text" class="input-text required" value="" th:placeholder="#{book.price}" name="bookprice" id="bookprice">
                 </div>
             </div>
+            <!--书籍id-->
+            <!--<div class="Add_p_s">-->
+                <!--<em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.bookid}">Book ID：</label>-->
+                <!--<div class="formControls col-2">-->
+                    <!--<input type="text" class="input-text required" value="" th:placeholder="#{book.bookid}" name="bookid" id="bookid">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--一次添加数量-->
             <div class="Add_p_s">
-                <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.bookid}">Book ID：</label>
+                <em style="color: red;">*</em><label class="form-label col-2" th:text="#{select.booknum}">Book Num：</label>
                 <div class="formControls col-2">
-                    <input type="text" class="input-text required" value="" th:placeholder="#{book.bookid}" name="bookid" id="bookid">
+                    <span class="select-box">
+                        <select class="select required" title="select status" name="booknum" id="booknum">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                        </select>
+                    </span>
                 </div>
             </div>
+            <!--书籍状态-->
             <div class="Add_p_s">
                 <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.status}">Status：</label>
                 <div class="formControls col-2">
@@ -148,6 +207,7 @@
                         </span>
                 </div>
             </div>
+            <!--书籍类型-->
             <div class="Add_p_s">
                 <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.type}">Type：</label>
                 <div class="formControls col-2">
@@ -176,13 +236,13 @@
             <!--<input type="text" class="input-text" value="" placeholder="" id="" name="">元-->
             <!--</div>-->
             <!--</div>-->
-            <div class="Add_p_s">
-                <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.registertime}">RegTime：</label>
-                <div class="formControls col-2">
-                    <input class="inline laydate-icon required" th:placeholder="#{book.registertime}" name="bookaddtime"
-                           id="start" style="padding-left:5px;">
-                </div>
-            </div>
+            <!--<div class="Add_p_s">-->
+                <!--<em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.registertime}">RegTime：</label>-->
+                <!--<div class="formControls col-2">-->
+                    <!--<input class="inline laydate-icon required" th:placeholder="#{book.registertime}" name="bookaddtime"-->
+                           <!--id="start" style="padding-left:5px;">-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
 
         <!--<div class="clearfix cl">-->
@@ -216,12 +276,18 @@
         </div>
     </form>
     <!--</div>-->
+    <div class="mybarcodeimgdiv">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <img id="barimg" src="/static/images/barcode-scan.png" alt="book image" style="width: 50px;height: 40px;">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="button" class="btn btn-default radius" value="print" onclick="doPrint()"><br>
+    </div>
 </div>
 <script src="/static/js/jquery_1.7.2.js"></script>
 <script src="/static/assets/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="/static/assets/js/typeahead-bs2.min.js"></script>
 <script src="/static/assets/layer/layer.js" type="text/javascript"></script>
-<script src="/static/assets/laydate/laydate.js" type="text/javascript"></script>
+<!--<script src="/static/assets/laydate/laydate.js" type="text/javascript"></script>-->
 <script type="text/javascript" src="/static/Widget/icheck/jquery.icheck.min.js"></script>
 <script type="text/javascript" src="/static/Widget/zTree/js/jquery.ztree.all-3.5.min.js"></script>
 <script src="/static/js/lrtk.js" type="text/javascript"></script>
@@ -230,6 +296,17 @@
 <script src="http://malsup.github.io/jquery.form.js"></script>
 <script src="/static/assets/js/jquery.validate.min.js" type="text/javascript"></script>
 <script>
+    //指定部分内容打印
+    function doPrint() {
+        bdhtml = window.document.body.innerHTML;
+        var  prnhtml = bdhtml.substr(bdhtml.indexOf("<!--startprint-->") + 17);//选区包围的元素，即为barcode图片
+        prnhtml = prnhtml.substring(0, prnhtml.indexOf("<!--endprint-->"));
+        window.document.body.innerHTML = prnhtml;
+        window.print();
+        //恢复原状态页面
+        window.document.body.innerHTML=bdhtml; //还原 原有页面内容;
+    }
+
     function setImagePreview() {
         var docObj = document.getElementById("bookcover");
         var imgObjPreview = document.getElementById("coverimg");
@@ -264,12 +341,14 @@
         }
         return true;
     }
+    /*手动添加新书*/
     $(document).ready(function(){
         var options = {
             type: 'post',//提交方式
             url:  '/book_addnewbook',
             success: function(data) {
-                layer.alert(data);
+                layer.alert("add book success!");
+                $(".mybarcodeimgdiv").append(data);
                 //window.location.href="/book_list";
             }
         };
@@ -283,10 +362,10 @@
     });
 
     //日期插件
-    laydate({
-        elem: '#start',
-        event: 'focus'
-    });
+    // laydate({
+    //     elem: '#start',
+    //     event: 'focus'
+    // });
 </script>
 </body>
 </html>
