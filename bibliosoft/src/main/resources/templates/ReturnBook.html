@@ -60,7 +60,7 @@
     /*<![CDATA[*/
     var message1 = [[#{alert.rebid}]];
     /*]]>*/
-    /*借书ajax提交*/
+    /*还书ajax提交*/
     function submitform() {
         var bookid = $("#bookId").val();
         if (bookid == '') {
@@ -72,10 +72,9 @@
                 url: "/returnBook",
                 data: data,
                 success: function (data) {
-                    layer.msg(data, {
+                    layer.alert(data, {
                         title: 'Info',
                         icon: 8,
-                        anim: 4
                     });
                     //reset表格,清空内容以便下次添加
                     setTimeout(function () {

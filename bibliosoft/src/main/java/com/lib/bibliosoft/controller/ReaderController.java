@@ -800,6 +800,9 @@ public class ReaderController {
     public synchronized String returnBook(String bookid){
         Integer bookId = Integer.parseInt(bookid);
         BorrowRecord borrowRecord=borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId);
+        if(borrowRecord == null){
+            return ResultEnum.NOT_EXIST.getMsg();
+        }
         String readerId=borrowRecord.getReaderId();
         updateReaderAlldebt(readerId);
         Integer debtmoney = 0;

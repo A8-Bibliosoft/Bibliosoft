@@ -42,7 +42,12 @@
     <script src="/static/assets/laydate/laydate.js" type="text/javascript"></script>
 
 
-    <script type="text/javascript">
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var exit = [[#{alert.exit}]];
+        var y = [[#{alert.yes}]];
+        var n = [[#{alert.no}]];
+        /*]]>*/
         $(function () {
             var cid = $('#nav_list> li>.submenu');
             cid.each(function (i) {
@@ -99,8 +104,9 @@
             });
 
             $('#Exit_system').on('click', function () {
-                layer.confirm('是否确定退出系统？', {
-                        btn: ['是', '否'],//按钮
+                layer.confirm(exit, {
+                        title: "Confirm",
+                        btn: [y, n],//按钮
                         icon: 3,
                     },
                     function () {
