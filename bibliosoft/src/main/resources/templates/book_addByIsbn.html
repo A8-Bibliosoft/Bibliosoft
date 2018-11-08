@@ -18,7 +18,7 @@
     <script src="/static/assets/js/jquery.dataTables.min.js"></script>
     <script src="/static/assets/js/jquery.dataTables.bootstrap.js"></script>
     <script src="/static/assets/layer/layer.js" type="text/javascript"></script>
-    <script src="/static/assets/laydate/laydate.js" type="text/javascript"></script>
+    <!--<script src="/static/assets/laydate/laydate.js" type="text/javascript"></script>-->
     <script src="/static/js/dragDivResize.js" type="text/javascript"></script>
     <title>Add BookByISBN</title>
     <style>
@@ -41,6 +41,22 @@
             width: 70%;
             margin: 0 auto;
         }
+        .mybookimgdiv{
+            width: 270px;
+            height: 353px;
+            position: absolute;
+            left: 90px;
+            top: 134px;
+            border: 1px dashed lightpink;
+        }
+        .mybarcodeimgdiv{
+            width: 300px;
+            /*height: 200px;*/
+            position: absolute;
+            right: 10px;
+            top: 134px;
+            border: 1px solid lightcyan;
+        }
     </style>
 </head>
 <!-- 2018-10-09 5:20 PM maowenjie -->
@@ -50,11 +66,31 @@
         <div class="title_name" th:text="#{book.add}"></div>
         <form id="myform">
             <div class="Competence_add">
+                <!--isbn-->
                 <div class="form-group">
                     <div class="myinput">
-                        <input type="text" th:placeholder="#{book.isbn}" name="bookisbn" id="bookisbn" class="form-control">
+                        <input type="text" th:placeholder="#{book.isbn}" autocomplete="on" name="bookisbn" id="bookisbn" class="form-control">
                     </div>
                 </div>
+                <!--bookname-->
+                <div class="form-group">
+                    <div class="myinput">
+                        <input class="form-control" th:placeholder="#{bookdetail.name}" name="bookname" id="bookname">
+                    </div>
+                </div>
+                <!--author-->
+                <div class="form-group">
+                    <div class="myinput">
+                        <input class="form-control" th:placeholder="#{book.author}" name="bookauthor" id="bookauthor">
+                    </div>
+                </div>
+                <!--pubisher-->
+                <div class="form-group">
+                    <div class="myinput">
+                        <input class="form-control" th:placeholder="#{book.publisher}" name="bookpublisher" id="bookpublisher">
+                    </div>
+                </div>
+                <!--position-->
                 <div class="form-group">
                     <div class="myinput">
                         <span class="select-box">
@@ -64,19 +100,31 @@
                         </span>
                     </div>
                 </div>
+                <!--copies num-->
                 <div class="form-group">
                     <div class="myinput">
                         <!-- default one -->
-                        <input type="text" th:placeholder="#{book.addbnum}" value="1" name="booknumber" id="booknumber" class="form-control">
+                        <!--<input type="text" th:placeholder="#{book.addbnum}" value="1" name="booknumber" id="booknumber" class="form-control">-->
+                        <span class="select-box">
+                            <select class="form-control" th:title="#{select.booknum}"  name="booknumber" id="booknumber">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                            </select>
+                        </span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="myinput">
-                        <input class="inline laydate-icon form-control" name="bookaddtime"
-                               th:placeholder="#{search.ph.sbtime}" id="bookaddtime">
-                        <!-- 这里借用了搜索框的placeholder -->
-                    </div>
-                </div>
+                <!--addtime-->
+                <!--<div class="form-group">-->
+                    <!--<div class="myinput">-->
+                        <!--<input class="inline laydate-icon form-control" name="bookaddtime"-->
+                               <!--th:placeholder="#{search.ph.sbtime}" id="bookaddtime">-->
+                        <!--&lt;!&ndash; 这里借用了搜索框的placeholder &ndash;&gt;-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--status-->
                 <div class="form-group">
                     <div class="myinput">
                         <span class="select-box">
@@ -86,7 +134,7 @@
                         </span>
                     </div>
                 </div>
-
+                <!--type-->
                 <div class="form-group">
                     <div class="myinput">
                         <span class="select-box">
@@ -109,7 +157,7 @@
                         <span th:text="#{button.return}"></span>
                     </button>
                     &nbsp;&nbsp;
-                    <button class="btn btn-default radius" type="reset" th:text="#{button.cancel}">&nbsp;&nbsp;Cancel&nbsp;&nbsp;
+                    <button class="btn btn-default radius" type="button" id="resetTable" th:text="#{button.cancel}">&nbsp;&nbsp;Cancel&nbsp;&nbsp;
                     </button>
                 </div>
             </div>
@@ -118,30 +166,59 @@
         <!--<div class="form-group">-->
             <!--<span id="showbookid" style="width:100%;"></span>-->
         <!--</div>-->
+        <div class="mybookimgdiv">
+            <img id="img" src="/static/images/bookisbn.png" alt="book image" style="width: 270px;height: 353px;">
+        </div>
+        <div class="mybarcodeimgdiv">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <img id="barimg" src="/static/images/barcode-scan.png" alt="book image" style="width: 50px;height: 40px;">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="button" class="btn btn-default radius" value="print" onclick="doPrint()"></input><br>
+        </div>
     </div>
 </div>
 </body>
 </html>
 <script type="text/javascript">
+
+    //指定部分内容打印
+    function doPrint() {
+        bdhtml = window.document.body.innerHTML;
+        var  prnhtml = bdhtml.substr(bdhtml.indexOf("<!--startprint-->") + 17);//选区包围的元素，即为barcode图片
+        prnhtml = prnhtml.substring(0, prnhtml.indexOf("<!--endprint-->"));
+        window.document.body.innerHTML = prnhtml;
+        window.print();
+        //恢复原状态页面
+        window.document.body.innerHTML=bdhtml; //还原 原有页面内容;
+    }
+
     //提交按钮
     function book_save_submit(){
         var bookstatus = $("#bookstatus").val();
-        var bookaddtime = $("#bookaddtime").val();
+        //var bookaddtime = $("#bookaddtime").val();
         var bookposition = $("#bookposition").val();
         var bookisbn = $("#bookisbn").val();
         var booknum = $("#booknumber").val();
         var booktype = $("#booktype").val();
-        if(bookstatus == "" || booktype == "" || bookaddtime == "" || bookposition == "" || bookisbn == ""){
+        var bookname = $("#bookname").val();
+        var bookauthor = $("#bookauthor").val();
+        var bookpublisher = $("#bookpublisher").val();
+        if(bookstatus == "" || booktype == "" || bookposition == "" || bookisbn == "" || bookname == "" || bookauthor == "" || bookpublisher == ""){
             layer.msg("Please complete the data form！");
         }else{
-            var data="isbn="+bookisbn+"&time="+bookaddtime+"&status="+bookstatus+"&position="+bookposition+"&num="+booknum+"&typeid="+booktype;
+            var data="isbn="+bookisbn+"&status="+bookstatus+"&position="+bookposition+"&num="+booknum+"&typeid="+booktype+"&bookname="+bookname+"&bookauthor="+bookauthor+"&bookpublisher="+bookpublisher;
             $.ajax({
                 type: "post",
                 url: "/book_isbn",
                 data: data,
                 success: function(data){
-                    layer.alert(data.msg, {
-                        title: 'Info [view and download the barcode by clicking on the bookid]',
+                    $(".mybarcodeimgdiv").append(data.msg);
+                    // layer.alert(data.msg, {
+                    //     title: 'Info [Download images by right click]',
+                    //     icon: 1
+                    // });
+                    layer.alert("add successful!", {
+                        title: 'Info [Download images by right click]',
                         icon: 1
                     });
                     //setTimeout(function(){resetandshow(data)},1000);
@@ -151,8 +228,18 @@
             });
         }
     }
-    function resetform(){
+
+    $("#resetTable").click(function(){
         $("#myform")[0].reset();
+        resetform();
+        $("#bookisbn").focus();
+    });
+
+
+    function resetform(){
+        // $("#myform")[0].reset();
+        $("#bookisbn").attr("readonly",false);
+        // $("#img").attr("src", '/static/images/bookisbn.png');
     }
     //显示出图书id，并且reset表格，但是这个功能有点鸡肋，删掉了
     // function resetandshow(data){
@@ -161,12 +248,59 @@
     // }
 
     //日期input输入框插件
-    laydate({
-        elem: '#bookaddtime',
-        event: 'focus'
-    });
+    // laydate({
+    //     elem: '#bookaddtime',
+    //     event: 'focus'
+    // });
 
     $(function(){
         $("#bookisbn").focus();
+    });
+    //失去焦点
+    $('#bookisbn').blur(function() {
+        var bookisbn = $("#bookisbn").val();
+        //提示用户先填写isbn
+        if(bookisbn == ""){
+            layer.msg("please input isbn first!", {
+                title: 'Info',
+                icon: 2
+            });
+            $("#bookisbn").focus();
+        }else{
+            var isbn = "bookisbn="+bookisbn;
+            $.ajax({
+                type: "post",
+                url: "/book_completeinfo",
+                data: isbn,
+                success: function(data){
+                    if(data.msg == 'success'){
+                        layer.msg("successfully read the book information");
+                        $("#bookname").val(data.name);
+                        $("#bookpublisher").val(data.publisher);
+                        $("#bookauthor").val(data.author);
+                        $("#img").attr("src", 'https://images.weserv.nl/?url='+data.imgsrc);
+                        $("#bookisbn").attr("readonly",true);
+                    }else{
+                        layer.alert(data.msg, {
+                            title: 'alert',
+                            icon: 3
+                        });
+                    }
+
+                },
+                // error: function(){
+                //     layer.alert(data.msg, {
+                //         title: 'something error',
+                //         icon: 2
+                //     });
+                // },
+                // failed: function (data) {
+                //     layer.alert(data.msg, {
+                //         title: 'something error',
+                //         icon: 2
+                //     });
+                // }
+            });
+        }
     });
 </script>

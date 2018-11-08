@@ -815,7 +815,7 @@ public class ReaderController {
             //logger.info(borrowRecordRepository.findByBookId(bookId).toString());
             return ResultEnum.RETURN_BOOK_SUCCESS.getMsg();
         }else if(debtmoney>0){
-            //还款
+            //在此还款
             bookRepository.updateBookStatus(0,bookId);
             borrowRecordRepository.updateBorrow(new Date(),0,bookId);
             return ResultEnum.RETURN_BOOK_PAY.getMsg()+":"+debtmoney;

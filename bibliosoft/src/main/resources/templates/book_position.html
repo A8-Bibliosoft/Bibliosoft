@@ -24,7 +24,7 @@
 <body>
 <div class="type_style">
     <div class="type_title" th:text="#{lib_index.items.position}"></div>
-    <div class="type_content" style="width: 50%;">
+    <div class="type_content">
         <div class="Operate_btn" style="border: 0px;padding-bottom: 0px;">
             <ul id="pro-info" class="nav nav-tabs">
                 <li class="active">
@@ -89,7 +89,7 @@
                             <td th:text="${p.place}"></td>
 
                             <td class="td-manage">
-                                <a th:onclick="'javascript:place_edit('+this+','+${p.id}+')'" th:title="#{table.title.edit}" href="javascript:;"
+                                <a th:onclick="'javascript:place_edit('+this+','+${p.id}+','+'\''+${p.place}+'\''+')'" th:title="#{table.title.edit}" href="javascript:;"
                                    class="btn btn-xs btn-info">
                                     <i class="icon-edit bigger-120"></i>
                                 </a>
@@ -160,6 +160,10 @@
         }
     }
 
+    $(function () {
+        $("#positionname").focus();
+    });
+
     /*书籍位置信息-删除*/
     function place_del(obj, id) {
         layer.confirm(message2, function (index) {
@@ -176,10 +180,10 @@
     }
 
     /*书籍类型-编辑*/
-    function place_edit(obj, id) {
+    function place_edit(obj, id, place) {
         $('#placeid').val(id);
         $('#placeid').attr("readonly", "readonly");
-        $('#placename').focus();
+        $('#placename').val(place);
         layer.open({
             type: 1,
             title: 'Modify Position',

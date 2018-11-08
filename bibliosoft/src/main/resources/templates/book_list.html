@@ -69,7 +69,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" name="isbn" id="sbookisbn" th:placeholder="#{search.ph.sbisbn}">
                                     <span class="input-group-btn">
-                                    <button class="btn btn-default" type="submit" th:text="#{search.button}">
+                                    <button class="btn btn-default bigger-110" type="submit" th:text="#{search.button}">
                                     </button>
 					            </span>
                                 </div><!-- /input-group -->
@@ -93,22 +93,22 @@
                 <thead>
                 <tr>
                     <!-- 按照ID排序 -->
-                    <th width="60" th:text="#{category.id}">ID</th>
-                    <th width="80" th:text="#{book.bookid}">Book ID</th>
+                    <!--<th width="60" th:text="#{category.id}">ID</th>-->
+                    <!--<th width="80" th:text="#{book.bookid}">Book ID</th>-->
                     <th width="160" th:text="#{bookdetail.name}">Book Name</th>
                     <th width="120" th:text="#{bookdetail.ISBN}">ISBN</th>
                     <th width="120" th:text="#{search.author}">Author</th>
                     <th width="60" th:text="#{bookdetail.price}">Price</th>
-                    <th width="200" th:text="#{book.position}">Position</th>
+                    <th width="160" th:text="#{book.position}">Position</th>
                     <th width="170" th:text="#{search.ph.sbtime}">Add Time</th>
-                    <th width="30" th:text="#{book.status}">Status</th>
+                    <th width="60" th:text="#{book.status}">Status</th>
                     <th width="180" th:text="#{table.operation}">Operation</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="book : ${books}">
-                    <td th:text="${book.getId()}"></td>
-                    <td th:text="${book.getBookId()}"></td>
+                    <!--<td th:text="${book.getId()}"></td>-->
+                    <!--<td th:text="${book.getBookId()}"></td>-->
                     <td>
                         <u style="cursor:pointer" class="text-primary" th:text="${book.getBookName()}" th:onclick="'javascript:member_show('+${book.getId()}+')'">
                             <!-- 两个参数的话，一直传不成功，它竟然把thymeleaf取回的值转变成了js变量名，而不是字符串 -->
@@ -137,7 +137,7 @@
                         <a title="show barcode" href="javascript:;"
                            th:onclick="'javascript:show_barcode('+${book.getBookId()}+')'"
                            class="btn btn-xs btn-success">
-                            <i class="icon-folder-open  bigger-110"></i>
+                            <i class="icon-barcode  bigger-110"></i>
                         </a>
                     </td>
                 </tr>
@@ -307,6 +307,7 @@
         });
     });
 </script>
+
 <script type="text/javascript">
 
     /*书籍-查看*/
@@ -316,6 +317,68 @@
         var h = 400;
         layer_show("Book Info", url + '#?=' + id, w, h);
     }
+    $(function(){
+        //记录初始状态
+        bhtml=window.document.body.innerHTML;
+    });
+
+    //指定部分内容打印
+    function doPrint() {
+        // bdhtml = window.document.body.innerHTML;
+        //在这里必须使用document的获取元素的方式！！！jQuery不行，耽误了我好长时间QAQ
+        //选中悬浮框，转化为字符串
+        bdhtml = document.getElementsByClassName("layui-layer-content layui-layer-padding")[0].innerHTML;
+        var  prnhtml = bdhtml.substr(bdhtml.indexOf("<!--startprint-->") + 17);//选区包围的元素，即为barcode图片
+        prnhtml = prnhtml.substring(0, prnhtml.indexOf("<!--endprint-->"));
+
+        window.document.body.innerHTML = prnhtml;
+        if (getExplorer() == "Chrome" || getExplorer() == "IE") {
+            pagesetup_null();
+        }
+        window.print();
+        //恢复原状态页面
+        window.document.body.innerHTML=bhtml; //还原 原有页面内容;
+    }
+
+    //获取浏览器类型
+    function getExplorer() {
+        var explorer = window.navigator.userAgent;
+        //ie
+        if (explorer.indexOf("MSIE") >= 0) {
+            return "IE";
+        }
+        //firefox
+        else if (explorer.indexOf("Firefox") >= 0) {
+            return "Firefox";
+        }
+        //Chrome
+        else if (explorer.indexOf("Chrome") >= 0) {
+            return "Chrome";
+        }
+        //Opera
+        else if (explorer.indexOf("Opera") >= 0) {
+            return "Opera";
+        }
+        //Safari
+        else if (explorer.indexOf("Safari") >= 0) {
+            return "Safari";
+        }
+    }
+
+    //IE设置去除页眉页脚
+    function pagesetup_null() {
+        var hkey_root, hkey_path, hkey_key;
+        hkey_root = "HKEY_CURRENT_USER";
+        hkey_path = "\\Software\\Microsoft\\Internet Explorer\\PageSetup\\";
+        try {
+            var RegWsh = new ActiveXObject("WScript.Shell");
+            hkey_key = "header";
+            RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "");
+            hkey_key = "footer";
+            RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "");
+        } catch (e) { }
+    }
+
 
     /*点击查看图书barcode图片*/
     function show_barcode(bookid){
@@ -324,6 +387,7 @@
                 title: 'Barcode',
                 icon: 1,
             });
+            // layer.close(index);
         });
     }
 

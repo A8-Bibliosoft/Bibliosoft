@@ -79,7 +79,7 @@
                             <td th:text="${t.typeName}"></td>
 
                             <td class="td-manage">
-                                <a th:onclick="'javascript:type_edit('+this+','+${t.typeId}+')'" th:title="#{table.title.edit}" href="javascript:;"
+                                <a th:onclick="'javascript:type_edit('+this+','+${t.typeId}+','+'\''+${t.typeName}+'\''+')'" th:title="#{table.title.edit}" href="javascript:;"
                                    class="btn btn-xs btn-info">
                                     <i class="icon-edit bigger-120"></i>
                                 </a>
@@ -150,7 +150,9 @@
             });
         }
     }
-
+    $(function () {
+        $("#categoryname").focus();
+    });
     /*书籍类型-删除*/
     function type_del(obj, id) {
         layer.confirm(message2, function (index) {
@@ -167,10 +169,10 @@
     }
 
     /*书籍类型-编辑*/
-    function type_edit(obj, id) {
+    function type_edit(obj, id, typename) {
         $('#typeid').val(id);
         $('#typeid').attr("readonly", "readonly");
-        $('#typename').focus();
+        $('#typename').val(typename);
         layer.open({
             type: 1,
             title: 'Modify Category',

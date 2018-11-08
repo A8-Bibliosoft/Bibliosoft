@@ -1,5 +1,6 @@
 package com.lib.bibliosoft.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.lib.bibliosoft.entity.*;
 import com.lib.bibliosoft.enums.ResultEnum;
 import com.lib.bibliosoft.repository.*;
@@ -26,9 +27,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Date;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.lib.bibliosoft.utils.ScanerIsbn.loadJSON;
 
 /**
  *@Title: BookController.java
@@ -540,16 +544,27 @@ public class BookController {
      * @description add books by isbn
      * @date 2:19 PM. 10/9/2018
      */
-
     @PostMapping("/book_isbn")
-    public ResponseEntity<Map<String,Object>> getInfoByDouBan(String isbn, String time, Integer position, String status, String num, String typeid){
+    public ResponseEntity<Map<String,Object>> getInfoByDouBan(String isbn, Integer position, String status, String num, String typeid, String bookname, String bookauthor, String bookpublisher){
         Map<String,Object> map = new HashMap<String,Object>();
         Integer number = Integer.parseInt(num);
+        //当前时间
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String time = formatter.format(new java.util.Date());
+
         //get the books and improve their information
-        List<Book> books = ScanerIsbn.getBookInfoByIsbn(isbn, number, time, position, status, typeid);
+        List<Book> books = null;
+        try {
+            books = ScanerIsbn.getBookInfoByIsbn(isbn, number, time, position, status, typeid, bookname, bookauthor, bookpublisher);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("msg", e.getMessage());
+            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+        }
 
         StringBuilder bookids = new StringBuilder();
         String s = "";
+        int i=0;
         try {
             for (Book b : books){
                 bookService.addBook(b);
@@ -562,7 +577,14 @@ public class BookController {
                 String name = "static/barcodeimages/"+String.valueOf(b.getBookId())+".png";
 //                s = "<a target='view_window' href='http://localhost:8080/"+name+"'>"+b.getBookId()+"</a>;";
                 //把图片附加到末尾，直接显示图片
-                s = "<img src='"+name+"'>";
+                s = "<br><img src='"+name+"'>";
+                i++;
+                if(i == 1){
+                    s = "<br><!--startprint--><img src='"+name+"'>";
+                }
+                if(books.size() == i){
+                    s = "<br><img src='"+name+"'><!--endprint-->";
+                }
                 bookids.append(s);
             }
 
@@ -574,9 +596,49 @@ public class BookController {
         }
         //http://localhost:8080/downloadImage
 //        map.put("msg", ResultEnum.ADD_BOOK_SUCCESS.getMsg() + " bookid: " + bookids);
-        map.put("msg", ResultEnum.ADD_BOOK_SUCCESS.getMsg() + bookids);
+        map.put("msg", "Barcodes list:" + bookids);
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
+
+    /**
+     * @title BookController.java
+     * @author 毛文杰
+     * @date 1:59 PM. 11/8/2018
+     */
+    //补全添加isbn之后的表单信息
+    @PostMapping("/book_completeinfo")
+    public ResponseEntity<Map<String,Object>> complete(String bookisbn){
+        Map<String,Object> map = new HashMap<String,Object>();
+        String url = "https://api.douban.com/v2/book/isbn/:" + bookisbn;
+        String sauthor = "";
+        String publisher = "";
+        String author = "";
+        String name = "";
+        String imgsrc = "";
+        try{
+            String json = loadJSON(url);
+            JSONObject jsonObject = JSONObject.parseObject(json);
+            sauthor = jsonObject.getString("author");
+            publisher = jsonObject.getString("publisher");
+            author = sauthor.split("\"")[1];
+            name = jsonObject.getString("title");
+            imgsrc = jsonObject.getString("image");
+        }
+        catch(Exception e){
+            map.put("msg",ResultEnum.DOUBAN_ERROR.getMsg());
+            e.printStackTrace();
+            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+        }
+        map.put("msg", ResultEnum.SUCCESS.getMsg());
+        map.put("name", name);
+        map.put("publisher", publisher);
+        map.put("author", author);
+        map.put("imgsrc", imgsrc);
+        logger.info("name={},author={},publisher={},imgsrc={}",name,author,publisher,imgsrc);
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+    }
+
+
 
     /**
      * go to add book by isbn page
@@ -851,7 +913,7 @@ public class BookController {
     public String show_barcodeimg(@PathVariable("bookid") Integer bookid){
         String name = "static/barcodeimages/"+String.valueOf(bookid)+".png";
         //把图片附加到末尾，直接显示图片
-        String img = "this book's barcode is: <br><img alt='barcode' src='"+name+"'>";
+        String img = "this book's barcode is: <br><!--startprint--><img id='barcodeimg' alt='barcode' src='"+name+"'><!--endprint--><br><button class='btn btn-default radius' onclick='doPrint()'>p r i n t</button>";
         return img;
     }
 }

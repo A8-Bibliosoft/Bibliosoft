@@ -29,6 +29,7 @@ public enum ResultEnum {
     RETURN_BOOK_SUCCESS(115, "return success!"),
     RETURN_BOOK_PAY(116, "you have already owed a fee, please pay in time"),
     BOOK_ALREADY_RETURN(117, "the book has been returned, please do not repeat the operation!"),
+    DOUBAN_ERROR(118,"an error in parsing data from the Douban API. Please go to the manual add-book page! <a style='color:red' href='/book_list'>click me go！</a>"),
     ;
     private Integer code;
 
