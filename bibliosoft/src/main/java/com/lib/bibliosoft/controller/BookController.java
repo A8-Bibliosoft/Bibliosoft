@@ -455,6 +455,9 @@ public class BookController {
                 if(num-1 == i){
                     s = "<br><img src='"+name+"'><!--endprint-->";
                 }
+                if(num == 1){
+                    s = "<br><!--startprint--><img src='"+name+"'><!--endprint-->";
+                }
                 bookids.append(s);
             } catch (Exception e) {
                 logger.error("添加书籍出错！error = {}", e.getMessage());
@@ -583,6 +586,9 @@ public class BookController {
                 }
                 if(books.size() == i){
                     s = "<br><img src='"+name+"'><!--endprint-->";
+                }
+                if(books.size() == 1){
+                    s = "<br><!--startprint--><img src='"+name+"'><!--endprint-->";
                 }
                 bookids.append(s);
             }
