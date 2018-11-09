@@ -33,7 +33,7 @@ public interface LibrarianRepository extends JpaRepository<Librarian, Integer> {
     @Transactional
     @Modifying
     @Query(value = "update librarian lib set lib.lib_name=?2, lib.email=?3, lib.phone=?4 where lib.lib_id=?1", nativeQuery = true)
-    void updateLibrarianWithoutPass(String id, String name, String email, String phone);
+    void updateLibrarianWithoutPass(String libid, String name, String email, String phone);
 
     @Override
     List<Librarian> findAll();

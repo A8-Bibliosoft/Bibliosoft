@@ -30,7 +30,11 @@ public enum ResultEnum {
     RETURN_BOOK_PAY(116, "you have already owed a fee, please pay in time"),
     BOOK_ALREADY_RETURN(117, "the book has been returned, please do not repeat the operation!"),
     DOUBAN_ERROR(118,"an error in parsing data from the Douban API. Please go to the manual add-book page! <a style='color:red' href='/book_list'>click me go！</a>"),
-    NOT_EXIST(119,"bookid does not exist! please enter again."),
+    NOT_EXIST(119,"book does not exist! please enter again."),
+    BORROW_RECORD_NOT_EXIST(119,"this book doesn't have a borrow record!  please enter again."),
+    READER_NOT_EXIST(120, "reader does't exist! please enter again."),
+    CAN_NOT_DEL_POS(121,"there are other books in this location, so you can't delete the position!"),
+    DEL_POS_SUCCESS(122,"location deleted successfully!"),
     ;
     private Integer code;
 

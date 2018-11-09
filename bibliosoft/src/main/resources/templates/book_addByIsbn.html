@@ -173,7 +173,7 @@
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <img id="barimg" src="/static/images/barcode-scan.png" alt="book image" style="width: 50px;height: 40px;">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="button" class="btn btn-default radius" value="print" onclick="doPrint()"><br>
+            <input type="button" id="printbtn" class="btn btn-default radius" value="print" onclick="doPrint()"><br>
         </div>
     </div>
 </div>
@@ -184,7 +184,8 @@
     //指定部分内容打印
     function doPrint() {
         bdhtml = window.document.body.innerHTML;
-        var  prnhtml = bdhtml.substr(bdhtml.indexOf("<!--startprint-->") + 17);//选区包围的元素，即为barcode图片
+        var  prnhtml = bdhtml.substr(bdhtml.indexOf("<!--startprint-->") + 17);
+        //选区包围的元素，即为barcode图片
         prnhtml = prnhtml.substring(0, prnhtml.indexOf("<!--endprint-->"));
         window.document.body.innerHTML = prnhtml;
         window.print();
@@ -213,12 +214,13 @@
                 data: data,
                 success: function(data){
                     $(".mybarcodeimgdiv").append(data.msg);
+                    $("#printbtn").removeAttr("disabled");
                     // layer.alert(data.msg, {
                     //     title: 'Info [Download images by right click]',
                     //     icon: 1
                     // });
                     layer.alert("add successful!", {
-                        title: 'Info [Download images by right click]',
+                        title: 'Info',
                         icon: 1
                     });
                     //setTimeout(function(){resetandshow(data)},1000);
@@ -255,6 +257,7 @@
 
     $(function(){
         $("#bookisbn").focus();
+        $("#printbtn").attr("disabled",true);
     });
     //失去焦点
     $('#bookisbn').blur(function() {
