@@ -142,7 +142,8 @@
                 <ul class="nav imgsize">
                     <li th:each="borrow:${borrowlist}">
                         <a th:href="@{'goBookDetail?bookIsbn='+${borrow.book.bookIsbn}}" style="float: left">
-                            <img th:src="@{'https://images.weserv.nl/?url='+${borrow.book.bookImg}}" alt="">
+                            <img th:if="${borrow.book.judgeSrcLocalOrWeb() eq 1}" th:src="@{'https://images.weserv.nl/?url='+${borrow.book.bookImg}}" alt="">
+                            <img th:if="${borrow.book.judgeSrcLocalOrWeb() eq 0}" th:src="@{${borrow.book.bookImg}}" alt="">
                         </a>
                         <div class="bookinfo">
                             <h4><span th:text="#{readerinfo.bookname}">书籍名称:</span><span th:text="${borrow.book.bookName}"></span></h4>
@@ -157,7 +158,8 @@
                 <ul class="nav imgsize">
                     <li th:each="appointment:${appointmentlist}">
                         <a th:href="@{'goBookDetail?bookIsbn='+${appointment.book.bookIsbn}}" style="float: left">
-                            <img th:src="@{${'https://images.weserv.nl/?url='+appointment.book.bookImg}}" alt="">
+                            <img th:if="${appointment.book.judgeSrcLocalOrWeb() eq 1}" th:src="@{${'https://images.weserv.nl/?url='+appointment.book.bookImg}}" alt="">
+                            <img th:if="${appointment.book.judgeSrcLocalOrWeb() eq 0}" th:src="@{${appointment.book.bookImg}}" alt="">
                         </a>
                         <div class="bookinfo">
                             <h4><span th:text="#{readerinfo.bookname}">书籍名称:</span><span th:text="${appointment.book.bookName}"></span></h4>
@@ -170,7 +172,8 @@
                 <ul class="nav imgsize">
                     <li th:each="history:${historylist}">
                         <a th:href="@{'goBookDetail?bookIsbn='+${history.book.bookIsbn}}" style="float: left">
-                            <img th:src="${'https://images.weserv.nl/?url='+history.book.bookImg}" alt="" >
+                            <img th:if="${history.book.judgeSrcLocalOrWeb() eq 1}" th:src="${'https://images.weserv.nl/?url='+history.book.bookImg}" alt="" >
+                            <img th:if="${history.book.judgeSrcLocalOrWeb() eq 0}" th:src="${history.book.bookImg}" alt="" >
                         </a>
                         <div class="bookinfo">
                             <h4><span th:text="#{readerinfo.bookname}">书籍名称:</span><span th:text="${history.book.bookName}"></span></h4>

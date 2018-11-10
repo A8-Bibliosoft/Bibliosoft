@@ -43,7 +43,8 @@
         <div class="col-md-12">
             <div class="col-md-6">
                 <h2 style="text-align: center" th:text="#{bookdetail.bookcover}">书籍封面</h2><br>
-                <img th:src="'https://images.weserv.nl/?url='+${book.bookImg}" alt="书籍封面" style="width: 85%;height: 600px;margin-left: 50px;" >
+                <img th:if="${book.judgeSrcLocalOrWeb() eq 1}" th:src="'https://images.weserv.nl/?url='+${book.bookImg}" alt="书籍封面" style="width: 85%;height: 600px;margin-left: 50px;" >
+                <img th:if="${book.judgeSrcLocalOrWeb() eq 0}" th:src="${book.bookImg}" alt="书籍封面" style="width: 85%;height: 600px;margin-left: 50px;" >
             </div>
             <div class="col-md-6">
                 <h2 style="text-align: center" th:text="#{bookdetail.description}">书籍简介</h2>

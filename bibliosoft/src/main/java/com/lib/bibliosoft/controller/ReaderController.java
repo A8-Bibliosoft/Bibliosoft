@@ -218,7 +218,7 @@ public class ReaderController {
         }
     }
 
-    //???????
+    //
     private void updateReaderAlldebt(String readerId){
         List<BorrowRecord> borrowRecordDebtList= borrowRecordRepository.findNowDebtByReaderId(readerId);
         float NowAllDebt=0;
@@ -883,8 +883,13 @@ public class ReaderController {
         //日期减少
         borrowRecordRepository.minusLastday();
         // 所有欠款记录
-        // List<Reader> readers=readerRepository.findAllDebtReader();
-       // List<BorrowRecord> borrowRecordListDebt=borrowRecordRepository.findByDebt();
+        List<Reader> readers=readerRepository.findAllDebtReader();
+        if(readers.size()>0){
+            for(Reader reader:readers){
+                updateReaderAlldebt(reader.getReaderId());
+                readerRepository.updateReaderStatusById(reader.getId(),"OFF");
+            }
+        }
 
         //增加欠款
         borrowRecordRepository.addDebt();
