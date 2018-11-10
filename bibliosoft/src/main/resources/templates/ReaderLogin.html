@@ -197,6 +197,15 @@
 							});
 							showfh();
 							$("#code").focus();
+						}else if("delreader"===data){
+                            $("#readerId").tips({
+                                side : 1,
+                                msg : "请前往管理员处激活账户！",
+                                bg : '#FF5080',
+                                time : 15
+                            });
+                            showfh();
+                            $("#readerId").focus();
 						}else{
 							$("#readerId").tips({
 								side : 1,

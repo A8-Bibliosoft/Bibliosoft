@@ -299,7 +299,7 @@ public class ReaderController {
         }else if(borrowRecordRepository.findByReaderIdAndReturntimeIsNull(reader.getReaderId()).size()>0){
             return ResultEnum.READER_DEL_CANCEL.getMsg();
         }else{
-            //考虑要不要直接删掉，还是把状态改为OFF
+            //考虑要不要直接删掉，还是把状态改为DEL
             //iReaderDao.deleteReader(reader);
             iReaderDao.updateReaderStatusById(Iid, "DEL");
             logger.info("delete reader>>>  id={}, name={}",id, reader.getReaderName());
@@ -326,11 +326,13 @@ public class ReaderController {
             //id是主键
             iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status, password);
         }else if(flag.equals("add")){
+            //如果数据库里面存在之前标记为del的用户,则把它激活即可
             Reader reader1 = readerRepository.findReaderByReaderId(readerId);
             if(reader1 != null){
                  readerRepository.updateReaderStatusById(reader1.getId(),"ON");
                  return "redirect:/reader_list";
             }
+            //之前不存在新建读者
             Reader reader = new Reader();
             reader.setSex(sex);
             reader.setReaderName(readerName);
@@ -481,6 +483,9 @@ public class ReaderController {
                     readerRepository.save(reader);
                 }
                 //状态确认
+                if(reader.getStatus().equals("DEL")){
+                    return "delreader";
+                }
                 if(reader.getStatus().equals("ON")){
                     if(reader.getAlldebt()>0){
                         reader.setStatus("OFF");
@@ -671,6 +676,8 @@ public class ReaderController {
         //logger.info(bookSortRepository.findByTypeId(1).get(0).getOneBook().getBookPosition().getPlace());
         return "Search";
     }
+
+
     @RequestMapping("/search")
     public String search(Model model,String find_type,String find_info,Integer booktypeid) throws Exception{
         model.addAttribute("booktypelist",bookTypeRepository.findAll());
@@ -815,6 +822,7 @@ public class ReaderController {
     public synchronized String returnBook(String bookid){
         Integer bookId = Integer.parseInt(bookid);
         BorrowRecord borrowRecord=borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId);
+        //判断记录是否存在
         if(borrowRecord == null){
             return ResultEnum.BORROW_RECORD_NOT_EXIST.getMsg();
         }
@@ -836,6 +844,8 @@ public class ReaderController {
             //在此还款
             bookRepository.updateBookStatus(0,bookId);
             borrowRecordRepository.updateBorrow(new Date(),0,bookId);
+            //读者状态恢复为ON
+            //readerRepository.updateReaderStatusById(Integer.parseInt(readerId),"ON");
             return ResultEnum.RETURN_BOOK_PAY.getMsg()+":"+debtmoney;
         }else{
             return ResultEnum.UNKNOWN_ERROR.getMsg();
@@ -869,7 +879,7 @@ public class ReaderController {
             return ResultEnum.BOOK_ALREADY_RETURN.getMsg();
         }
 
-        //3将书籍的状态标志为已损坏\丢失(2)
+        //3将书籍的状态标志为已损坏\丢失(2)---->
         bookRepository.updateBookStatus(2,bookId);
 
         //4将罚款金额附加到record的debt中
@@ -887,17 +897,17 @@ public class ReaderController {
     public void testCron1() throws MessagingException {
         //日期减少
         borrowRecordRepository.minusLastday();
-        // 所有欠款记录
-        List<Reader> readers=readerRepository.findAllDebtReader();
-        if(readers.size()>0){
-            for(Reader reader:readers){
-                updateReaderAlldebt(reader.getReaderId());
-                readerRepository.updateReaderStatusById(reader.getId(),"OFF");
-            }
-        }
-
         //增加欠款
         borrowRecordRepository.addDebt();
+
+        // 所有欠款记录
+        List<BorrowRecord> borrowRecordDebtList=borrowRecordRepository.findByDebt();
+        if(borrowRecordDebtList.size()>0){
+            for(BorrowRecord borrowRecord:borrowRecordDebtList){
+                updateReaderAlldebt(borrowRecord.getReaderId());
+                readerRepository.updateReaderStatusByReaderId(borrowRecord.getReaderId(),"OFF");
+            }
+        }
 
         //7天限制
         List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByLastday();
