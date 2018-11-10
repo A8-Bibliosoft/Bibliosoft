@@ -123,10 +123,10 @@
                         <img th:src="'https://images.weserv.nl/?url='+${book.getOneBook().bookImg}" alt="bookImage" style="float: left">
 						<br>
                         <div style="margin-left: 100px;">
-                            <h4>书名: <span th:text="${book.bookName}"></span></h4>
-                            <h4>作者: <span th:text="${book.bookAuthor}"></span></h4>
-                            <h4>价格: <span th:text="${book.getOneBook().bookPrice}"></span></h4>
-                            <h4>位置: <span th:text="${book.getOneBook().getBookPosition().getPlace()}"></span></h4>
+                            <h4><span th:text="#{search.bookname}">书名:</span>&nbsp;<span th:text="${book.bookName}"></span></h4>
+                            <h4><span th:text="#{search.author}">作者:</span>&nbsp;<span th:text="${book.bookAuthor}"></span></h4>
+                            <h4><span th:text="#{search.price}">价格:</span>&nbsp;<span th:text="${book.getOneBook().bookPrice}"></span></h4>
+                            <h4><span th:text="#{search.posotion}">位置:</span>&nbsp;<span th:text="${book.getOneBook().getBookPosition().getPlace()}"></span></h4>
                         </div>
                     </a>
                 </div>
