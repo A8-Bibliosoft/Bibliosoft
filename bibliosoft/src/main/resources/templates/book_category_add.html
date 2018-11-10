@@ -128,11 +128,15 @@
     var cancel = [[#{button.cancel}]];
     /*]]>*/
     /*目前的不足之处：提交之后切换回第二个面板不会立即刷新类型列表*/
+
     /*增加-书籍类型*/
     function submitform(){
         var catename = $("#categoryname").val();
         if(catename == ""){
-            layer.msg(message1);
+            layer.msg(message1,{
+                title: 'Info',
+                icon: 8
+            });
         }else{
             var data="categoryname="+catename;
             $.ajax({

@@ -141,7 +141,11 @@
     function submitform(){
         var placename = $("#positionname").val();
         if(placename == ""){
-            layer.msg(message1);
+            layer.msg(message1,{
+                title: 'Info',
+                    icon: 8,
+                    anim: 4
+            });
         }else{
             var data="placename="+placename;
             $.ajax({
@@ -167,12 +171,12 @@
     /*书籍位置信息-删除*/
     function place_del(obj, id) {
         layer.confirm(message2, function (index) {
-            $(obj).parents("tr").remove();
             $.post("/bookposition/" + id, {}, function (data) {
-                if (data.msg == "success") {
-                    layer.msg('delete successful!', {icon: 1, time: 700});
+                if (data.msg == "location deleted successfully!") {
+                    $(obj).parents("tr").remove();
+                    layer.msg(data.msg, {icon: 1, time: 1000});
                 } else {
-                    layer.msg('delete failed!', {icon: 2, time: 700});
+                    layer.msg(data.msg, {icon: 2, time: 2000});
                 }
             });
 

@@ -763,6 +763,14 @@ public class ReaderController {
 
         //获取借书期限  借书前提 读者未被封禁(未欠款) 借书少于3本 且书还在架上
         Reader reader=readerRepository.findReaderByReaderId(readerId);
+        //不存在读者
+        if(reader == null) {
+            return ResultEnum.READER_NOT_EXIST.getMsg();
+        }
+        //不存在书籍
+        if(bookRepository.findByBookId(bookId) == null){
+            return ResultEnum.NOT_EXIST.getMsg();
+        }
         //OFF代表没有借书权限，直接不允许
         if("OFF".equals(reader.getStatus())){
             return ResultEnum.CANNOT_BORROW.getMsg();
@@ -801,7 +809,7 @@ public class ReaderController {
         Integer bookId = Integer.parseInt(bookid);
         BorrowRecord borrowRecord=borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId);
         if(borrowRecord == null){
-            return ResultEnum.NOT_EXIST.getMsg();
+            return ResultEnum.BORROW_RECORD_NOT_EXIST.getMsg();
         }
         String readerId=borrowRecord.getReaderId();
         updateReaderAlldebt(readerId);

@@ -6,6 +6,7 @@ import com.lib.bibliosoft.entity.Librarian;
 import com.lib.bibliosoft.entity.Reader;
 import com.lib.bibliosoft.repository.BorrowRecordRepository;
 import com.lib.bibliosoft.repository.DefSettingRepository;
+import com.lib.bibliosoft.repository.LibrarianRepository;
 import com.lib.bibliosoft.repository.ReaderRepository;
 import com.lib.bibliosoft.service.ILibrarianSerivce;
 import com.lib.bibliosoft.utils.VerifyCode;
@@ -53,6 +54,9 @@ public class LibrarianController {
 
     @Autowired
     private BorrowRecordRepository borrowRecordRepository;
+
+    @Autowired
+    private LibrarianRepository librarianRepository;
     /**
      * index Page of Librarian used system
      *
@@ -87,7 +91,7 @@ public class LibrarianController {
      */
     @PostMapping("/librarian_login")
     @ResponseBody
-    public String loginReader(String loginname,
+    public String loginReader(String libid,
                               String password,
                               String code,
                               HttpServletRequest request,
@@ -99,13 +103,16 @@ public class LibrarianController {
         //set the type of response
         response.setContentType("text/plain;charset=UTF-8");
 
-        Librarian librarian = iLibrarianSerivce.findByLibrarianName(loginname);
+//        String loginname = librarianRepository.findByLibId(libid).getLibName();
+//        Librarian librarian = iLibrarianSerivce.findByLibrarianName(loginname);
+
+        Librarian librarian = librarianRepository.findByLibId(libid);
 
         if (!code.equals(key)) {
             logger.info("codeerror");
             return "codeerror";
         } else if (librarian == null) {
-            logger.info("This username={} does not exist", loginname);
+            logger.info("This userid={} does not exist", libid);
             return "usererror";
         } else if (password.equals(librarian.getPassword())) {
             logger.info("login success");
@@ -190,8 +197,6 @@ public class LibrarianController {
         Date enddate=Date.valueOf(sdf.format(cal.getTime()));
         //System.out.println("所在周星期六的日期："+enddate);
 
-
-
         //获取这一天注册了多少个新读者，乘以押金
         List<Reader> readerList = readerRepository.findByWeek(startdate,enddate);
         deposit = defSettingRepository.findById(2).get().getDefnumber()*readerList.size();
@@ -238,6 +243,23 @@ public class LibrarianController {
     public String lib_logout(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
         return "/lib_login";
+    }
+
+    /**
+     * 图书馆员自己修改信息
+     * @title LibrarianController.java
+     * @param libid, libname, phone, email
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name modifyinfo
+     * @date 10:34 PM. 11/9/2018
+     */
+    @PostMapping("/lib_modify_info")
+    public String modifyinfo(String libid, String libname, String phone, String email, HttpSession session){
+        //logger.info("={}={}={}={}",libname,libid,email,phone);
+        librarianRepository.updateLibrarianWithoutPass(libid,libname,email,phone);
+        session.setAttribute("librarian", librarianRepository.findByLibId(libid));
+        return "redirect:/librarian_info";
     }
 
 }

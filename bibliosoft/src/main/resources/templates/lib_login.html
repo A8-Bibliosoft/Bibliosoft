@@ -31,8 +31,8 @@
     <script type="text/javascript" th:src="@{/static/js/jquery.cookie.js}"></script>
 
     <!-- 软键盘控件start -->
-    <script type="text/javascript" th:src="@{/static/login/keypad/js/form/keypad.js}"></script>
-    <script type="text/javascript" th:src="@{/static/login/keypad/js/framework.js}"></script>
+    <!--<script type="text/javascript" th:src="@{/static/login/keypad/js/form/keypad.js}"></script>-->
+    <!--<script type="text/javascript" th:src="@{/static/login/keypad/js/framework.js}"></script>-->
     <!-- 软键盘控件end -->
     <style type="text/css">
         .cavs {
@@ -49,7 +49,7 @@
         function showfh() {
             fhi = 1;
             //关闭提示晃动屏幕，注释掉这句话即可
-            timer = setInterval(xzfh2, 2);
+            //timer = setInterval(xzfh2, 2);
         }
         var current = 0;
 
@@ -111,7 +111,7 @@
                                 <img height="35" th:src="@{/static/login/user.png}"/>
                             </i>
 							</span>
-                            <input type="text" style="margin-left: -3px;" name="loginname" id="loginname" value="" placeholder="username" th:placeholder="#{login.username}"/>
+                            <input type="text" style="margin-left: -3px;" name="libid" id="loginname" value="" placeholder="librarianid" th:placeholder="#{login.username}"/>
                         </div>
                     </div>
                 </div>
@@ -156,6 +156,7 @@
                         </div>
                         <span class="pull-right">
                             <a onclick="severCheck();" class="flip-link btn btn-info" th:text="#{login.signin}" id="to-recover">Sign In</a>
+                            <a href="#" onclick="find_pass()" class="flip-link btn btn-info" th:text="#{readerlogin.forget}">忘记密码</a>
                         </span>
                     </div>
                 </div>
@@ -187,12 +188,31 @@
 </div>
 
 <script type="text/javascript">
+    function find_pass() {
+        var id = $("#loginname").val();
+        $.ajax({
+            type: "POST",
+            url: '/find_pass',
+            data: "id="+id,
+            // dataType: "json",
+            async: false,
+            cache: false,
+            success: function (result) {
+                if("success" === result){
+                    alert("Password has already been sent to your email address.")
+                }else {
+                    alert("Your emali address is Invalid, please modify your email address.")
+                }
+            },
+        });
+    }
+
     //服务器校验
     function severCheck() {
         if (check()) {
-            var loginname = $("#loginname").val();
+            var libid = $("#loginname").val();
             var password = $("#password").val();
-            var code = "loginname=" + loginname + "&password=" + password + "&code=" + $("#code").val();
+            var code = "libid=" + libid + "&password=" + password + "&code=" + $("#code").val();
             $.ajax({
                 type: "POST",
                 url: '/librarian_login',
@@ -306,7 +326,7 @@
         }
         $("#loginbox").tips({
             side: 1,
-            msg: '正在登录 , 请稍后 ...',
+            msg: 'Signing in, please wait...',
             bg: '#68B500',
             time: 10
         });
@@ -367,134 +387,134 @@
     }
 
     //注册
-    function rcheck() {
-        if ($("#USERNAME").val() == "") {
-            $("#USERNAME").tips({
-                side: 3,
-                msg: '输入用户名',
-                bg: '#AE81FF',
-                time: 2
-            });
-            $("#USERNAME").focus();
-            $("#USERNAME").val('');
-            return false;
-        } else {
-            $("#USERNAME").val(jQuery.trim($('#USERNAME').val()));
-        }
-        if ($("#PASSWORD").val() == "") {
-            $("#PASSWORD").tips({
-                side: 3,
-                msg: '输入密码',
-                bg: '#AE81FF',
-                time: 2
-            });
-            $("#PASSWORD").focus();
-            return false;
-        }
-        if ($("#PASSWORD").val() != $("#chkpwd").val()) {
-            $("#chkpwd").tips({
-                side: 3,
-                msg: '两次密码不相同',
-                bg: '#AE81FF',
-                time: 3
-            });
-            $("#chkpwd").focus();
-            return false;
-        }
-        if ($("#name").val() == "") {
-            $("#name").tips({
-                side: 3,
-                msg: '输入姓名',
-                bg: '#AE81FF',
-                time: 3
-            });
-            $("#name").focus();
-            return false;
-        }
-        if ($("#EMAIL").val() == "") {
-            $("#EMAIL").tips({
-                side: 3,
-                msg: '输入邮箱',
-                bg: '#AE81FF',
-                time: 3
-            });
-            $("#EMAIL").focus();
-            return false;
-        } else if (!ismail($("#EMAIL").val())) {
-            $("#EMAIL").tips({
-                side: 3,
-                msg: '邮箱格式不正确',
-                bg: '#AE81FF',
-                time: 3
-            });
-            $("#EMAIL").focus();
-            return false;
-        }
-        if ($("#rcode").val() == "") {
-            $("#rcode").tips({
-                side: 1,
-                msg: '验证码不得为空',
-                bg: '#AE81FF',
-                time: 3
-            });
-            $("#rcode").focus();
-            return false;
-        }
-        return true;
-    }
-
-    //提交注册
-    function register() {
-        if (rcheck()) {
-            var nowtime = date2str(new Date(), "yyyyMMdd");
-            $.ajax({
-                type: "POST",
-                url: 'appSysUser/registerSysUser.do',
-                data: {
-                    USERNAME: $("#USERNAME").val(),
-                    PASSWORD: $("#PASSWORD").val(),
-                    NAME: $("#name").val(),
-                    EMAIL: $("#EMAIL").val(),
-                    rcode: $("#rcode").val(),
-                    FKEY: $.md5('USERNAME' + nowtime + ',fh,'),
-                    tm: new Date().getTime()
-                },
-                dataType: 'json',
-                cache: false,
-                success: function (data) {
-                    if ("00" == data.result) {
-                        $("#windows2").hide();
-                        $("#windows1").show();
-                        $("#loginbox").tips({
-                            side: 1,
-                            msg: '注册成功,请登录',
-                            bg: '#68B500',
-                            time: 3
-                        });
-                        changeCode1();
-                    } else if ("04" == data.result) {
-                        $("#USERNAME").tips({
-                            side: 1,
-                            msg: "用户名已存在",
-                            bg: '#FF5080',
-                            time: 15
-                        });
-                        showfh();
-                        $("#USERNAME").focus();
-                    } else if ("06" == data.result) {
-                        $("#rcode").tips({
-                            side: 1,
-                            msg: "验证码输入有误",
-                            bg: '#FF5080',
-                            time: 15
-                        });
-                        showfh();
-                        $("#rcode").focus();
-                    }
-                }
-            });
-        }
-    }
+    // function rcheck() {
+    //     if ($("#USERNAME").val() == "") {
+    //         $("#USERNAME").tips({
+    //             side: 3,
+    //             msg: '输入用户名',
+    //             bg: '#AE81FF',
+    //             time: 2
+    //         });
+    //         $("#USERNAME").focus();
+    //         $("#USERNAME").val('');
+    //         return false;
+    //     } else {
+    //         $("#USERNAME").val(jQuery.trim($('#USERNAME').val()));
+    //     }
+    //     if ($("#PASSWORD").val() == "") {
+    //         $("#PASSWORD").tips({
+    //             side: 3,
+    //             msg: '输入密码',
+    //             bg: '#AE81FF',
+    //             time: 2
+    //         });
+    //         $("#PASSWORD").focus();
+    //         return false;
+    //     }
+    //     if ($("#PASSWORD").val() != $("#chkpwd").val()) {
+    //         $("#chkpwd").tips({
+    //             side: 3,
+    //             msg: '两次密码不相同',
+    //             bg: '#AE81FF',
+    //             time: 3
+    //         });
+    //         $("#chkpwd").focus();
+    //         return false;
+    //     }
+    //     if ($("#name").val() == "") {
+    //         $("#name").tips({
+    //             side: 3,
+    //             msg: '输入姓名',
+    //             bg: '#AE81FF',
+    //             time: 3
+    //         });
+    //         $("#name").focus();
+    //         return false;
+    //     }
+    //     if ($("#EMAIL").val() == "") {
+    //         $("#EMAIL").tips({
+    //             side: 3,
+    //             msg: '输入邮箱',
+    //             bg: '#AE81FF',
+    //             time: 3
+    //         });
+    //         $("#EMAIL").focus();
+    //         return false;
+    //     } else if (!ismail($("#EMAIL").val())) {
+    //         $("#EMAIL").tips({
+    //             side: 3,
+    //             msg: '邮箱格式不正确',
+    //             bg: '#AE81FF',
+    //             time: 3
+    //         });
+    //         $("#EMAIL").focus();
+    //         return false;
+    //     }
+    //     if ($("#rcode").val() == "") {
+    //         $("#rcode").tips({
+    //             side: 1,
+    //             msg: '验证码不得为空',
+    //             bg: '#AE81FF',
+    //             time: 3
+    //         });
+    //         $("#rcode").focus();
+    //         return false;
+    //     }
+    //     return true;
+    // }
+    //
+    // //提交注册
+    // function register() {
+    //     if (rcheck()) {
+    //         var nowtime = date2str(new Date(), "yyyyMMdd");
+    //         $.ajax({
+    //             type: "POST",
+    //             url: 'appSysUser/registerSysUser.do',
+    //             data: {
+    //                 USERNAME: $("#USERNAME").val(),
+    //                 PASSWORD: $("#PASSWORD").val(),
+    //                 NAME: $("#name").val(),
+    //                 EMAIL: $("#EMAIL").val(),
+    //                 rcode: $("#rcode").val(),
+    //                 FKEY: $.md5('USERNAME' + nowtime + ',fh,'),
+    //                 tm: new Date().getTime()
+    //             },
+    //             dataType: 'json',
+    //             cache: false,
+    //             success: function (data) {
+    //                 if ("00" == data.result) {
+    //                     $("#windows2").hide();
+    //                     $("#windows1").show();
+    //                     $("#loginbox").tips({
+    //                         side: 1,
+    //                         msg: '注册成功,请登录',
+    //                         bg: '#68B500',
+    //                         time: 3
+    //                     });
+    //                     changeCode1();
+    //                 } else if ("04" == data.result) {
+    //                     $("#USERNAME").tips({
+    //                         side: 1,
+    //                         msg: "用户名已存在",
+    //                         bg: '#FF5080',
+    //                         time: 15
+    //                     });
+    //                     showfh();
+    //                     $("#USERNAME").focus();
+    //                 } else if ("06" == data.result) {
+    //                     $("#rcode").tips({
+    //                         side: 1,
+    //                         msg: "验证码输入有误",
+    //                         bg: '#FF5080',
+    //                         time: 15
+    //                     });
+    //                     showfh();
+    //                     $("#rcode").focus();
+    //                 }
+    //             }
+    //         });
+    //     }
+    // }
 
     //邮箱格式校验
     function ismail(mail) {

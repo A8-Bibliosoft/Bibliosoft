@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -294,7 +295,11 @@ public class AdminController {
     @ResponseBody
     @PostMapping("/find_pass")
     public String findPass(String id){
-        logger.info(librarianRepository.findByLibId(id).getPassword());
+        //logger.info(librarianRepository.findByLibId(id).getPassword());
+        //判空！！！
+        if(librarianRepository.findByLibId(id) == null){
+            return "failed";
+        }
         String password=librarianRepository.findByLibId(id).getPassword();
         String mail=librarianRepository.findByLibId(id).getEmail();
         SimpleMailMessage mailMessage=new SimpleMailMessage();

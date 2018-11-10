@@ -455,6 +455,9 @@ public class BookController {
                 if(num-1 == i){
                     s = "<br><img src='"+name+"'><!--endprint-->";
                 }
+                if(num == 1){
+                    s = "<br><!--startprint--><img src='"+name+"'><!--endprint-->";
+                }
                 bookids.append(s);
             } catch (Exception e) {
                 logger.error("添加书籍出错！error = {}", e.getMessage());
@@ -577,12 +580,15 @@ public class BookController {
 //                s = "<a target='view_window' href='http://localhost:8080/"+name+"'>"+b.getBookId()+"</a>;";
                 //把图片附加到末尾，直接显示图片
                 s = "<br><img src='"+name+"'>";
-                i++;
+                ++i;
                 if(i == 1){
                     s = "<br><!--startprint--><img src='"+name+"'>";
                 }
                 if(books.size() == i){
                     s = "<br><img src='"+name+"'><!--endprint-->";
+                }
+                if(books.size() == 1){
+                    s = "<br><!--startprint--><img src='"+name+"'><!--endprint-->";
                 }
                 bookids.append(s);
             }
@@ -818,10 +824,10 @@ public class BookController {
         Map<String,Object> map = new HashMap<String,Object>();
         //查看是否有其他书籍有此位置
         if(bookRepository.findByBookPosition(id).size()>0) {
-            map.put("msg", ResultEnum.FAILED.getMsg());
+            map.put("msg", ResultEnum.CAN_NOT_DEL_POS.getMsg());
         }else{
             bookPositionRepository.deleteById(id);
-            map.put("msg", ResultEnum.SUCCESS.getMsg());
+            map.put("msg", ResultEnum.DEL_POS_SUCCESS.getMsg());
         }
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
