@@ -315,11 +315,10 @@ public class AdminController {
     @ResponseBody
     @PostMapping("/change_pass")
     public String change_pass(String old_pass, String new_pass, String new_pass_check){
-        if(!adminRepository.findByAdminName("admin").getPassword().equals(old_pass)){
-            return "wrong password";
-        }
-        else if(!new_pass.equals(new_pass_check)){
+        if(!new_pass.equals(new_pass_check)){
             return "input inconsistency";
+        }else if(!adminRepository.findByAdminName("admin").getPassword().equals(old_pass)){
+            return "wrong password";
         }
         else{
             Admin admin= adminRepository.findByAdminName("admin");
