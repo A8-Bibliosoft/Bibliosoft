@@ -144,7 +144,7 @@ public class BookController {
         //logger.info("status={}", status);
         if(status == 5){
             map.put("msg", ResultEnum.BOOK_ALREADY_DEL.getMsg());
-        }else if(status == 0){
+        }else if(status == 0 || status == 2){
             /*先在删除记录表里记录*/
             BookDelRecord bookDelRecord = new BookDelRecord();
             Librarian librarian = (Librarian) session.getAttribute("librarian");
