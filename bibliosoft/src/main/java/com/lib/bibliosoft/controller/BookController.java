@@ -165,8 +165,16 @@ public class BookController {
             bookRepository.deleteById(id);
             //bookSort表也要更新
             List<BookSort> bookSort = bookSortRepository.findByBookIsbn(book.getBookIsbn());
+            //实际上最多只能有一条相同isbn的记录,这里为了判断是否存在,用size表示
             if(bookSort.size()>0){
+                //同一类(ISBN)书籍的数目减一
                 bookSortRepository.updateBookNumByisbn(-1,book.getBookIsbn());
+                //判断是否为0,是在删除此类(isbn)书籍
+                BookSort bookSort1 = bookSort.get(0);
+                if(bookSort1.getNum() == 0){
+                    //无此类书籍,删除,否则在读者页面会出现空白格子
+                    bookSortRepository.delete(bookSort1);
+                }
             }
             map.put("msg", ResultEnum.BOOK_DEL_SUCCESS.getMsg());
         }else{
@@ -257,13 +265,6 @@ public class BookController {
             currpage = totalPages;
         //获得每页的数据
         List<Book> bookList = bookService.getPage(currpage, pagesize).getContent();
-
-        //logger.info("currpage={}",currpage);
-//        List<Book> list = new ArrayList<>();
-//        while(bookIterator.hasNext()) {
-//            list.add(bookIterator.next());
-//        }
-//        logger.info("list.size = {}",list.size());
         //放在model
         model.addAttribute("books", bookList);
         model.addAttribute("currpage",currpage);
