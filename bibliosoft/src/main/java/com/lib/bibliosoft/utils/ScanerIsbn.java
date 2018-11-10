@@ -3,6 +3,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.lib.bibliosoft.entity.Book;
 import com.lib.bibliosoft.entity.BookPosition;
 import com.lib.bibliosoft.entity.BookSort;
+import com.lib.bibliosoft.enums.ResultEnum;
 import com.lib.bibliosoft.repository.BookPositionRepository;
 import com.lib.bibliosoft.repository.BookRepository;
 import com.lib.bibliosoft.repository.BookSortRepository;
@@ -61,30 +62,38 @@ public class ScanerIsbn {
      * @date 2:10 PM. 10/9/2018
      * @modify 2:05 PM. 10/14/2018
      */
-    public static List<Book> getBookInfoByIsbn(String isbn, Integer num, String time, Integer position, String status, String typeid) {
+    public static List<Book> getBookInfoByIsbn(String isbn, Integer num, String time, Integer position, String status, String typeid, String bookname, String bookauthor, String bookpublisher) throws Exception {
 
         /*解析豆瓣数据库返回的json数据*/
         String url = "https://api.douban.com/v2/book/isbn/:" + isbn;
-        String json = loadJSON(url);
-        JSONObject jsonObject = JSONObject.parseObject(json);
-        String sauthor = jsonObject.getString("author");
-        String publisher = jsonObject.getString("publisher");
-        String image = jsonObject.getString("image");
-        String sprice = jsonObject.getString("price").replace("元","");
-        //从豆瓣获得的信息价格可能为空
+        String id = "", desc = "", image = "";
         float price = 0;
-        if (sprice == null || "".equals(sprice)){}
-        else {
-            price = Float.parseFloat(sprice);
+        try {
+            /*开始解析*/
+            String json = loadJSON(url);
+            JSONObject jsonObject = JSONObject.parseObject(json);
+            //String sauthor = jsonObject.getString("author");
+            //String publisher = jsonObject.getString("publisher");
+            image = jsonObject.getString("image");
+            String sprice = jsonObject.getString("price").replace("元", "");
+            //从豆瓣获得的信息价格可能为空
+            price = 0;
+            if (sprice == null || "".equals(sprice)) {
+            } else {
+                price = Float.parseFloat(sprice);
+            }
+            //String title = jsonObject.getString("title");
+            desc = jsonObject.getString("summary");
+            /*再次从豆瓣获得isbn13位的编码*/
+            //String risbn = jsonObject.getString("isbn13");
+            /*从豆瓣获得的话，这个也有可能为空！。。。不能处理它这种乱七八糟令人捉摸不透的bug，不管了，以后只接受正版书籍的添加*/
+            //String author = sauthor.split("\"")[1];
+            id = jsonObject.getString("id");
+            /*解析完成*/
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new Exception(ResultEnum.DOUBAN_ERROR.getMsg());
         }
-        String title = jsonObject.getString("title");
-        String desc = jsonObject.getString("summary");
-        /*再次从豆瓣获得isbn13位的编码*/
-        //String risbn = jsonObject.getString("isbn13");
-        /*从豆瓣获得的话，这个也有可能为空！。。。不能处理它这种乱七八糟令人捉摸不透的bug，不管了，以后只接受正版书籍的添加*/
-        String author = sauthor.split("\"")[1];
-        String id = jsonObject.getString("id");
-        /*解析完成*/
 
         Date t = Date.valueOf(time);
         Integer s = Integer.parseInt(status);
@@ -110,13 +119,13 @@ public class ScanerIsbn {
             book.setBookPosition(bookPosition);
 
             book.setBookStatus(s);
-            book.setBookAuthor(author);
+            book.setBookAuthor(bookauthor);
             book.setBookDesc(desc);
             book.setBookIsbn(isbn);
-            book.setBookName(title);
+            book.setBookName(bookname);
             book.setBookImg(image);
             book.setBookPrice(price);
-            book.setBookPublisher(publisher);
+            book.setBookPublisher(bookpublisher);
             //每次都加一
             book.setBookId(bookid++);
             books.add(book);
@@ -131,15 +140,16 @@ public class ScanerIsbn {
         }else{
             //书籍分类表
             BookSort bookSort = new BookSort();
-            bookSort.setBookAuthor(author);
+            bookSort.setBookAuthor(bookauthor);
             bookSort.setBookIsbn(isbn);
-            bookSort.setBookName(title);
+            bookSort.setBookName(bookname);
             bookSort.setTypeId(Integer.parseInt(typeid));
+            bookSort.setNum(1);
             scanerIsbn.bookSortRepository.save(bookSort);
             scanerIsbn.bookSortRepository.insertTypeId(Integer.parseInt(typeid),isbn);
         }
 
-        logger.info("bookId={},bookAuthor={},bookPublisher={},bookImage={},bookPrice={},bookTitle={}",id,author,publisher,image,price,title);
+        //logger.info("bookId={},bookAuthor={},bookPublisher={},bookImage={},bookPrice={},bookTitle={}",id,author,publisher,image,price,title);
         return books;
     }
     /**

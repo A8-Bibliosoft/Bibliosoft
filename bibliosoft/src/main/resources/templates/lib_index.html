@@ -14,6 +14,24 @@
     <link rel="stylesheet" href="/static/assets/css/ace-rtl.min.css"/>
     <link rel="stylesheet" href="/static/assets/css/ace-skins.min.css"/>
     <link rel="stylesheet" href="/static/css/style.css"/>
+    <style>
+        #mylangid1{
+            position: absolute;
+            right: 260px;
+            top: 28px;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+        }
+        #mylangid2{
+            position: absolute;
+            right: 200px;
+            top: 28px;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
     <!--[if lte IE 8]>
     <link rel="stylesheet" href="/static/assets/css/ace-ie.min.css"/>
     <![endif]-->
@@ -41,8 +59,12 @@
     <script src="/static/assets/layer/layer.js" type="text/javascript"></script>
     <script src="/static/assets/laydate/laydate.js" type="text/javascript"></script>
 
-
-    <script type="text/javascript">
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var exit = [[#{alert.exit}]];
+        var y = [[#{alert.yes}]];
+        var n = [[#{alert.no}]];
+        /*]]>*/
         $(function () {
             var cid = $('#nav_list> li>.submenu');
             cid.each(function (i) {
@@ -99,8 +121,9 @@
             });
 
             $('#Exit_system').on('click', function () {
-                layer.confirm('是否确定退出系统？', {
-                        btn: ['是', '否'],//按钮
+                layer.confirm(exit, {
+                        title: "Confirm",
+                        btn: [y, n],//按钮
                         icon: 3,
                     },
                     function () {
@@ -126,6 +149,8 @@
                     <!--<img src="/static/images/logo.png">-->
                 </small>
                 <strong style="font-size: 28px;position: absolute;left: 30px;top: 24px;">Bibliosoft</strong>
+                <a id="mylangid1" th:text="#{lang.en}" href="/lib_index?l=en_US"></a>
+                <a id="mylangid2" th:text="#{lang.zh}" href="/lib_index?l=zh_CN"></a>
             </a><!-- /.brand -->
         </div><!-- /.navbar-header -->
         <div class="navbar-header pull-right" role="navigation">
@@ -141,7 +166,7 @@
                     </a>
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <li>
-                            <a href="javascript:void(0)" class="iframeurl" th:title="#{lib_index.right.title.set}" name="/system_setting">
+                            <a href="javascript:void(0)" class="iframeurl" th:title="#{lib_index.items.income}" name="/librarian_income">
                                 <i class="icon-cog"></i>
                                 <p th:text="#{lib_index.right.title.set}" style="left: 30px;position: absolute;top: 9px;"></p>
                             </a>
@@ -274,20 +299,20 @@
                                 <span th:text="#{lib_index.items.isbn}"></span>
                             </a>
                         </li>
-                        <li class="home">
-                            <a href="javascript:void(0)" name="/goBorrowBook" th:title="#{lib_index.items.title.brbook}"
-                               class="iframeurl">
-                                <i class="icon-double-angle-right"></i>
-                                <span th:text="#{lib_index.items.borbook}"></span>
-                            </a>
-                        </li>
-                        <li class="home">
-                            <a href="javascript:void(0)" name="/goReturnBook" th:title="#{lib_index.items.title.rebook}"
-                               class="iframeurl">
-                                <i class="icon-double-angle-right"></i>
-                                <span th:text="#{lib_index.items.rebook}"></span>
-                            </a>
-                        </li>
+                        <!--<li class="home">-->
+                            <!--<a href="javascript:void(0)" name="/goBorrowBook" th:title="#{lib_index.items.title.brbook}"-->
+                               <!--class="iframeurl">-->
+                                <!--<i class="icon-double-angle-right"></i>-->
+                                <!--<span th:text="#{lib_index.items.borbook}"></span>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li class="home">-->
+                            <!--<a href="javascript:void(0)" name="/goReturnBook" th:title="#{lib_index.items.title.rebook}"-->
+                               <!--class="iframeurl">-->
+                                <!--<i class="icon-double-angle-right"></i>-->
+                                <!--<span th:text="#{lib_index.items.rebook}"></span>-->
+                            <!--</a>-->
+                        <!--</li>-->
                         <li class="home">
                             <a href="javascript:void(0)" name="/book_position" th:title="#{lib_index.items.title.posi}"
                                class="iframeurl">
@@ -309,13 +334,6 @@
                                 <span th:text="#{lib_index.items.bookdelrec}"></span>
                             </a>
                         </li>
-                        <li class="home">
-                            <a href="javascript:void(0)" name="/book_grading" th:title="#{lib_index.items.title.tatistics}" class="iframeurl">
-                                <i class="icon-double-angle-right"></i>
-                                <span th:text="#{lib_index.items.bookstatistics}"></span>
-                            </a>
-                        </li>
-
                     </ul>
                 </li>
                 <li>
@@ -329,6 +347,20 @@
                             <a href="javascript:void(0)" name="/reader_list" th:title="#{lib_index.items.title.r}" class="iframeurl">
                                 <i class="icon-double-angle-right"></i>
                                 <span th:text="#{lib_index.items.rl}"></span>
+                            </a>
+                        </li>
+                        <li class="home">
+                            <a href="javascript:void(0)" name="/goBorrowBook" th:title="#{lib_index.items.title.brbook}"
+                               class="iframeurl">
+                                <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.borbook}"></span>
+                            </a>
+                        </li>
+                        <li class="home">
+                            <a href="javascript:void(0)" name="/goReturnBook" th:title="#{lib_index.items.title.rebook}"
+                               class="iframeurl">
+                                <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.rebook}"></span>
                             </a>
                         </li>
                     </ul>
@@ -368,6 +400,12 @@
                                class="iframeurl">
                                 <i class="icon-double-angle-right"></i>
                                 <span th:text="#{lib_index.items.bm}"></span>
+                            </a>
+                        </li>
+                        <li class="home">
+                            <a href="javascript:void(0)" name="/book_grading" th:title="#{lib_index.items.title.tatistics}" class="iframeurl">
+                                <i class="icon-double-angle-right"></i>
+                                <span th:text="#{lib_index.items.bookstatistics}"></span>
                             </a>
                         </li>
                     </ul>
@@ -467,5 +505,6 @@
 <!-- /.main-container -->
 <!-- basic scripts -->
 </body>
+
 </html>
 

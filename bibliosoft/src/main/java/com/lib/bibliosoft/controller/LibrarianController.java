@@ -6,6 +6,7 @@ import com.lib.bibliosoft.entity.Librarian;
 import com.lib.bibliosoft.entity.Reader;
 import com.lib.bibliosoft.repository.BorrowRecordRepository;
 import com.lib.bibliosoft.repository.DefSettingRepository;
+import com.lib.bibliosoft.repository.LibrarianRepository;
 import com.lib.bibliosoft.repository.ReaderRepository;
 import com.lib.bibliosoft.service.ILibrarianSerivce;
 import com.lib.bibliosoft.utils.VerifyCode;
@@ -53,6 +54,9 @@ public class LibrarianController {
 
     @Autowired
     private BorrowRecordRepository borrowRecordRepository;
+
+    @Autowired
+    private LibrarianRepository librarianRepository;
     /**
      * index Page of Librarian used system
      *
@@ -76,8 +80,7 @@ public class LibrarianController {
 
     /**
      * Librarian login the system he is using
-     *
-     * @param loginname
+     *  @param libid 图书馆员的id号码用来登录,这涉及到找回密码要重用董航的代码
      * @param password
      * @param code
      * @param request
@@ -87,7 +90,7 @@ public class LibrarianController {
      */
     @PostMapping("/librarian_login")
     @ResponseBody
-    public String loginReader(String loginname,
+    public String loginReader(String libid,
                               String password,
                               String code,
                               HttpServletRequest request,
@@ -99,13 +102,16 @@ public class LibrarianController {
         //set the type of response
         response.setContentType("text/plain;charset=UTF-8");
 
-        Librarian librarian = iLibrarianSerivce.findByLibrarianName(loginname);
+//        String loginname = librarianRepository.findByLibId(libid).getLibName();
+//        Librarian librarian = iLibrarianSerivce.findByLibrarianName(loginname);
+
+        Librarian librarian = librarianRepository.findByLibId(libid);
 
         if (!code.equals(key)) {
             logger.info("codeerror");
             return "codeerror";
         } else if (librarian == null) {
-            logger.info("This username={} does not exist", loginname);
+            logger.info("This userid={} does not exist", libid);
             return "usererror";
         } else if (password.equals(librarian.getPassword())) {
             logger.info("login success");
@@ -146,7 +152,8 @@ public class LibrarianController {
      */
     @PostMapping("/income_sbday")
     public String sbday_totalincome(String day, Model model){
-        Integer deposit=0,fine=0;
+        Integer deposit=0;
+        float fine=0;
         Date date = Date.valueOf(day);
         //logger.info("date={}",date);
         List<Reader> readerList = readerRepository.findByRegistTime(date);
@@ -171,7 +178,8 @@ public class LibrarianController {
      */
     @PostMapping("/income_sbweek")
     public String sbweek_totalincome(String week, Model model) throws Exception{
-        Integer deposit=0,fine=0;
+        Integer deposit=0;
+        float fine=0;
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); //设置时间格式
         Calendar cal=Calendar.getInstance();
         java.util.Date time=sdf.parse(week);
@@ -189,8 +197,6 @@ public class LibrarianController {
         cal.add(Calendar.DATE, 6);
         Date enddate=Date.valueOf(sdf.format(cal.getTime()));
         //System.out.println("所在周星期六的日期："+enddate);
-
-
 
         //获取这一天注册了多少个新读者，乘以押金
         List<Reader> readerList = readerRepository.findByWeek(startdate,enddate);
@@ -214,7 +220,8 @@ public class LibrarianController {
      */
     @PostMapping("/income_sbmonth")
     public String sbmonth_totalincome(String month, Model model){
-        Integer deposit=0,fine=0;
+        Integer deposit=0;
+        float fine=0;
         String []m = month.split("-");
         List<Reader> readerList = readerRepository.findByMonthRegistTime(m[0],m[1]);
         //获取这一天注册了多少个新读者，乘以押金
@@ -238,6 +245,23 @@ public class LibrarianController {
     public String lib_logout(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
         return "/lib_login";
+    }
+
+    /**
+     * 图书馆员自己修改信息
+     * @title LibrarianController.java
+     * @param libid, libname, phone, email
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name modifyinfo
+     * @date 10:34 PM. 11/9/2018
+     */
+    @PostMapping("/lib_modify_info")
+    public String modifyinfo(String libid, String libname, String phone, String email, HttpSession session){
+        //logger.info("={}={}={}={}",libname,libid,email,phone);
+        librarianRepository.updateLibrarianWithoutPass(libid,libname,email,phone);
+        session.setAttribute("librarian", librarianRepository.findByLibId(libid));
+        return "redirect:/librarian_info";
     }
 
 }

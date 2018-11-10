@@ -26,7 +26,7 @@ public class BorrowRecord {
     private  Integer lastday;
 
     @Column(nullable=false,columnDefinition="INT default 0")
-    private Integer debt;
+    private Float debt;
 
     @JoinColumn(name = "book_id",referencedColumnName="book_id")
     @ManyToOne()
@@ -80,12 +80,12 @@ public class BorrowRecord {
         this.lastday = lastday;
     }
 
-    public Integer getDebt() {
-        return debt;
+    public void setDebt(Float debt) {
+        this.debt = debt;
     }
 
-    public void setDebt(Integer debt) {
-        this.debt = debt;
+    public Float getDebt() {
+        return debt;
     }
 
     public Book getBook() {

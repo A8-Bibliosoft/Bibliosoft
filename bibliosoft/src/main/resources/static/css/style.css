@@ -415,7 +415,7 @@ body
 #form-article-add .cl .Add_p_s .select{width:85%; margin-right:5px;}
 #form-article-add .formControls{ width: auto; margin-left:20px; top:0px; float:left}
 #form-article-add .formControls.col-10{ position:relative; width:90%; margin-left:10px}
-#form-article-add .formControls.col-10 textarea{ margin-left:0px; width:100%; height:250px;}
+#form-article-add .formControls.col-10 textarea{ margin-left:0px; width:100%; height:112px;}/*250*/
 #form-article-add .cl .input-text,
 #form-article-add .cl .select{ width:100%; margin-left:0px}
 #form-article-add .cl .input-text.Wdate{ width:200px;}

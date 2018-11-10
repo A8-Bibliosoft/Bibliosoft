@@ -29,7 +29,7 @@
     <style>
         .delrecord {
             width: 98%;
-            margin: 20px auto 0px;
+            margin: 80px auto 0px;
         }
 
     </style>
@@ -79,7 +79,7 @@
                 </a>
             </li>
             <li th:if="${currpage ne 1 and currpage ne 0}" style="margin: 0 5px;">
-                <a th:href="@{/bulletin_page(currpage=${currpage}-1)}" th:text="#{page.old}">&larr; Older</a>
+                <a th:href="@{/bookdelrecord_page(currpage=${currpage}-1)}" th:text="#{page.old}">&larr; Older</a>
             </li>
             <li th:if="${currpage eq 1 or currpage eq 0}" style="margin: 0 5px;" class="disabled">
                 <a href="javascript:return false;" th:text="#{page.old}">&larr; Older</a>
@@ -94,7 +94,7 @@
                 <a href="javascript:return false;" th:text="#{page.new}">Newer &rarr;</a>
             </li>
             <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                <a th:href="@{/bulletin_page(currpage=${currpage}+1)}" th:text="#{page.new}">Newer &rarr;</a>
+                <a th:href="@{/bookdelrecord_page(currpage=${currpage}+1)}" th:text="#{page.new}">Newer &rarr;</a>
             </li>
             <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
                 <a href="javascript:return false;" th:text="#{page.last}">
@@ -102,7 +102,7 @@
                 </a>
             </li>
             <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                <a th:href="@{/bulletin_page(currpage=${totalpages})}" th:text="#{page.last}">
+                <a th:href="@{/bookdelrecord_page(currpage=${totalpages})}" th:text="#{page.last}">
                     &nbsp;last&nbsp;
                 </a>
             </li>

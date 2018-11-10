@@ -139,6 +139,14 @@ public class Book  implements Serializable{
         }
     }
 
+    //判断是否是本地图片链接，如果是，则返回0
+    public Integer judgeSrcLocalOrWeb(){
+        if(bookImg.startsWith("https://")){
+            return 1;
+        }
+        return 0;
+    }
+
     public void setBookDesc(String bookDesc) {
         this.bookDesc = bookDesc;
     }

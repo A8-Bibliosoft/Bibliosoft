@@ -1,14 +1,12 @@
 package com.lib.bibliosoft.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.lib.bibliosoft.entity.*;
 import com.lib.bibliosoft.enums.ResultEnum;
 import com.lib.bibliosoft.repository.*;
 import com.lib.bibliosoft.service.impl.BookDelService;
 import com.lib.bibliosoft.service.impl.BookService;
-import com.lib.bibliosoft.utils.BarcodeUtil;
-import com.lib.bibliosoft.utils.FileNameUtil;
-import com.lib.bibliosoft.utils.FileUtil;
-import com.lib.bibliosoft.utils.ScanerIsbn;
+import com.lib.bibliosoft.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +22,14 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.Date;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.lib.bibliosoft.utils.ScanerIsbn.loadJSON;
 
 /**
  *@Title: BookController.java
@@ -394,44 +395,79 @@ public class BookController {
     @RequestMapping("/book_addnewbook")
     @ResponseBody
     public String add_newbook(String booktitle, MultipartFile bookcover, String bookisbn, String bookauthor,
-                                                          Integer bookposition, String bookprice, String bookid, Integer bookstatus, String bookaddtime,
+                                                          Integer bookposition, String bookprice, String booknum, Integer bookstatus,
                                                           String booksummary, String typeid){
-//        Map<String,Object> map = new HashMap<String,Object>();
         // 上传成功或者失败的提示
-        String msg;
+        String msg = "";
+        String bookid = "";
+        Integer Ibookid = 0;
+        StringBuilder bookids = new StringBuilder();
+        String s = "";
+        //java.sql.Date 日期
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        sf.format(date);
+        /*获得新的文件名*/
+        String bookImg = FileNameUtil.getFileName(bookcover.getOriginalFilename());
+        float Fbookprice = Float.parseFloat(bookprice);
 
-        /*书籍*/
-        Book book = new Book();
-        //Integer Ibookstatus = Integer.parseInt(bookstatus);
-        book.setBookStatus(bookstatus);
-        book.setBookAuthor(bookauthor);
         //通过用户选择的位置找到位置实体
         BookPosition bookPosition = bookPositionRepository.findById(bookposition).orElse(null);
-        bookPosition.getBooks().add(book);
-        book.setBookPosition(bookPosition);
+        //生成多个book对象
+        Integer num = Integer.parseInt(booknum);
+        for(int i=0;i<num;i++) {
+            /*书籍*/
+            Book book = new Book();
+            book.setBookStatus(bookstatus);
+            book.setBookAuthor(bookauthor);
+            bookPosition.getBooks().add(book);
+            book.setBookPosition(bookPosition);
+            book.setBookName(booktitle);
+            book.setBookPrice(Fbookprice);
+            book.setBookIsbn(bookisbn);
 
-        book.setBookName(booktitle);
-        float Fbookprice = Float.parseFloat(bookprice);
-        book.setBookPrice(Fbookprice);
-        book.setBookIsbn(bookisbn);
-
-        Integer Ibookid = Integer.parseInt(bookid);
-        if (bookRepository.findByBookId(Ibookid) == null)
+            //生成随机8位数
+            bookid = RandomId.getRandomNum(8);
+            Ibookid = Integer.parseInt(bookid);
+            while (bookRepository.findByBookId(Ibookid) != null) {
+                bookid = RandomId.getRandomNum(8);
+                Ibookid = Integer.parseInt(bookid);
+            }
             book.setBookId(Ibookid);
-        else{
-            //bookid不能重复，若已存在则返回错误信息！
-//            map.put("msg", ResultEnum.ADD_BOOK_FAILED.getMsg());
-//            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.NOT_ACCEPTABLE);
-            msg = ResultEnum.ADD_BOOK_FAILED.getMsg();
-            return msg;
+            book.setRegisterTime(date);
+            book.setBookDesc(booksummary);
+            book.setBookImg("/static/bookimages" + '/' + bookImg);
+            //保存到book表
+            bookService.addBook(book);
+            //插入book表中的sort关联的isbn号
+            bookRepository.insertBookIsbn(bookisbn, Ibookid);
+
+            try {
+                //生成条形码
+                BarcodeUtil.generateFile(bookid);
+                //提示语句
+                String name = "static/barcodeimages/" + bookid + ".png";
+                //把图片附加到末尾，直接显示图片
+                s = "<br><img src='" + name + "'>";
+                if(i == 0){
+                    s = "<br><!--startprint--><img src='"+name+"'>";
+                }
+                if(num-1 == i){
+                    s = "<br><img src='"+name+"'><!--endprint-->";
+                }
+                if(num == 1){
+                    s = "<br><!--startprint--><img src='"+name+"'><!--endprint-->";
+                }
+                bookids.append(s);
+            } catch (Exception e) {
+                logger.error("添加书籍出错！error = {}", e.getMessage());
+                msg = ResultEnum.ADD_BOOK_FAILED.getMsg();
+                e.printStackTrace();
+                return msg;
+            }
         }
 
-        //java.sql.Date
-        Date date = Date.valueOf(bookaddtime);
-        book.setRegisterTime(date);
-        book.setBookDesc(booksummary);
-
-        // 要上传的目标文件存放路径为 static/bookimages/
+        /*要上传的目标文件存放路径为 static/bookimages/ */
         File p = null;
         try {
             p = new File(ResourceUtils.getURL("classpath:").getPath());
@@ -444,17 +480,16 @@ public class BookController {
         if(!upload.exists())
             upload.mkdirs();
 
-        /*获得新的文件名*/
-        String bookImg = FileNameUtil.getFileName(bookcover.getOriginalFilename());
-        book.setBookImg("/static/bookimages"+'/'+bookImg);
+        if (FileUtil.upload2(bookcover, upload.getAbsolutePath(), bookImg)){
+            // 上传成功，给出页面提示
+            msg = ResultEnum.ADD_BOOK_SUCCESS.getMsg();
+        }else {
+            msg = ResultEnum.ADD_BOOK_FAILED.getMsg();
+        }
 
         //booksort表插入数据
         if(bookSortRepository.findByBookIsbn(bookisbn).size()>0){
             logger.info("已有ISBN编号为==={}的书籍，故不插入", bookisbn);
-//            logger.info("书籍={}",bookSortRepository.findByBookIsbn(bookisbn).toString());
-//            List<BookSort> bookSort = bookSortRepository.findByBookIsbn(bookisbn);
-            //数量加一
-//            bookSort.get(0).setNum(bookSort.get(0).getNum()+1);
             bookSortRepository.updateBookNumByisbn(1,bookisbn);
         }else{
             //书籍分类表
@@ -471,41 +506,12 @@ public class BookController {
             bookSortRepository.save(bookSort);
             bookSortRepository.insertTypeId(Integer.parseInt(typeid),bookisbn);
         }
-        //保存到book表
-        bookService.addBook(book);
-        //插入book表中的sort关联的isbn号
-        bookRepository.insertBookIsbn(bookisbn, Ibookid);
 
         /*这是获取项目根目录*/
 //        String ph = ClassUtils.getDefaultClassLoader().getResource("").getPath();
 //        logger.info("path的绝对路径 = {}", ph);
 
-        if (FileUtil.upload2(bookcover, upload.getAbsolutePath(), bookImg)){
-            // 上传成功，给出页面提示
-            msg = ResultEnum.ADD_BOOK_SUCCESS.getMsg();
-        }else {
-            msg = ResultEnum.ADD_BOOK_FAILED.getMsg();
-        }
-
-        // 显示图片
-        //map.put("msg", msg);
-        //map.put("fileName", file.getOriginalFilename());
-        StringBuilder bookids = new StringBuilder();
-        String s = "";
-        try {
-                //生成条形码
-                BarcodeUtil.generateFile(bookid);
-                //提示语句
-                String name = "static/barcodeimages/"+bookid+".png";
-                //把图片附加到末尾，直接显示图片
-                s = "<br><img src='"+name+"'>";
-        }catch(Exception e){
-            logger.error("添加书籍出错！error = {}", e.getMessage());
-            msg = ResultEnum.ADD_BOOK_FAILED.getMsg();
-            e.printStackTrace();
-            return msg;
-        }
-        return msg+s;
+        return msg+bookids;
     }
 
     /**
@@ -540,16 +546,27 @@ public class BookController {
      * @description add books by isbn
      * @date 2:19 PM. 10/9/2018
      */
-
     @PostMapping("/book_isbn")
-    public ResponseEntity<Map<String,Object>> getInfoByDouBan(String isbn, String time, Integer position, String status, String num, String typeid){
+    public ResponseEntity<Map<String,Object>> getInfoByDouBan(String isbn, Integer position, String status, String num, String typeid, String bookname, String bookauthor, String bookpublisher){
         Map<String,Object> map = new HashMap<String,Object>();
         Integer number = Integer.parseInt(num);
+        //当前时间
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String time = formatter.format(new java.util.Date());
+
         //get the books and improve their information
-        List<Book> books = ScanerIsbn.getBookInfoByIsbn(isbn, number, time, position, status, typeid);
+        List<Book> books = null;
+        try {
+            books = ScanerIsbn.getBookInfoByIsbn(isbn, number, time, position, status, typeid, bookname, bookauthor, bookpublisher);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("msg", e.getMessage());
+            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+        }
 
         StringBuilder bookids = new StringBuilder();
         String s = "";
+        int i=0;
         try {
             for (Book b : books){
                 bookService.addBook(b);
@@ -562,7 +579,17 @@ public class BookController {
                 String name = "static/barcodeimages/"+String.valueOf(b.getBookId())+".png";
 //                s = "<a target='view_window' href='http://localhost:8080/"+name+"'>"+b.getBookId()+"</a>;";
                 //把图片附加到末尾，直接显示图片
-                s = "<img src='"+name+"'>";
+                s = "<br><img src='"+name+"'>";
+                ++i;
+                if(i == 1){
+                    s = "<br><!--startprint--><img src='"+name+"'>";
+                }
+                if(books.size() == i){
+                    s = "<br><img src='"+name+"'><!--endprint-->";
+                }
+                if(books.size() == 1){
+                    s = "<br><!--startprint--><img src='"+name+"'><!--endprint-->";
+                }
                 bookids.append(s);
             }
 
@@ -574,9 +601,49 @@ public class BookController {
         }
         //http://localhost:8080/downloadImage
 //        map.put("msg", ResultEnum.ADD_BOOK_SUCCESS.getMsg() + " bookid: " + bookids);
-        map.put("msg", ResultEnum.ADD_BOOK_SUCCESS.getMsg() + bookids);
+        map.put("msg", "Barcodes list:" + bookids);
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
+
+    /**
+     * @title BookController.java
+     * @author 毛文杰
+     * @date 1:59 PM. 11/8/2018
+     */
+    //补全添加isbn之后的表单信息
+    @PostMapping("/book_completeinfo")
+    public ResponseEntity<Map<String,Object>> complete(String bookisbn){
+        Map<String,Object> map = new HashMap<String,Object>();
+        String url = "https://api.douban.com/v2/book/isbn/:" + bookisbn;
+        String sauthor = "";
+        String publisher = "";
+        String author = "";
+        String name = "";
+        String imgsrc = "";
+        try{
+            String json = loadJSON(url);
+            JSONObject jsonObject = JSONObject.parseObject(json);
+            sauthor = jsonObject.getString("author");
+            publisher = jsonObject.getString("publisher");
+            author = sauthor.split("\"")[1];
+            name = jsonObject.getString("title");
+            imgsrc = jsonObject.getString("image");
+        }
+        catch(Exception e){
+            map.put("msg",ResultEnum.DOUBAN_ERROR.getMsg());
+            e.printStackTrace();
+            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+        }
+        map.put("msg", ResultEnum.SUCCESS.getMsg());
+        map.put("name", name);
+        map.put("publisher", publisher);
+        map.put("author", author);
+        map.put("imgsrc", imgsrc);
+        logger.info("name={},author={},publisher={},imgsrc={}",name,author,publisher,imgsrc);
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+    }
+
+
 
     /**
      * go to add book by isbn page
@@ -757,10 +824,10 @@ public class BookController {
         Map<String,Object> map = new HashMap<String,Object>();
         //查看是否有其他书籍有此位置
         if(bookRepository.findByBookPosition(id).size()>0) {
-            map.put("msg", ResultEnum.FAILED.getMsg());
+            map.put("msg", ResultEnum.CAN_NOT_DEL_POS.getMsg());
         }else{
             bookPositionRepository.deleteById(id);
-            map.put("msg", ResultEnum.SUCCESS.getMsg());
+            map.put("msg", ResultEnum.DEL_POS_SUCCESS.getMsg());
         }
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
@@ -851,7 +918,7 @@ public class BookController {
     public String show_barcodeimg(@PathVariable("bookid") Integer bookid){
         String name = "static/barcodeimages/"+String.valueOf(bookid)+".png";
         //把图片附加到末尾，直接显示图片
-        String img = "this book's barcode is: <br><img alt='barcode' src='"+name+"'>";
+        String img = "this book's barcode is: <input class='btn smaller-30' type='button' value='print' onclick='doPrint()'><br><br><!--startprint--><img id='barcodeimg' alt='barcode' src='"+name+"'><!--endprint-->";
         return img;
     }
 }
