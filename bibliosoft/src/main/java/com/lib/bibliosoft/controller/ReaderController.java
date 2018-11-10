@@ -887,17 +887,17 @@ public class ReaderController {
     public void testCron1() throws MessagingException {
         //日期减少
         borrowRecordRepository.minusLastday();
-        // 所有欠款记录
-        List<Reader> readers=readerRepository.findAllDebtReader();
-        if(readers.size()>0){
-            for(Reader reader:readers){
-                updateReaderAlldebt(reader.getReaderId());
-                readerRepository.updateReaderStatusById(reader.getId(),"OFF");
-            }
-        }
-
         //增加欠款
         borrowRecordRepository.addDebt();
+
+        // 所有欠款记录
+        List<BorrowRecord> borrowRecordDebtList=borrowRecordRepository.findByDebt();
+        if(borrowRecordDebtList.size()>0){
+            for(BorrowRecord borrowRecord:borrowRecordDebtList){
+                updateReaderAlldebt(borrowRecord.getReaderId());
+                readerRepository.updateReaderStatusByReaderId(borrowRecord.getReaderId(),"OFF");
+            }
+        }
 
         //7天限制
         List<BorrowRecord> borrowRecordList=borrowRecordRepository.findByLastday();
