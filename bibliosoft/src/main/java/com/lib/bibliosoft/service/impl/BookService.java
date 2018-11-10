@@ -10,11 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.sql.Date;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -152,5 +159,84 @@ public class BookService {
      */
     public String findsstatusByid(Integer bookid) {
         return bookRepository.getsstatusByid(bookid);
+    }
+
+
+    /**
+     * 分页按照书籍名字或者日期查询
+     * @param page
+     * @param size
+     * @param bookname
+     * @param bookaddtime
+     * @return
+     */
+    public Page<Book> findbookbynameortime(Integer page, Integer size, String bookname, String bookaddtime) {
+        Date date = Date.valueOf(bookaddtime);;
+        if(bookname == null || "".equals(bookname)){
+            if (bookaddtime == null || "".equals(bookaddtime)){
+                return null;
+            }else{
+                Pageable pageable = PageRequest.of(page-1, size, Sort.Direction.DESC, "registerTime");
+                Page<Book> book = bookRepository.findAll(new Specification<Book>(){
+                    @Override
+                    public Predicate toPredicate(Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+
+                        Predicate p1 = criteriaBuilder.equal(root.get("registerTime"), date);
+                        query.where(criteriaBuilder.and(p1));
+                        return query.getRestriction();
+                    }
+                },pageable);
+                return book;
+            }
+        }
+        if (bookaddtime == null || "".equals(bookaddtime)){
+            Pageable pageable = PageRequest.of(page-1, size, Sort.Direction.DESC, "registerTime");
+            Page<Book> book = bookRepository.findAll(new Specification<Book>(){
+                @Override
+                public Predicate toPredicate(Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                    Predicate p1 = criteriaBuilder.like(root.get("bookName"), '%' + bookname + '%');
+                    query.where(criteriaBuilder.and(p1));
+                    return query.getRestriction();
+                }
+            },pageable);
+            return book;
+//            return  bookRepository.findByBookNameLike('%' + bookname + '%');
+        }else{
+            List<Predicate> predicatesList = new ArrayList<Predicate>();
+            Pageable pageable = PageRequest.of(page-1, size, Sort.Direction.DESC, "registerTime");
+            Page<Book> book = bookRepository.findAll(new Specification<Book>(){
+                @Override
+                public Predicate toPredicate(Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                    Predicate p1 = criteriaBuilder.like(root.get("bookName"), '%' + bookname + '%');
+                    Predicate p2 = criteriaBuilder.equal(root.get("registerTime"), bookaddtime);
+                    Predicate p3 =  criteriaBuilder.or(p1,p2);
+                    query.where(criteriaBuilder.and(p3));
+                    return query.getRestriction();
+                }
+            },pageable);
+            return book;
+//            return  bookRepository.searchBookByNameOrRegisterTime('%'+bookname+'%', bookaddtime);
+        }
+
+    }
+
+    /**
+     * isbn搜索分页
+     * @param currpage
+     * @param pagesize
+     * @param isbn
+     * @return
+     */
+    public Page<Book> getPagebyIsbn(Integer currpage, Integer pagesize, String isbn) {
+        Pageable pageable = new PageRequest(currpage-1, pagesize, Sort.Direction.ASC, "registerTime");
+        Page<Book> books = bookRepository.findAll(new Specification<Book>(){
+            @Override
+            public Predicate toPredicate(Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                Predicate p1 = criteriaBuilder.equal(root.get("bookIsbn").as(String.class),isbn);
+                query.where(criteriaBuilder.and(p1));
+                return query.getRestriction();
+            }
+        },pageable);
+        return books;
     }
 }

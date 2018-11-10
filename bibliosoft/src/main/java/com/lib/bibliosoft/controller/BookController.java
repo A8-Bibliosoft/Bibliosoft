@@ -192,33 +192,26 @@ public class BookController {
      * @modifyTime 8:14 PM. 10/12/2018
      */
     @GetMapping("/book_sBybisbn")
-    public String findBooksByIsbn(@RequestParam("isbn") String isbn, Model model){
+    public String findBooksByIsbn(@RequestParam("isbn") String isbn, Model model, HttpSession session){
+        session.setAttribute("searchContent1",isbn);
         List<Book> books = bookRepository.findBookByBookIsbn(isbn);
 //        logger.info("bookisbn={}", isbn);
         Integer totalcount =  books.size();
         model.addAttribute("totalcount", totalcount);
         Integer totalPages = (totalcount + pagesize - 1)/pagesize;
         model.addAttribute("totalpages", totalPages);
-        model.addAttribute("books",books);
+        List<Book> bookList = bookService.getPagebyIsbn(1,pagesize,isbn).getContent();
+        model.addAttribute("books",bookList);
         if(totalcount == 0)
             model.addAttribute("currpage",0);
         else
             model.addAttribute("currpage",1);
         model.addAttribute("place", bookPositionRepository.findAll());
         model.addAttribute("status", status);
+        model.addAttribute("sbtype", 3);
         return "book_list";
     }
 
-    /**
-     * Test
-     * get the price of a book，Throw the exception to the ExceptionHandler for processing
-     * @param id
-     */
-//    @GetMapping("/books/getPrice/{id}")
-//    @ResponseBody
-//    public void getPrice(@PathVariable("id") Integer id) throws Exception {
-//        bookService.getPrice(id);
-//    }
 
     /**
      * list all the books
@@ -243,6 +236,7 @@ public class BookController {
         status = bookStatusRepository.findAll();
         model.addAttribute("status", status);
         model.addAttribute("place", bookPositionRepository.findAll());
+        model.addAttribute("sbtype", 0);
         return "book_list";
     }
 
@@ -250,21 +244,71 @@ public class BookController {
      * paging list book
      * @param currpage
      * @param model
+     * @param sbtype 分页查询的时候在页面之间传递的参数,代表是按照什么搜索的
+     *               0 :首次进入首页什么都不查
+     *               1 :按照bookid搜索,分页
+     *               2 :按照time来搜索
+     *               3 :按照ISBN来搜索
+     *               4 :按照bookname来搜索
      * @return
      */
     @GetMapping("/book_page")
-    public String page_book(@RequestParam(value = "currpage") Integer currpage, Model model){
-        totalcount = bookService.findAll().size();
-        model.addAttribute("totalcount", totalcount);
-        Integer totalPages = (totalcount + pagesize - 1)/pagesize;
-        model.addAttribute("totalpages", totalPages);
+    public String page_book(@RequestParam(value = "currpage") Integer currpage, Integer sbtype, Model model, HttpSession session){
+        List<Book> bookList = null;
 
-        if(currpage == 0)
-            currpage = 1;
-        if(currpage == totalPages+1)
-            currpage = totalPages;
-        //获得每页的数据
-        List<Book> bookList = bookService.getPage(currpage, pagesize).getContent();
+        if(sbtype == 0){
+            totalcount = bookService.findAll().size();
+            model.addAttribute("totalcount", totalcount);
+            Integer totalPages = (totalcount + pagesize - 1)/pagesize;
+            model.addAttribute("totalpages", totalPages);
+            if(currpage == 0)
+                currpage = 1;
+            if(currpage == totalPages+1)
+                currpage = totalPages;
+            //获得每页的数据
+            bookList = bookService.getPage(currpage, pagesize).getContent();
+            model.addAttribute("sbtype", 0);
+        }else if(sbtype == 1 || sbtype == 2){
+            try {
+                totalcount = bookService.searchBookByNameOrAddTime((String)session.getAttribute("searchContent1"),
+                        (String)session.getAttribute("searchContent2")).size();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            model.addAttribute("totalcount", totalcount);
+            Integer totalPages = (totalcount + pagesize - 1)/pagesize;
+            model.addAttribute("totalpages", totalPages);
+            if(currpage == 0)
+                currpage = 1;
+            if(currpage == totalPages+1)
+                currpage = totalPages;
+            bookList = bookService.findbookbynameortime(currpage, pagesize, (String)session.getAttribute("searchContent1"),
+                    (String)session.getAttribute("searchContent2")).getContent();
+            model.addAttribute("sbtype", 2);
+        }else if(sbtype == 3){
+            totalcount = bookRepository.findBookByBookIsbn((String)session.getAttribute("searchContent1")).size();
+            model.addAttribute("totalcount", totalcount);
+            Integer totalPages = (totalcount + pagesize - 1)/pagesize;
+            model.addAttribute("totalpages", totalPages);
+            if(currpage == 0)
+                currpage = 1;
+            if(currpage == totalPages+1)
+                currpage = totalPages;
+            bookList = bookService.getPagebyIsbn(currpage,pagesize,(String)session.getAttribute("searchContent1")).getContent();
+            model.addAttribute("sbtype", 3);
+        }else if(sbtype == 4){
+            totalcount = bookRepository.findBookByBookIsbn((String)session.getAttribute("searchContent1")).size();
+            model.addAttribute("totalcount", totalcount);
+            Integer totalPages = (totalcount + pagesize - 1)/pagesize;
+            model.addAttribute("totalpages", totalPages);
+            if(currpage == 0)
+                currpage = 1;
+            if(currpage == totalPages+1)
+                currpage = totalPages;
+            bookList = bookService.getPagebyIsbn(currpage, pagesize, (String)session.getAttribute("searchContent1")).getContent();
+            model.addAttribute("sbtype", 3);
+        }
+
         //放在model
         model.addAttribute("books", bookList);
         model.addAttribute("currpage",currpage);
@@ -274,21 +318,43 @@ public class BookController {
     }
 
     /**
-     * search by bookname or ISBN or add time
+     * search by bookname or add time
      * @param model
      * @param bookname
      * @param bookaddtime
      * @return
      */
     @RequestMapping("/book_search")
-    public String search_book(Model model, @RequestParam("bookname") String bookname, @RequestParam("bookaddtime") String bookaddtime){
+    public String search_book(Model model, HttpSession session, @RequestParam("bookname") String bookname, @RequestParam("bookaddtime") String bookaddtime){
+        session.setAttribute("searchContent1", bookname);
+        session.setAttribute("searchContent2", bookaddtime);
 //        logger.info("book name==={}, book add time==={}",bookname, bookaddtime);
         List<Book> searchBook = null;
+//        try {
+//            if (bookService.searchBookByNameOrAddTime(bookname, bookaddtime) != null){
+//                searchBook = bookService.searchBookByNameOrAddTime(bookname, bookaddtime);
+//                totalcount = searchBook.size();
+//                model.addAttribute("totalcount", totalcount);
+//                Integer totalPages = (totalcount + pagesize - 1)/pagesize;
+//                model.addAttribute("totalpages", totalPages);
+//                model.addAttribute("currpage",1);
+//            }else {
+//                model.addAttribute("totalcount", 0);
+//                model.addAttribute("totalpages", 0);
+//                model.addAttribute("currpage",0);
+//            }
+//
+//        } catch (ParseException e) {
+//            logger.error("Parse Date Error={}", e);
+//            e.printStackTrace();
+//        }
+
         try {
             if (bookService.searchBookByNameOrAddTime(bookname, bookaddtime) != null){
-                searchBook = bookService.searchBookByNameOrAddTime(bookname, bookaddtime);
-                model.addAttribute("totalcount", searchBook.size());
-                Integer totalPages = (searchBook.size() + pagesize - 1)/pagesize;
+                searchBook = bookService.findbookbynameortime(1,pagesize,bookname, bookaddtime).getContent();
+                totalcount = bookService.searchBookByNameOrAddTime(bookname, bookaddtime).size();
+                model.addAttribute("totalcount", totalcount);
+                Integer totalPages = (totalcount + pagesize - 1)/pagesize;
                 model.addAttribute("totalpages", totalPages);
                 model.addAttribute("currpage",1);
             }else {
@@ -297,14 +363,15 @@ public class BookController {
                 model.addAttribute("currpage",0);
             }
 
-        } catch (ParseException e) {
-            logger.error("Parse Date Error={}", e);
+        } catch (Exception e) {
+            logger.error("Error={}", e);
             e.printStackTrace();
         }
 
         //logger.info("查询结果===大小size={}",searchBook.size());
         model.addAttribute("books",searchBook);
         model.addAttribute("status", status);
+        model.addAttribute("sbtype", 1);
         model.addAttribute("place", bookPositionRepository.findAll());
         return "book_list";
     }
@@ -322,7 +389,6 @@ public class BookController {
         Integer ibookid = Integer.parseInt(bookid);
 //        List<Book> books = bookRepository.findBookByBookIsbn(sbookid);
         Book books = bookRepository.findBookByBookId(ibookid);
-//        logger.info("bookid={}", bookid);
         if(books != null){
             model.addAttribute("totalcount", 1);
             model.addAttribute("totalpages", 1);
@@ -334,6 +400,7 @@ public class BookController {
         }
         model.addAttribute("books",books);
         model.addAttribute("status", status);
+        model.addAttribute("sbtype", 4);
         model.addAttribute("place", bookPositionRepository.findAll());
         return "book_list";
     }
