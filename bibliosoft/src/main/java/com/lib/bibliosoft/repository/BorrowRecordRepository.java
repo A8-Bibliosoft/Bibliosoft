@@ -78,6 +78,20 @@ public interface BorrowRecordRepository extends JpaRepository<BorrowRecord, Inte
     @Query(value = "update borrowrecord set returntime=?1,lastday=?2 where book_id=?3 and returntime is null",nativeQuery = true)
     void updateBorrow(Date returntime, Integer lastday, Integer bookId);
 
+    /**
+     * 还书时，把罚款加上debt
+     * @title BorrowRecordRepository.java
+     * @param fine, bookid
+     * @return void
+     * @author 毛文杰
+     * @method name updateDebtByBookid
+     * @date 12:47 PM. 11/10/2018
+     */
+    @Transactional
+    @Modifying
+    @Query(value = "update borrowrecord set debt = debt+?1 where book_id = ?2", nativeQuery = true)
+    void updateDebtByBookid(float fine, Integer bookid);
+
     //倒计时借书日期减少
     @Transactional
     @Modifying

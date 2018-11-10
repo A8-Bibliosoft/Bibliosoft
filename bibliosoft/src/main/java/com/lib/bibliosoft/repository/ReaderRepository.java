@@ -80,7 +80,7 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
     @Transactional
     @Modifying
     @Query(value = "update reader r set r.alldebt=?2 where r.reader_id = ?1", nativeQuery = true)
-    void updateReaderNowDebt(String readerId,Integer alldebt);
+    void updateReaderNowDebt(String readerId,float alldebt);
 
     //所有欠款读者
     @Transactional

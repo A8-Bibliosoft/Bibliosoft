@@ -80,8 +80,7 @@ public class LibrarianController {
 
     /**
      * Librarian login the system he is using
-     *
-     * @param loginname
+     *  @param libid 图书馆员的id号码用来登录,这涉及到找回密码要重用董航的代码
      * @param password
      * @param code
      * @param request
@@ -153,7 +152,8 @@ public class LibrarianController {
      */
     @PostMapping("/income_sbday")
     public String sbday_totalincome(String day, Model model){
-        Integer deposit=0,fine=0;
+        Integer deposit=0;
+        float fine=0;
         Date date = Date.valueOf(day);
         //logger.info("date={}",date);
         List<Reader> readerList = readerRepository.findByRegistTime(date);
@@ -178,7 +178,8 @@ public class LibrarianController {
      */
     @PostMapping("/income_sbweek")
     public String sbweek_totalincome(String week, Model model) throws Exception{
-        Integer deposit=0,fine=0;
+        Integer deposit=0;
+        float fine=0;
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); //设置时间格式
         Calendar cal=Calendar.getInstance();
         java.util.Date time=sdf.parse(week);
@@ -219,7 +220,8 @@ public class LibrarianController {
      */
     @PostMapping("/income_sbmonth")
     public String sbmonth_totalincome(String month, Model model){
-        Integer deposit=0,fine=0;
+        Integer deposit=0;
+        float fine=0;
         String []m = month.split("-");
         List<Reader> readerList = readerRepository.findByMonthRegistTime(m[0],m[1]);
         //获取这一天注册了多少个新读者，乘以押金

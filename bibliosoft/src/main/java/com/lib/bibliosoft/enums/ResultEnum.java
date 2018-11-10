@@ -35,6 +35,7 @@ public enum ResultEnum {
     READER_NOT_EXIST(120, "reader does't exist! please enter again."),
     CAN_NOT_DEL_POS(121,"there are other books in this location, so you can't delete the position!"),
     DEL_POS_SUCCESS(122,"location deleted successfully!"),
+    PAY_FINE_SUCCESS(123, "you have successfully paid the fine."),
     ;
     private Integer code;
 

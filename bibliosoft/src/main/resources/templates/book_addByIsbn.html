@@ -59,7 +59,7 @@
         }
     </style>
 </head>
-<!-- 2018-10-09 5:20 PM maowenjie -->
+<!-- 2018-11-10 5:20 PM maowenjie -->
 <body>
 <div class="Competence_add_style clearfix">
     <div class="myclass">
@@ -170,10 +170,11 @@
             <img id="img" src="/static/images/bookisbn.png" alt="book image" style="width: 270px;height: 353px;">
         </div>
         <div class="mybarcodeimgdiv">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
             <img id="barimg" src="/static/images/barcode-scan.png" alt="book image" style="width: 50px;height: 40px;">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
             <input type="button" id="printbtn" class="btn btn-default radius" value="print" onclick="doPrint()">
+            &nbsp;&nbsp;&nbsp;
         </div>
     </div>
 </div>
@@ -259,7 +260,8 @@
         $("#bookisbn").focus();
         $("#printbtn").attr("disabled",true);
     });
-    //失去焦点
+
+    //isbn失去焦点
     $('#bookisbn').blur(function() {
         var bookisbn = $("#bookisbn").val();
         //提示用户先填写isbn
@@ -291,18 +293,6 @@
                     }
 
                 },
-                // error: function(){
-                //     layer.alert(data.msg, {
-                //         title: 'something error',
-                //         icon: 2
-                //     });
-                // },
-                // failed: function (data) {
-                //     layer.alert(data.msg, {
-                //         title: 'something error',
-                //         icon: 2
-                //     });
-                // }
             });
         }
     });

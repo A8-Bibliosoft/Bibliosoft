@@ -29,12 +29,18 @@
                         <span th:text="#{return.Book}"></span>
                     </a>
                 </li>
+                <li>
+                    <a href="#info-2" data-toggle="tab">
+                        <i class="icon-edit align-top bigger-125"></i>
+                        <span th:text="#{return.payfine}"></span>
+                    </a>
+                </li>
             </ul>
         </div>
 
         <div id="pro-info-content" class="tab-content"
              style="border-left: 1px solid lightgrey;border-right: 1px solid lightgrey;border-bottom: 1px solid lightgrey;">
-            <!-- 面板1 -->
+            <!-- 面板1 正常还书 -->
             <div class="tab-pane fade in active" id="info-1">
                 <form class="form form-horizontal" id="returnbookform">
                     <div class="Operate_cont clearfix">
@@ -53,13 +59,77 @@
                     </div>
                 </form>
             </div>
+            <!--面板2 丢失损坏-->
+            <div class="tab-pane fade" id="info-2">
+                <form class="form form-horizontal" id="payfineform">
+                    <div class="Operate_cont clearfix">
+                        <!--bookid-->
+                        <label style="float: left;text-align: right">
+                            <span style="color: red">*</span>
+                            <span th:text="#{book.bookid}"></span>
+                        </label>
+                        <div class="formControls ">
+                            <input type="text" class="input-text" id="bid" name="bookId">
+                        </div>
+                    </div>
+                    <div class="Operate_cont clearfix">
+                        <!--罚款-->
+                        <label style="float: left;text-align: right">
+                            <span style="color: red">*</span>
+                            <span th:text="#{button.payfine}"></span>
+                        </label>
+                        <div class="formControls ">
+                            <input type="text" class="input-text" id="fine" name="fine"><span id="numbig0" style="color: red">&nbsp;( >0 )</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div style="text-align:center">
+                            <input class="btn btn-primary radius" onclick="subform()" type="button" th:value="#{button.payfine}">
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 <script th:inline="javascript">
     /*<![CDATA[*/
     var message1 = [[#{alert.rebid}]];
+    var message2 = [[#{alert.bidandfine}]];
     /*]]>*/
+
+
+    /*还欠款*/
+    function subform() {
+        var bid = $("#bid").val();
+        var fine = $("#fine").val();
+        if (bid == '' || fine == '') {
+            layer.msg(message2,{icon: 7});
+        }
+        if(fine < 0){
+            $("#numbig0").show();
+            $("#fine").focus();
+        }else{
+            var data = "bookid=" + bid + "&fine=" + fine;
+            $.ajax({
+                type: "post",
+                url: "/pay_fine",
+                data: data,
+                success: function (data) {
+                    layer.alert(data, {
+                        title: 'Info',
+                        icon: 8,
+                    });
+                    //reset表格,清空内容以便下次添加
+                    setTimeout(function () {
+                        $("#payfineform")[0].reset();
+                    }, 1000);
+                }
+            });
+        }
+    }
+
     /*还书ajax提交*/
     function submitform() {
         var bookid = $("#bookId").val();
@@ -78,14 +148,16 @@
                     });
                     //reset表格,清空内容以便下次添加
                     setTimeout(function () {
-                        $("#returnbookform")[0].reset()
+                        $("#returnbookform")[0].reset();
                     }, 1000);
                 }
             });
         }
     }
+
     $(function(){
         $("#bookId").focus();
+        $("#numbig0").hide();
     });
 </script>
 </body>

@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
@@ -97,13 +98,13 @@ public class ReaderController {
         model.addAttribute("feedbacks", feedbackRepository.findFeedbacksByIsView("no"));
         model.addAttribute("totalfeedbacks", feedbackRepository.findAll().size());
         Integer deposit = defSettingRepository.findById(2).get().getDefnumber();
-        Integer debt = 0;
+        float debt = 0;
         //找出所有的欠款的
         for(BorrowRecord borrowRecord : borrowRecordRepository.findAllIncome()){
             debt+=borrowRecord.getDebt();
         }
         //先这样算总收入
-        Integer income = deposit*totalReaders + debt;
+        float income = deposit*totalReaders + debt;
         model.addAttribute("income", income);
         return "home";
     }
@@ -220,7 +221,7 @@ public class ReaderController {
     //???????
     private void updateReaderAlldebt(String readerId){
         List<BorrowRecord> borrowRecordDebtList= borrowRecordRepository.findNowDebtByReaderId(readerId);
-        Integer NowAllDebt=0;
+        float NowAllDebt=0;
         if(borrowRecordDebtList.size()>0){
             for(BorrowRecord x:borrowRecordDebtList){
                 NowAllDebt+=x.getDebt();
@@ -708,6 +709,7 @@ public class ReaderController {
         return "redirect:goHomePage";
     }
 
+    //预约书籍
     @RequestMapping("/bookBook")
     @ResponseBody
     public String bookBook(HttpServletRequest request,Integer bookId){
@@ -796,13 +798,13 @@ public class ReaderController {
         return ResultEnum.BORROW_BOOK_ERROR.getMsg();
     }
 
-    //读者还书
+    //读者还书页面
     @RequestMapping("/goReturnBook")
     public String goReturnBook(){
         return "ReturnBook";
     }
 
-    //书籍存在 借书记录存在 书籍欠款为0
+    //还书 书籍存在 借书记录存在 书籍欠款为0
     @RequestMapping("/returnBook")
     @ResponseBody
     public synchronized String returnBook(String bookid){
@@ -813,7 +815,7 @@ public class ReaderController {
         }
         String readerId=borrowRecord.getReaderId();
         updateReaderAlldebt(readerId);
-        Integer debtmoney = 0;
+        float debtmoney = 0;
         if(borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId) != null){
             debtmoney = borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId).getDebt();
         }else{
@@ -834,6 +836,45 @@ public class ReaderController {
             return ResultEnum.UNKNOWN_ERROR.getMsg();
         }
     }
+
+    /**
+     * 书籍损坏\丢失 缴纳罚款
+     * @title ReaderController.java
+     * @param bookId, fine
+     * @return java.lang.String
+     * @author 毛文杰
+     * @method name payfine
+     * @date 12:13 PM. 11/10/2018
+     */
+    @Transactional
+    @PostMapping("/pay_fine")
+    @ResponseBody
+    public String payfine(String bookid, String fine){
+        Integer bookId = Integer.parseInt(bookid);
+        float ffine = Float.parseFloat(fine);
+        //1查找此书在book表是否存在
+        if(bookRepository.findByBookId(bookId) == null){
+            return ResultEnum.NOT_EXIST.getMsg();
+        }
+        //2查找此bookid是否在bookrecord表中存在,如果不存在返回提示
+        if(borrowRecordRepository.findByBookId(bookId) == null){
+            return ResultEnum.BORROW_RECORD_NOT_EXIST.getMsg();
+        }else if(borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId) == null){
+            //书籍已还,无须再还
+            return ResultEnum.BOOK_ALREADY_RETURN.getMsg();
+        }
+
+        //3将书籍的状态标志为已损坏\丢失(2)
+        bookRepository.updateBookStatus(2,bookId);
+
+        //4将罚款金额附加到record的debt中
+        borrowRecordRepository.updateDebtByBookid(ffine, bookId);
+
+        //5将returntime填进去,则book里面的allDebt会自动更新
+        borrowRecordRepository.updateBorrow(new Date(),0, bookId);
+        return ResultEnum.PAY_FINE_SUCCESS.getMsg();
+    }
+
 
     //计时测试 还书期限
     //第一层returntime!=null 第二层lastday>0 第三层?
