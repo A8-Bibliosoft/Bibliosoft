@@ -301,7 +301,7 @@ public class ReaderController {
         }else{
             //考虑要不要直接删掉，还是把状态改为OFF
             //iReaderDao.deleteReader(reader);
-            iReaderDao.updateReaderStatusById(Iid, "OFF");
+            iReaderDao.updateReaderStatusById(Iid, "DEL");
             logger.info("delete reader>>>  id={}, name={}",id, reader.getReaderName());
             return ResultEnum.READER_DEL_SUCCESS.getMsg();
         }
@@ -326,6 +326,11 @@ public class ReaderController {
             //id是主键
             iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status, password);
         }else if(flag.equals("add")){
+            Reader reader1 = readerRepository.findReaderByReaderId(readerId);
+            if(reader1 != null){
+                 readerRepository.updateReaderStatusById(reader1.getId(),"ON");
+                 return "redirect:/reader_list";
+            }
             Reader reader = new Reader();
             reader.setSex(sex);
             reader.setReaderName(readerName);
@@ -840,7 +845,7 @@ public class ReaderController {
     /**
      * 书籍损坏\丢失 缴纳罚款
      * @title ReaderController.java
-     * @param bookId, fine
+     * @param bookid, fine
      * @return java.lang.String
      * @author 毛文杰
      * @method name payfine
@@ -857,7 +862,7 @@ public class ReaderController {
             return ResultEnum.NOT_EXIST.getMsg();
         }
         //2查找此bookid是否在bookrecord表中存在,如果不存在返回提示
-        if(borrowRecordRepository.findByBookId(bookId) == null){
+        if(borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId) == null){
             return ResultEnum.BORROW_RECORD_NOT_EXIST.getMsg();
         }else if(borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId) == null){
             //书籍已还,无须再还

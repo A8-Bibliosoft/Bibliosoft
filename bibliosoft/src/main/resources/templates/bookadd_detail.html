@@ -280,7 +280,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <img id="barimg" src="/static/images/barcode-scan.png" alt="book image" style="width: 50px;height: 40px;">
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="button" class="btn btn-default radius" value="print" onclick="doPrint()"><br>
+        <input type="button" id="printbtn" class="btn btn-default radius" value="print" onclick="doPrint()"><br>
     </div>
 </div>
 <script src="/static/js/jquery_1.7.2.js"></script>
@@ -349,6 +349,7 @@
             success: function(data) {
                 layer.alert("add book success!");
                 $(".mybarcodeimgdiv").append(data);
+                $("#printbtn").removeAttr("disabled");
                 //window.location.href="/book_list";
             }
         };
@@ -360,7 +361,9 @@
         });
 
     });
-
+    $(function(){
+        $("#printbtn").attr("disabled",true);
+    });
     //日期插件
     // laydate({
     //     elem: '#start',
