@@ -481,6 +481,9 @@ public class ReaderController {
                     readerRepository.save(reader);
                 }
                 //状态确认
+                if(reader.getStatus().equals("DEL")){
+                    return "delreader";
+                }
                 if(reader.getStatus().equals("ON")){
                     if(reader.getAlldebt()>0){
                         reader.setStatus("OFF");
