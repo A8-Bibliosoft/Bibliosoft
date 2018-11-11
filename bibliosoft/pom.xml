@@ -6,7 +6,7 @@
     <groupId>com.lib</groupId>
     <artifactId>bibliosoft</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>bibliosoft</name>
     <description>Online Library Management System- Bibliosoft</description>

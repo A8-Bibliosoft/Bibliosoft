@@ -3,6 +3,8 @@ package com.lib.bibliosoft;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -15,8 +17,12 @@ import java.nio.charset.Charset;
 @SpringBootApplication
 @EnableScheduling//开启定时任务
 @EnableAsync//开启异步
-public class BibliosoftApplication {
-
+public class BibliosoftApplication extends SpringBootServletInitializer{
+    //重写了configure方法用于打war包
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder){
+        return builder.sources(BibliosoftApplication.class);
+    }
     /**
      * You can change the banner shape as you want, just add a text file named "banner.txt"
      * @title BibliosoftApplication.java
