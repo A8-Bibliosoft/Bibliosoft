@@ -142,10 +142,17 @@
         <!--</div>-->
 
         <div class=" clearfix cl">
+            <!--ISBN-->
+            <!--<div class="Add_p_s">-->
+                <!--<em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.isbn}">Book ISBN：</label>-->
+                <!--<div class="formControls col-2">-->
+                    <!--<input type="text" class="input-text required" value="" th:placeholder="#{book.isbn}" name="bookisbn" id="bookisbn">-->
+                <!--</div>-->
+            <!--</div>-->
             <div class="Add_p_s">
-                <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.isbn}">Book ISBN：</label>
+                <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.publisher}">Publisher：</label>
                 <div class="formControls col-2">
-                    <input type="text" class="input-text required" value="" th:placeholder="#{book.isbn}" name="bookisbn" id="bookisbn">
+                <input type="text" class="input-text required" value="" th:placeholder="#{book.publisher}" name="bookpublisher" id="bookpublisher">
                 </div>
             </div>
             <!--作者-->
@@ -351,6 +358,9 @@
                 $(".mybarcodeimgdiv").append(data);
                 $("#printbtn").removeAttr("disabled");
                 //window.location.href="/book_list";
+            },
+            error: function(data) {
+                layer.alert(data);
             }
         };
         //js插件验证表单
@@ -363,6 +373,7 @@
     });
     $(function(){
         $("#printbtn").attr("disabled",true);
+        $("#booktitle").focus();
     });
     //日期插件
     // laydate({

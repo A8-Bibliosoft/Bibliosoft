@@ -16,7 +16,7 @@ public class RandomId {
         Random rand=new Random();//生成随机数
         String rnum="";
         for(int a=0;a<len;a++){
-            rnum += rand.nextInt(10);//生成6位数字
+            rnum += rand.nextInt(10);//生成len位数字
         }
         return rnum;
     }
