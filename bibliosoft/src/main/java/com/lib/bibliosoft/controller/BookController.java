@@ -442,12 +442,10 @@ public class BookController {
 //        }
         return "redirect:/book_list";
     }
-//TODO
     /**
      * @Title: BookController.java
      * @param booktitle
      * @param bookcover
-     * @param bookisbn
      * @param bookauthor
      * @param bookposition
      * @param bookprice
@@ -462,7 +460,7 @@ public class BookController {
      */
     @RequestMapping("/book_addnewbook")
     @ResponseBody
-    public String add_newbook(String booktitle, MultipartFile bookcover, String bookisbn, String bookauthor,
+    public String add_newbook(String booktitle, MultipartFile bookcover, String bookpublisher, String bookauthor,
                                                           Integer bookposition, String bookprice, String booknum, Integer bookstatus,
                                                           String booksummary, String typeid){
         // 上传成功或者失败的提示
@@ -483,6 +481,14 @@ public class BookController {
         BookPosition bookPosition = bookPositionRepository.findById(bookposition).orElse(null);
         //生成多个book对象
         Integer num = Integer.parseInt(booknum);
+        String bookisbn = "";
+        //检测是否重复出现isbn,同一批的书的isbn是一样的
+        bookisbn = RandomId.getRandomNum(13);
+        //这里因为返回的是集合，所以不能使用是否等于null判断
+        while(bookRepository.findBookByBookIsbn(bookisbn).size() > 0){
+            bookisbn = RandomId.getRandomNum(13);
+        }
+        logger.info("isbn={}", bookisbn);
         for(int i=0;i<num;i++) {
             /*书籍*/
             Book book = new Book();
@@ -493,8 +499,9 @@ public class BookController {
             book.setBookName(booktitle);
             book.setBookPrice(Fbookprice);
             book.setBookIsbn(bookisbn);
+            book.setBookPublisher(bookpublisher);
 
-            //生成随机8位数
+            //生成随机8位数，保证任意不同两本书的id不同
             bookid = RandomId.getRandomNum(8);
             Ibookid = Integer.parseInt(bookid);
             while (bookRepository.findByBookId(Ibookid) != null) {
@@ -602,7 +609,6 @@ public class BookController {
         return "book_show";
     }
 
-    //TODO
     /**
      * @param isbn
      * @param time

@@ -171,17 +171,18 @@ public class BookService {
      * @return
      */
     public Page<Book> findbookbynameortime(Integer page, Integer size, String bookname, String bookaddtime) {
-        Date date = Date.valueOf(bookaddtime);;
+        Date date = null;
         if(bookname == null || "".equals(bookname)){
             if (bookaddtime == null || "".equals(bookaddtime)){
                 return null;
             }else{
+                date = Date.valueOf(bookaddtime);
                 Pageable pageable = PageRequest.of(page-1, size, Sort.Direction.DESC, "registerTime");
+                Date finalDate = date;
                 Page<Book> book = bookRepository.findAll(new Specification<Book>(){
                     @Override
                     public Predicate toPredicate(Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-
-                        Predicate p1 = criteriaBuilder.equal(root.get("registerTime"), date);
+                        Predicate p1 = criteriaBuilder.equal(root.get("registerTime"), finalDate);
                         query.where(criteriaBuilder.and(p1));
                         return query.getRestriction();
                     }
@@ -202,14 +203,17 @@ public class BookService {
             return book;
 //            return  bookRepository.findByBookNameLike('%' + bookname + '%');
         }else{
+            date = Date.valueOf(bookaddtime);
             List<Predicate> predicatesList = new ArrayList<Predicate>();
             Pageable pageable = PageRequest.of(page-1, size, Sort.Direction.DESC, "registerTime");
+            Date finalDate1 = date;
             Page<Book> book = bookRepository.findAll(new Specification<Book>(){
                 @Override
                 public Predicate toPredicate(Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                     Predicate p1 = criteriaBuilder.like(root.get("bookName"), '%' + bookname + '%');
-                    Predicate p2 = criteriaBuilder.equal(root.get("registerTime"), bookaddtime);
-                    Predicate p3 =  criteriaBuilder.or(p1,p2);
+                    Predicate p2 = criteriaBuilder.equal(root.get("registerTime"), finalDate1);
+                    //这里使用and，两条件必须同时成立
+                    Predicate p3 =  criteriaBuilder.and(p1,p2);
                     query.where(criteriaBuilder.and(p3));
                     return query.getRestriction();
                 }

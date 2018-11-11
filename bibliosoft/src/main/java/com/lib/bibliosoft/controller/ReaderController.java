@@ -330,6 +330,9 @@ public class ReaderController {
             Reader reader1 = readerRepository.findReaderByReaderId(readerId);
             if(reader1 != null){
                  readerRepository.updateReaderStatusById(reader1.getId(),"ON");
+                 Integer id = reader1.getId();
+                 //更新他的信息
+                 iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status, password);
                  return "redirect:/reader_list";
             }
             //之前不存在新建读者
