@@ -62,7 +62,7 @@ public class LibrarianController {
      *
      * @return
      */
-    @RequestMapping("/lib_index")
+    @RequestMapping("lib_index")
     @ResponseBody
     public ModelAndView gotoIndex() {
         ModelAndView mv = new ModelAndView("lib_index");
@@ -88,7 +88,7 @@ public class LibrarianController {
      * @return Code indicating the result of the login
      * @throws IOException
      */
-    @PostMapping("/librarian_login")
+    @PostMapping("librarian_login")
     @ResponseBody
     public String loginReader(String libid,
                               String password,
@@ -131,14 +131,14 @@ public class LibrarianController {
      *
      * @return
      */
-    @GetMapping("/librarian_info")
+    @GetMapping("librarian_info")
     public String info_lib(Model model, HttpSession session) {
         if (session.getAttribute("librarian") != null) {
             Librarian lib = (Librarian) session.getAttribute("librarian");
             model.addAttribute("lib", lib);
             return "librarian_info";
         } else
-            return "/lib_login";
+            return "forward:lib_login";
     }
 
     /**
@@ -150,7 +150,7 @@ public class LibrarianController {
      * @method name sbday_totalincome
      * @date 11:55 AM. 11/4/2018
      */
-    @PostMapping("/income_sbday")
+    @PostMapping("income_sbday")
     public String sbday_totalincome(String day, Model model){
         Integer deposit=0;
         float fine=0;
@@ -176,7 +176,7 @@ public class LibrarianController {
      * @method name sbweek_totalincome
      * @date 11:55 AM. 11/6/2018
      */
-    @PostMapping("/income_sbweek")
+    @PostMapping("income_sbweek")
     public String sbweek_totalincome(String week, Model model) throws Exception{
         Integer deposit=0;
         float fine=0;
@@ -218,7 +218,7 @@ public class LibrarianController {
      * @method name sbmonth_totalincome
      * @date 1:51 PM. 11/4/2018
      */
-    @PostMapping("/income_sbmonth")
+    @PostMapping("income_sbmonth")
     public String sbmonth_totalincome(String month, Model model){
         Integer deposit=0;
         float fine=0;
@@ -244,7 +244,7 @@ public class LibrarianController {
     @GetMapping("lib_logout")
     public String lib_logout(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
-        return "/lib_login";
+        return "forward:lib_login";
     }
 
     /**
@@ -256,12 +256,12 @@ public class LibrarianController {
      * @method name modifyinfo
      * @date 10:34 PM. 11/9/2018
      */
-    @PostMapping("/lib_modify_info")
+    @PostMapping("lib_modify_info")
     public String modifyinfo(String libid, String libname, String phone, String email, HttpSession session){
         //logger.info("={}={}={}={}",libname,libid,email,phone);
         librarianRepository.updateLibrarianWithoutPass(libid,libname,email,phone);
         session.setAttribute("librarian", librarianRepository.findByLibId(libid));
-        return "redirect:/librarian_info";
+        return "redirect:librarian_info";
     }
 
 }
