@@ -1,0 +1,40 @@
+Manifest-Version: 1.0
+Class-Path: spring-boot-starter-data-jpa-2.0.5.RELEASE.jar spring-aop-
+ 5.0.9.RELEASE.jar jackson-databind-2.9.6.jar spring-boot-starter-aop-
+ 2.0.5.RELEASE.jar javassist-3.22.0-GA.jar webjars-locator-core-0.35.j
+ ar spring-data-commons-2.0.10.RELEASE.jar spring-boot-configuration-p
+ rocessor-2.0.5.RELEASE.jar unbescape-1.1.5.RELEASE.jar bootstrap-3.3.
+ 7.jar mybatis-spring-boot-starter-1.3.0.jar spring-context-support-5.
+ 0.9.RELEASE.jar spring-jdbc-5.0.9.RELEASE.jar mybatis-3.4.4.jar dom4j
+ -1.6.1.jar spring-boot-starter-tomcat-2.0.5.RELEASE.jar log4j-api-2.1
+ 0.0.jar logback-classic-1.2.3.jar spring-aspects-5.0.9.RELEASE.jar at
+ toparser-2.0.4.RELEASE.jar spring-boot-starter-thymeleaf-2.0.5.RELEAS
+ E.jar spring-tx-5.0.9.RELEASE.jar spring-boot-starter-web-2.0.5.RELEA
+ SE.jar javax.mail-1.6.2.jar spring-boot-starter-jdbc-2.0.5.RELEASE.ja
+ r spring-boot-2.0.5.RELEASE.jar fastjson-1.2.51.jar logback-core-1.2.
+ 3.jar mybatis-spring-1.3.1.jar spring-boot-starter-logging-2.0.5.RELE
+ ASE.jar slf4j-api-1.7.25.jar spring-jcl-5.0.9.RELEASE.jar jackson-dat
+ atype-jdk8-2.9.6.jar hibernate-validator-6.0.12.Final.jar javax.trans
+ action-api-1.2.jar spring-boot-starter-json-2.0.5.RELEASE.jar jackson
+ -module-parameter-names-2.9.6.jar commons-compress-1.9.jar hibernate-
+ commons-annotations-5.0.1.Final.jar mysql-connector-java-5.1.47.jar j
+ avax.annotation-api-1.3.2.jar spring-boot-starter-mail-2.0.5.RELEASE.
+ jar xml-apis-1.4.01.jar classmate-1.3.4.jar spring-beans-5.0.9.RELEAS
+ E.jar spring-web-5.0.9.RELEASE.jar spring-orm-5.0.9.RELEASE.jar barco
+ de4j-light-2.0.jar tomcat-embed-el-8.5.34.jar spring-core-5.0.9.RELEA
+ SE.jar spring-data-jpa-2.0.10.RELEASE.jar hibernate-jpa-2.1-api-1.0.2
+ .Final.jar mybatis-spring-boot-autoconfigure-1.3.0.jar thymeleaf-3.0.
+ 9.RELEASE.jar tomcat-embed-websocket-8.5.34.jar aspectjweaver-1.8.13.
+ jar spring-expression-5.0.9.RELEASE.jar HikariCP-2.7.9.jar jackson-an
+ notations-2.9.0.jar tomcat-embed-core-8.5.34.jar antlr-2.7.7.jar spri
+ ng-boot-autoconfigure-2.0.5.RELEASE.jar jandex-2.0.3.Final.jar thymel
+ eaf-extras-java8time-3.0.1.RELEASE.jar log4j-to-slf4j-2.10.0.jar thym
+ eleaf-spring5-3.0.9.RELEASE.jar jul-to-slf4j-1.7.25.jar jboss-logging
+ -3.3.2.Final.jar commons-lang3-3.7.jar javax.mail-api-1.6.2.jar jacks
+ on-core-2.9.6.jar spring-context-5.0.9.RELEASE.jar spring-boot-starte
+ r-2.0.5.RELEASE.jar validation-api-2.0.1.Final.jar jquery-3.1.0.jar a
+ ctivation-1.1.jar hibernate-core-5.2.17.Final.jar c3p0-0.9.1.2.jar ja
+ ckson-datatype-jsr310-2.9.6.jar snakeyaml-1.19.jar spring-webmvc-5.0.
+ 9.RELEASE.jar
+Main-Class: com.lib.bibliosoft.BibliosoftApplication
+
