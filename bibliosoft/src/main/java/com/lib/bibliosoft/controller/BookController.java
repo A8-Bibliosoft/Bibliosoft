@@ -134,7 +134,7 @@ public class BookController {
      * @Modify time 5:05 PM 10/22/2018
      */
     @Transactional
-    @PostMapping("/book/{id}")
+    @PostMapping("book/{id}")
     public ResponseEntity<Map<String,Object>> bookDelete(@PathVariable("id") Integer id, HttpSession session){
 
         Map<String,Object> map = new HashMap<String,Object>();
@@ -191,7 +191,7 @@ public class BookController {
      * @date: 11:14 PM. 9/27/2018
      * @modifyTime 8:14 PM. 10/12/2018
      */
-    @GetMapping("/book_sBybisbn")
+    @GetMapping("book_sBybisbn")
     public String findBooksByIsbn(@RequestParam("isbn") String isbn, Model model, HttpSession session){
         session.setAttribute("searchContent1",isbn);
         List<Book> books = bookRepository.findBookByBookIsbn(isbn);
@@ -218,7 +218,7 @@ public class BookController {
      * @param model
      * @return
      */
-    @GetMapping("/book_list")
+    @GetMapping("book_list")
     public String list_book(Model model){
         Integer currpage = 1;
         totalcount = bookService.findAll().size();
@@ -252,7 +252,7 @@ public class BookController {
      *               4 :按照bookname来搜索
      * @return
      */
-    @GetMapping("/book_page")
+    @GetMapping("book_page")
     public String page_book(@RequestParam(value = "currpage") Integer currpage, Integer sbtype, Model model, HttpSession session){
         List<Book> bookList = null;
 
@@ -324,7 +324,7 @@ public class BookController {
      * @param bookaddtime
      * @return
      */
-    @RequestMapping("/book_search")
+    @RequestMapping("book_search")
     public String search_book(Model model, HttpSession session, @RequestParam("bookname") String bookname, @RequestParam("bookaddtime") String bookaddtime){
         session.setAttribute("searchContent1", bookname);
         session.setAttribute("searchContent2", bookaddtime);
@@ -384,7 +384,7 @@ public class BookController {
      *@Description: find a book by its bookid
      *@Date: 5:22 PM. 10/12/2018
      */
-    @GetMapping("/book_sBybid")
+    @GetMapping("book_sBybid")
     public String searchBookByBookid(String bookid, Model model){
         Integer ibookid = Integer.parseInt(bookid);
 //        List<Book> books = bookRepository.findBookByBookIsbn(sbookid);
@@ -418,7 +418,7 @@ public class BookController {
      * @param status
      * @return
      */
-    @PostMapping("/edit_book")
+    @PostMapping("edit_book")
     public String book_edit(String bookId, String bookName, Integer bookPosition,
                              String isbn, String price, String author,
                              @RequestParam("bookstatus") String status){
@@ -440,7 +440,7 @@ public class BookController {
 //            bookService.addBook(book);
 //            logger.info("Add book={}",book.toString());
 //        }
-        return "redirect:/book_list";
+        return "redirect:book_list";
     }
     /**
      * @Title: BookController.java
@@ -458,7 +458,7 @@ public class BookController {
      * @Description: add a new book to the library
      * @Date: 10:07 PM. 10/6/2018
      */
-    @RequestMapping("/book_addnewbook")
+    @RequestMapping("book_addnewbook")
     @ResponseBody
     public String add_newbook(String booktitle, MultipartFile bookcover, String bookpublisher, String bookauthor,
                                                           Integer bookposition, String bookprice, String booknum, Integer bookstatus,
@@ -598,7 +598,7 @@ public class BookController {
      * @description show detail information of a book
      * @date 6:24 PM. 10/7/2018
      */
-    @GetMapping("/book_show/{id}")
+    @GetMapping("book_show/{id}")
     public String show_book(@PathVariable("id") Integer bookId, Model model){
         //Integer bookid = Integer.parseInt(bookId);
         Book book = bookService.getBookById(bookId);
@@ -620,7 +620,7 @@ public class BookController {
      * @description add books by isbn
      * @date 2:19 PM. 10/9/2018
      */
-    @PostMapping("/book_isbn")
+    @PostMapping("book_isbn")
     public ResponseEntity<Map<String,Object>> getInfoByDouBan(String isbn, Integer position, String status, String num, String typeid, String bookname, String bookauthor, String bookpublisher){
         Map<String,Object> map = new HashMap<String,Object>();
         Integer number = Integer.parseInt(num);
@@ -685,7 +685,7 @@ public class BookController {
      * @date 1:59 PM. 11/8/2018
      */
     //补全添加isbn之后的表单信息
-    @PostMapping("/book_completeinfo")
+    @PostMapping("book_completeinfo")
     public ResponseEntity<Map<String,Object>> complete(String bookisbn){
         Map<String,Object> map = new HashMap<String,Object>();
         String url = "https://api.douban.com/v2/book/isbn/:" + bookisbn;
@@ -728,7 +728,7 @@ public class BookController {
      * @method name goaddBookIsbnPage
      * @date 9:24 PM. 10/18/2018
      */
-    @GetMapping("/book_addByIsbn")
+    @GetMapping("book_addByIsbn")
     public String goaddBookIsbnPage(Model model){
         model.addAttribute("types", bookTypeRepository.findAll());
         status = bookStatusRepository.findAll();
@@ -746,7 +746,7 @@ public class BookController {
      * @method name goAddBookpage
      * @date 9:24 PM. 10/19/2018
      */
-    @GetMapping("/bookadd_detail")
+    @GetMapping("bookadd_detail")
     public String goAddBookpage(Model model){
         model.addAttribute("types", bookTypeRepository.findAll());
         model.addAttribute("status", status);
@@ -765,7 +765,7 @@ public class BookController {
      * @method name gotoAddCategory
      * @date 10:12 PM. 10/19/2018
      */
-    @GetMapping("/book_category_add")
+    @GetMapping("book_category_add")
     public String gotoAddCategory(Model model){
         model.addAttribute("types", bookTypeRepository.findAll());
         return "book_category_add";
@@ -780,7 +780,7 @@ public class BookController {
      * @method name deleteCategpory
      * @date 10:12 PM. 10/19/2018
      */
-    @PostMapping("/bookcategory/{id}")
+    @PostMapping("bookcategory/{id}")
     public ResponseEntity<Map<String,Object>> deleteCategpory(@PathVariable("id") Integer id) {
         Map<String,Object> map = new HashMap<String,Object>();
         if(bookRepository.findByBookStatus(5).size() > 0) {
@@ -801,7 +801,7 @@ public class BookController {
      * @method name editCategory
      * @date 10:21 PM. 10/19/2018
      */
-    @PostMapping("/edit_category")
+    @PostMapping("edit_category")
     public String editCategory(String typeid, String typename){
         Integer Id = Integer.parseInt(typeid);
 //        BookType bookType = bookTypeRepository.getOne(Id);
@@ -809,7 +809,7 @@ public class BookController {
 //        bookType.setTypeName(typename);
 //        bookTypeRepository.save(bookType);
         bookTypeRepository.updateTypeById(typename, Id);
-        return "redirect:/book_category_add";
+        return "redirect:book_category_add";
     }
 
     /**
@@ -821,7 +821,7 @@ public class BookController {
      * @method name addCategory
      * @date 10:24 PM. 10/19/2018
      */
-    @PostMapping("/add_category")
+    @PostMapping("add_category")
     public ResponseEntity<Map<String,Object>> addCategory(String categoryname){
         Map<String,Object> map = new HashMap<String,Object>();
         if(bookTypeRepository.findByTypeName(categoryname).size()>0){
@@ -840,7 +840,7 @@ public class BookController {
 
     /*--------------------------------图书位置管理----------------------------------------*/
 
-    @GetMapping("/book_position")
+    @GetMapping("book_position")
     public String gotoBookPositionManage(Model model){
         model.addAttribute("place", bookPositionRepository.findAll());
         return "book_position";
@@ -855,7 +855,7 @@ public class BookController {
      * @method name addPosition
      * @date 6:12 PM. 10/20/2018
      */
-    @PostMapping("/add_position")
+    @PostMapping("add_position")
     public ResponseEntity<Map<String,Object>> addPosition(String placename){
         Map<String,Object> map = new HashMap<String,Object>();
         if(bookPositionRepository.findByPlace(placename).size()>0){
@@ -878,7 +878,7 @@ public class BookController {
      * @method name editPosition
      * @date 6:15 PM. 10/20/2018
      */
-    @PostMapping("/edit_position")
+    @PostMapping("edit_position")
     public String editPosition(String placeid, String placename){
         Integer Id = Integer.parseInt(placeid);
         bookPositionRepository.updatePositionById(placename, Id);
@@ -893,7 +893,7 @@ public class BookController {
      * @method name deletePosition
      * @date 7:36 PM. 10/20/2018
      */
-    @PostMapping("/bookposition/{id}")
+    @PostMapping("bookposition/{id}")
     public ResponseEntity<Map<String,Object>> deletePosition(@PathVariable("id") Integer id) {
         Map<String,Object> map = new HashMap<String,Object>();
         //查看是否有其他书籍有此位置
@@ -919,7 +919,7 @@ public class BookController {
      * @method name gotoBookDelRdc
      * @date 3:26 PM. 10/25/2018
      */
-    @GetMapping("/bookDelRecord")
+    @GetMapping("bookDelRecord")
     public String gotoBookDelRdc(Model model){
         Integer currpage = 1;
         totalcount = bookDelRecordRepository.findAll().size();
@@ -944,7 +944,7 @@ public class BookController {
      * @method name delRecordPaging
      * @date 3:30 PM. 10/25/2018
      */
-    @GetMapping("/bookdelrecord_page")
+    @GetMapping("bookdelrecord_page")
     public String delRecordPaging(@RequestParam(value = "currpage") Integer currpage, Model model){
         totalcount = bookDelRecordRepository.findAll().size();
         model.addAttribute("totalcount", totalcount);
@@ -970,7 +970,7 @@ public class BookController {
 
     /*---------------图书借阅详情------------------------------*/
 
-    @GetMapping("/bookBorrowRecord")
+    @GetMapping("bookBorrowRecord")
     public String gotoDetail(Integer bookid, Model model){
         List<BorrowRecord> bookRecords = borrowRecordRepository.findAllByBookId(bookid);
         model.addAttribute("borrowRecords", bookRecords);
@@ -987,7 +987,7 @@ public class BookController {
      * @method name
      * @date 12:16 PM. 11/6/2018
      */
-    @PostMapping("/view_barcode/{bookid}")
+    @PostMapping("view_barcode/{bookid}")
     @ResponseBody
     public String show_barcodeimg(@PathVariable("bookid") Integer bookid){
         String name = "static/barcodeimages/"+String.valueOf(bookid)+".png";

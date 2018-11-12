@@ -82,7 +82,7 @@
 			<form action="" method="post" name="loginForm" id="loginForm">
                 <div class="control-group normal_text">
                     <h3>
-                        <img th:src="@{/static/huimages/biglogo.png}"/>
+                        <img th:src="@{static/huimages/biglogo.png}"/>
                     </h3>
                     <h1 style="margin-top: 10px;">Reader Login</h1>
                 </div>
@@ -92,7 +92,7 @@
 					<div class="controls">
 						<div class="main_input_box">
 							<span class="add-on bg_lg">
-							<i><img height="37" th:src="@{/static/login/user.png}" /></i>
+							<i><img height="37" th:src="@{static/login/user.png}" /></i>
 							</span><input type="text" name="readerId" id="readerId" value="" th:placeholder="#{readerlogin.username}" />
 						</div>
 					</div>
@@ -101,7 +101,7 @@
 					<div class="controls">
 						<div class="main_input_box">
 							<span class="add-on bg_ly">
-							<i><img height="37" th:src="@{/static/login/suo.png}" /></i>
+							<i><img height="37" th:src="@{static/login/suo.png}" /></i>
 							</span><input type="password" name="password" id="password" th:placeholder="#{readerlogin.password}" class="keypad" keypadMode="full" allowKeyboard="true" value=""/>
 						</div>
 					</div>
@@ -119,7 +119,7 @@
 					<div style="width:86%;padding-left:8%;">
 
 						<div style="float: left;padding-top:2px;">
-							<i><img th:src="@{/static/login/yan.png}" /></i>
+							<i><img th:src="@{static/login/yan.png}" /></i>
 						</div>
 						<div style="float: left;" class="codediv">
 							<input type="text" name="code" id="code" class="login_code"
@@ -139,7 +139,7 @@
                     <font color="white">
                         <span id="nameerr">Copyright © XD University 2018</span>
                         <br>
-                        <span><a style="color:white;cursor: pointer" th:href="@{/goLogin(l='zh_CN')}">中文</a>&nbsp;&nbsp;<a th:href="@{/goLogin(l='en_US')}" style="color:white;cursor: pointer;">english</a></span>
+                        <span><a style="color:white;cursor: pointer" th:href="@{goLogin(l='zh_CN')}">中文</a>&nbsp;&nbsp;<a th:href="@{goLogin(l='en_US')}" style="color:white;cursor: pointer;">english</a></span>
                     </font>
                 </div>
             </div>
@@ -169,7 +169,7 @@
 				var code = "readerId="+readerId+"&password="+password+"&code="+$("#code").val();
 				$.ajax({
 					type: "POST",
-					url: '/reader_login',//验证
+					url: 'reader_login',//验证
 			    	data: code,
 					// dataType:"json",不能写这个，否则永远返回不了String数据
                     async : false,
@@ -343,7 +343,7 @@
                 var code="readerId="+readerId;
                 $.ajax({
                     type: "POST",
-                    url: "/forgetPassword",
+                    url: "forgetPassword",
                     data: code,
                     async: false,
                     cache: false,

@@ -2,26 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href="../static/assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="../static/css/style.css"/>
-    <link rel="stylesheet" href="../static/assets/css/font-awesome.min.css"/>
-    <link href="../static/assets/css/codemirror.css" rel="stylesheet">
+    <link th:href="@{/static/assets/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/static/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/font-awesome.min.css}"/>
+    <link th:href="@{/static/assets/css/codemirror.css}" rel="stylesheet">
     <!--[if IE 7]>
-    <link rel="stylesheet" href="../static/assets/css/font-awesome-ie7.min.css"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/font-awesome-ie7.min.css}"/>
     <![endif]-->
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="../static/assets/css/ace-ie.min.css"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/ace-ie.min.css}"/>
     <![endif]-->
-    <script src="../static/assets/js/ace-extra.min.js"></script>
+    <script th:src="@{/static/assets/js/ace-extra.min.js}"></script>
     <!--[if lt IE 9]>
-    <script src="../static/assets/js/html5shiv.js"></script>
-    <script src="../static/assets/js/respond.min.js"></script>
+    <script th:src="@{/static/assets/js/html5shiv.js}"></script>
+    <script th:src="@{/static/assets/js/respond.min.js}"></script>
     <![endif]-->
     <!--[if !IE]> -->
-    <script src="../static/assets/js/jquery.min.js"></script>
+    <script th:src="@{/static/assets/js/jquery.min.js}"></script>
     <!-- <![endif]-->
-    <script src="../static/assets/dist/echarts.js"></script>
-    <script src="../static/assets/js/bootstrap.min.js"></script>
+    <script th:src="@{/static/assets/dist/echarts.js}"></script>
+    <script th:src="@{/static/assets/js/bootstrap.min.js}"></script>
     <title></title>
 </head>
 <body>
@@ -35,7 +35,7 @@
     <div class="state-overview clearfix">
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <a href="/reader_list" th:title="#{home.title.readers}">
+                <a href="reader_list" th:title="#{home.title.readers}">
                     <div class="symbol terques">
                         <i class="icon-user"></i>
                     </div>
@@ -48,7 +48,7 @@
         </div>
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <a href="/book_list" th:title="#{home.title.books}">
+                <a href="book_list" th:title="#{home.title.books}">
                     <div class="symbol red">
                         <i class="icon-book"></i>
                     </div>
@@ -61,7 +61,7 @@
         </div>
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <a href="/reader_feedback" th:title="#{home.title.feedbacks}">
+                <a href="reader_feedback" th:title="#{home.title.feedbacks}">
                     <div class="symbol yellow">
                         <i class="icon-comment"></i>
                     </div>
@@ -97,7 +97,7 @@
             <ul class="list">
                 <li th:each="f : ${feedbacks}">
                     <i class="icon-bell red"></i>
-                    <a href="/reader_feedback" th:text="${f.reader.readerName}"></a>
+                    <a href="reader_feedback" th:text="${f.reader.readerName}"></a>
                 </li>
             </ul>
         </div>
@@ -195,7 +195,7 @@
                 };
                 $.ajax({
                     type : "post",
-                    url : "/homedata",
+                    url : "homedata",
                     async: false, //同步执行
                     dataType: "json", //返回数据形式为json
                     success : function(result) {

@@ -6,16 +6,16 @@
     <script type="text/javascript" th:src="@{/static/hujs/jquery-2.1.4.min.js}"></script>
     <script type="text/javascript" th:src="@{/static/hujs/bootstrap-3.1.1.min.js}"></script>
     <link th:href="@{/static/hucss/bootstrap.css}" rel="stylesheet" type="text/css" media="all"/>
-    <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/static/css/style.css"/>
-    <link rel="stylesheet" href="/static/assets/css/ace.min.css"/>
-    <link rel="stylesheet" href="/static/assets/css/font-awesome.min.css"/>
-    <link href="/static/Widget/icheck/icheck.css" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/static/assets/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/static/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/ace.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/font-awesome.min.css}"/>
+    <link th:href="@{/static/Widget/icheck/icheck.css}" rel="stylesheet" type="text/css"/>
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/static/assets/css/font-awesome-ie7.min.css"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/font-awesome-ie7.min.css}"/>
     <![endif]-->
-    <link rel="stylesheet" href="/static/assets/css/ace-ie.min.css"/>
-    <script type="text/javascript" src="/static/assets/layer/layer.js"></script>
+    <link rel="stylesheet" th:href="@{/static/assets/css/ace-ie.min.css}"/>
+    <script type="text/javascript" th:src="@{/static/assets/layer/layer.js}"></script>
 </head>
 <body>
 <div class="type_style">
@@ -114,7 +114,7 @@
             var data = "bookid=" + bid + "&fine=" + fine;
             $.ajax({
                 type: "post",
-                url: "/pay_fine",
+                url: "pay_fine",
                 data: data,
                 success: function (data) {
                     layer.alert(data, {
@@ -139,7 +139,7 @@
             var data = "bookid=" + bookid;
             $.ajax({
                 type: "post",
-                url: "/returnBook",
+                url: "returnBook",
                 data: data,
                 success: function (data) {
                     layer.alert(data, {

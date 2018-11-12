@@ -6,24 +6,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
           content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-    <link href="../static/assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="../static/css/style.css"/>
-    <link href="../static/assets/css/codemirror.css" rel="stylesheet">
-    <link rel="stylesheet" href="../static/assets/css/ace.min.css"/>
-    <link rel="stylesheet" href="../static/assets/css/font-awesome.min.css"/>
+    <link th:href="@{/static/assets/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/static/css/style.css}"/>
+    <link th:href="@{/static/assets/css/codemirror.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/static/assets/css/ace.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/font-awesome.min.css}"/>
     <!--[if IE 7]>
-    <link rel="stylesheet" href="../static/assets/css/font-awesome-ie7.min.css"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/font-awesome-ie7.min.css}"/>
     <![endif]-->
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="../static/assets/css/ace-ie.min.css"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/ace-ie.min.css}"/>
     <![endif]-->
-    <script src="../static/assets/js/jquery.min.js"></script>
+    <script th:src="@{/static/assets/js/jquery.min.js}"></script>
     <title>view reader</title>
 </head>
 <body>
 <div class="member_show">
     <div class="member_jbxx clearfix">
-        <img class="img" th:if="${reader.imgsrc eq null}" src="../static/images/reader.png" th:src="@{../static/images/reader.png}" />
+        <img class="img" th:if="${reader.imgsrc eq null}" th:src="@{/static/images/reader.png}" th:src="@{../static/images/reader.png}" />
         <img class="img" th:if="${reader.imgsrc ne null}" th:src="@{${reader.imgsrc }}" />
         <dl class="right_xxln">
             <dt>
@@ -34,7 +34,7 @@
                 <span style="color: #eee">Arrears: <label th:text="${reader.alldebt}" style="color: greenyellow"></label> ￥</span>
             </dt>
             <!-- 借了几本书，都是哪几本 -->
-            <dd class="" style="margin-left:0">Has borrowed：<a th:href="@{/borrowbook(readerid=${reader.getReaderId()})}" th:text="${num}"></a> Books.</dd>
+            <dd class="" style="margin-left:0">Has borrowed：<a th:href="@{borrowbook(readerid=${reader.getReaderId()})}" th:text="${num}"></a> Books.</dd>
         </dl>
     </div>
     <div class="member_content">

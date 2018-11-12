@@ -53,7 +53,7 @@ public class BulletinController {
      * @method name gotoBulletinManagePage
      * @date 4:53 PM. 10/18/2018
      */
-    @GetMapping("/bulletin_page")
+    @GetMapping("bulletin_page")
     public String gotoBulletinManagePage(@RequestParam(value = "currpage") Integer currpage, Model model){
         totalcount = bulletinRepository.findAll().size();
         model.addAttribute("totalcount", totalcount);
@@ -83,7 +83,7 @@ public class BulletinController {
      * @method name getAllBulletins
      * @date 4:50 PM. 10/18/2018
      */
-    @GetMapping("/bulletin_list")
+    @GetMapping("bulletin_list")
     public String getAllBulletins(Model model){
         Integer currpage = 1;
         totalcount = bulletinRepository.findAll().size();
@@ -113,7 +113,7 @@ public class BulletinController {
      * @description 通过id删除一条公告
      */
     @Transactional
-    @PostMapping("/bulletin/{id}")
+    @PostMapping("bulletin/{id}")
     public ResponseEntity<Map<String,Object>> bulletinDelete(@PathVariable("id") Integer id){
         /*删除bulletin的notices表*/
         bulletinRepository.deleteById(id);
@@ -131,7 +131,7 @@ public class BulletinController {
      * @method name show_bulletin
      * @date 7:42 PM. 10/18/2018
      */
-    @GetMapping("/bulletin_show/{id}")
+    @GetMapping("bulletin_show/{id}")
     public String show_bulletin(@PathVariable("id") String id, Model model){
         Integer Id = Integer.parseInt(id);
         Notices notices = bulletinRepository.findById(Id).orElse(null);
@@ -148,7 +148,7 @@ public class BulletinController {
      * @method name editBulletin
      * @date 8:06 PM. 10/18/2018
      */
-    @PostMapping("/editadd_bulletin")
+    @PostMapping("editadd_bulletin")
     public String editBulletin( String bulletinid, String bulletintitle, String bulletincontent, String flag){
         if (flag.equals("edit")){
             Integer id = Integer.parseInt(bulletinid);
@@ -166,6 +166,6 @@ public class BulletinController {
             bulletinRepository.save(notices);
             logger.info("Add notice={}", notices.toString());
         }
-        return "redirect:/bulletin_list";
+        return "redirect:bulletin_list";
     }
 }
