@@ -32,18 +32,22 @@ import java.util.Map;
 @Controller
 public class BulletinController {
 
-    @Autowired
+
     private BulletinRepository bulletinRepository;
 
-    @Autowired
     private IBulletinService iBulletinService;
 
     private Integer totalcount;
 
     private Integer pagesize = 6;
 
-    private final static Logger logger = LoggerFactory.getLogger(BookController.class);
+    @Autowired
+    public BulletinController(BulletinRepository bulletinRepository, IBulletinService iBulletinService){
+        this.bulletinRepository = bulletinRepository;
+        this.iBulletinService = iBulletinService;
+    }
 
+    private final static Logger logger = LoggerFactory.getLogger(BookController.class);
 
     /**
      * @title BulletinController.java
@@ -85,7 +89,7 @@ public class BulletinController {
      */
     @GetMapping("bulletin_list")
     public String getAllBulletins(Model model){
-        Integer currpage = 1;
+        int currpage = 1;
         totalcount = bulletinRepository.findAll().size();
         model.addAttribute("totalcount", totalcount);
         Integer totalPages = (totalcount + pagesize - 1)/pagesize;
@@ -118,9 +122,9 @@ public class BulletinController {
         /*删除bulletin的notices表*/
         bulletinRepository.deleteById(id);
 
-        Map<String,Object> map = new HashMap<String,Object>();
+        Map<String,Object> map = new HashMap<>();
         map.put("msg", ResultEnum.SUCCESS.getMsg());
-        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     /**
