@@ -271,13 +271,13 @@ public class ReaderController {
     @GetMapping("/reader_show/{id}")
     public String show_reader(@PathVariable("id") String readerId, Model model){
         //查询出这个reader的详细信息
-        logger.info(readerId);
+//        logger.info(readerId);
         Reader reader = iReaderDao.findByReaderId(readerId);
         model.addAttribute("reader", reader);
         //找出借了几本书
         Integer borrownum = iReaderService.findBorrowCountByReaderId(readerId);
         model.addAttribute("num", borrownum);
-        logger.info(reader.getImgsrc());
+//        logger.info(reader.getImgsrc());
         return "reader_show";
     }
 

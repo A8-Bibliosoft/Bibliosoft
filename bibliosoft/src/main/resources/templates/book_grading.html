@@ -1,7 +1,7 @@
-<!DOCTYPE>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8">
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
@@ -29,31 +29,6 @@
 <body>
 <div class="grading_style">
     <div id="category">
-        <!--<div id="scrollsidebar" class="left_Treeview">-->
-            <!--<div class="show_btn" id="rightArrow"><span></span></div>-->
-            <!--<div class="widget-box side_content">-->
-                <!--<div class="side_title"><a title="隐藏" class="close_btn"><span></span></a></div>-->
-                <!--<div class="side_list">-->
-                    <!--<div class="widget-header header-color-green2">-->
-                        <!--<h4 class="lighter smaller">Book type</h4>-->
-                    <!--</div>-->
-                    <!--<div class="widget-body">-->
-                        <!--<ul class="b_P_Sort_list">-->
-                            <!--<li><i class="orange  fa fa-user-secret"></i><a href="#Statistic_pie" th:onclick="'javascript:checkbook()'">All(235)</a></li>-->
-                            <!--&lt;!&ndash;<li><i class="fa fa-diamond pink "></i> <a href="#">Science(235)</a></li>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<li><i class="fa fa-diamond pink "></i> <a href="#">Biology(2215)</a></li>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<li><i class="fa fa-diamond pink "></i> <a href="#">Mechanics(3456)</a></li>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<li><i class="fa fa-diamond pink "></i> <a href="#">Architecture(4332)</a></li>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<li><i class="fa fa-diamond pink "></i> <a href="#">Computer science(1332)</a></li>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<li><i class="fa fa-diamond grey"></i> <a href="#">Astronautics(4543)</a></li>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<li><i class="fa fa-diamond red"></i> <a href="#">Oceanography(343)</a></li>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<li><i class="fa fa-diamond blue"></i> <a href="#">Chemistry(2343)</a></li>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<li><i class="fa fa-diamond grey"></i> <a href="#">Literature(53)</a></li>&ndash;&gt;-->
-                        <!--</ul>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
         <!--右侧样式-->
         <div class="page_right_style right_grading" style="left:0">
             <div class="Statistics_style" id="Statistic_pie">
@@ -71,9 +46,7 @@
 </div>
 </body>
 </html>
-<script type="text/javascript">
-
-
+<script th:inline="javascript">
     $(function () {
         $("#category").fix({
             float: 'left',
@@ -100,8 +73,6 @@
         });
     });
 
-</script>
-<script th:inline="javascript">
     /*<![CDATA[*/
     var message1 = [[#{book.statistics}]];
     /*]]>*/
@@ -116,7 +87,7 @@
 
     require.config({
         paths: {
-            echarts: '/static/assets/dist'
+            echarts: 'static/assets/dist'
         }
     });
     require(

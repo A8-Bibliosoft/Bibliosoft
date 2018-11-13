@@ -23,8 +23,8 @@
 <body>
 <div class="member_show">
     <div class="member_jbxx clearfix">
-        <img class="img" th:if="${reader.imgsrc eq null}" th:src="@{/static/images/reader.png}" />
-        <img class="img" th:if="${reader.imgsrc ne null}" th:src="@{${reader.imgsrc }}" />
+        <img class="img" th:if="${reader.getImgsrc() eq null}" th:src="@{/static/images/reader.png}" />
+        <img class="img" th:if="${reader.getImgsrc() ne null}" th:src="@{${reader.imgsrc }}" />
         <dl class="right_xxln">
             <dt>
                 <span th:text="${reader.getReaderName()}">

@@ -44,7 +44,7 @@
             document.write("<script th:src='@{/static/assets/js/jquery.mobile.custom.min.js}'>" + "<" + "/script>");
     </script>
     <script th:src="@{/static/assets/js/bootstrap.min.js}"></script>
-    <script src="../static/assets/js/typeahead-bs2.min.js}"></script>
+    <script th:src="@{/static/assets/js/typeahead-bs2.min.js}"></script>
     <!-- page specific plugin scripts -->
     <script th:src="@{/static/assets/js/jquery.dataTables.min.js}"></script>
     <script th:src="@{/static/assets/js/jquery.dataTables.bootstrap.js}"></script>
@@ -315,7 +315,7 @@
 
     /*用户-查看*/
     function member_show(id) {
-        var url = "reader_show/" + id;
+        var url = "/reader_show/" + id;
         var w = 500;
         var h = 400;
         layer_show("Personal Info", url + '#?=' + id, w, h);
