@@ -611,7 +611,6 @@ public class BookController {
 
     /**
      * @param isbn
-     * @param time
      * @param position
      * @param status
      * @return String
@@ -722,7 +721,7 @@ public class BookController {
     /**
      * go to add book by isbn page
      * @title BookController.java
-     * @param [model]
+     * @param model
      * @return java.lang.String
      * @author 毛文杰
      * @method name goaddBookIsbnPage
@@ -740,7 +739,7 @@ public class BookController {
     /**
      * go to add book details manually
      * @title BookController.java
-     * @param [model]
+     * @param model
      * @return java.lang.String
      * @author 毛文杰
      * @method name goAddBookpage
@@ -759,7 +758,7 @@ public class BookController {
     /**
      * go to book type management page
      * @title BookController.java
-     * @param [model]
+     * @param model
      * @return java.lang.String
      * @author 毛文杰
      * @method name gotoAddCategory
@@ -774,7 +773,7 @@ public class BookController {
     /**
      * delete a book type in database by id
      * @title BookController.java
-     * @param [id]
+     * @param id
      * @return org.springframework.http.ResponseEntity<java.util.Map<java.lang.String,java.lang.Object>>
      * @author 毛文杰
      * @method name deleteCategpory
@@ -795,7 +794,7 @@ public class BookController {
     /**
      * edit the category's name by id
      * @title BookController.java
-     * @param [typeid, typename]
+     * @param typeid, typename
      * @return java.lang.String
      * @author 毛文杰
      * @method name editCategory
@@ -815,7 +814,7 @@ public class BookController {
     /**
      * add a new category
      * @title BookController.java
-     * @param [categoryname]
+     * @param categoryname
      * @return java.lang.String
      * @author 毛文杰
      * @method name addCategory
@@ -849,7 +848,7 @@ public class BookController {
     /**
      * add a book position to database
      * @title BookController.java
-     * @param [placename]
+     * @param placename
      * @return org.springframework.http.ResponseEntity<java.util.Map<java.lang.String,java.lang.Object>>
      * @author 毛文杰
      * @method name addPosition

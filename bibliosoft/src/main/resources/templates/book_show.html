@@ -24,7 +24,7 @@
 <div class="member_show">
     <div class="member_jbxx clearfix">
         <!--<img class="img" th:src="@{/static/images/book.png}">-->
-        <img class="img" th:if="${book.bookImg eq null}" th:src="@{/static/images/book.png}" th:src="@{../static/images/reader.png}" />
+        <img class="img" th:if="${book.bookImg eq null}" th:src="@{/static/images/book.png}" />
         <img class="img" th:if="${book.bookImg ne null and book.judgeSrcLocalOrWeb() eq 1}" th:src="@{'https://images.weserv.nl/?url='+${book.bookImg}}" />
         <img class="img" th:if="${book.bookImg ne null and book.judgeSrcLocalOrWeb() eq 0}" th:src="@{${book.bookImg}}" />
         <dl class="right_xxln">

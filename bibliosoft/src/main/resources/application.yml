@@ -102,7 +102,7 @@ barcode:
 
 #Server Configuration
 server:
-  port: 8080
+  port: 80
   tomcat:
     uri-encoding: UTF-8
     max-connections: 10000
