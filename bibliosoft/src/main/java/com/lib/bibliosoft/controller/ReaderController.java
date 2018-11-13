@@ -271,11 +271,13 @@ public class ReaderController {
     @GetMapping("/reader_show/{id}")
     public String show_reader(@PathVariable("id") String readerId, Model model){
         //查询出这个reader的详细信息
+        logger.info(readerId);
         Reader reader = iReaderDao.findByReaderId(readerId);
         model.addAttribute("reader", reader);
         //找出借了几本书
         Integer borrownum = iReaderService.findBorrowCountByReaderId(readerId);
         model.addAttribute("num", borrownum);
+        logger.info(reader.getImgsrc());
         return "reader_show";
     }
 
@@ -659,10 +661,8 @@ public class ReaderController {
             Integer totalPages =  bookSortService.PageBook(0,pagesize,booktypeid).getTotalPages();
             model.addAttribute("totalpages", totalPages);
             //获得每页的数据
-            if(currpage == 1)
-                currpage = 0;
-            if(currpage == totalPages&&currpage>0)
-                currpage = totalPages-1;
+            if(currpage >0)
+                currpage = currpage-1;
             List<BookSort> bookSortList=bookSortService.PageBook(currpage,pagesize,booktypeid).getContent();
             if(totalPages>1){
                 model.addAttribute("currpage",currpage+1);
@@ -676,7 +676,6 @@ public class ReaderController {
             model.addAttribute("currpage",0);
             model.addAttribute("booktypelist",bookTypeRepository.findAll());
         }
-        //logger.info(bookSortRepository.findByTypeId(1).get(0).getOneBook().getBookPosition().getPlace());
         return "Search";
     }
 
@@ -736,7 +735,7 @@ public class ReaderController {
         DefSetting defSetting=defSettingRepository.findDefSettingById(4);
         //获取最大借书数量
         DefSetting maxborrow=defSettingRepository.findDefSettingById(5);
-        logger.info(defSetting.getDeftype());
+
         String readerId=session.getAttribute("readerId").toString();
         updateReaderAlldebt(readerId);
         //已借书籍+已预约书籍<最大可借书籍 剩余书籍大于0 用户未欠款(或状态为on)
@@ -763,7 +762,6 @@ public class ReaderController {
             }
         }else{
             return "error";
-
         }
     }
 
@@ -960,7 +958,7 @@ public class ReaderController {
      *@Description:
      *@Date: 4:01 PM. 10/12/2018
      */
-    @GetMapping("borrowbook")
+    @GetMapping("/borrowbook")
     public String gotoBorrowBookList(@RequestParam("readerid") String readerid, Model model){
         List<BorrowRecord> bookRecords = borrowRecordRepository.findAllByReaderId(readerid);
         model.addAttribute("borrowRecords", bookRecords);

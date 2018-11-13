@@ -23,7 +23,7 @@
 <body>
 <div class="member_show">
     <div class="member_jbxx clearfix">
-        <img class="img" th:if="${reader.imgsrc eq null}" th:src="@{/static/images/reader.png}" th:src="@{../static/images/reader.png}" />
+        <img class="img" th:if="${reader.imgsrc eq null}" th:src="@{/static/images/reader.png}" />
         <img class="img" th:if="${reader.imgsrc ne null}" th:src="@{${reader.imgsrc }}" />
         <dl class="right_xxln">
             <dt>
@@ -34,7 +34,7 @@
                 <span style="color: #eee">Arrears: <label th:text="${reader.alldebt}" style="color: greenyellow"></label> ￥</span>
             </dt>
             <!-- 借了几本书，都是哪几本 -->
-            <dd class="" style="margin-left:0">Has borrowed：<a th:href="@{borrowbook(readerid=${reader.getReaderId()})}" th:text="${num}"></a> Books.</dd>
+            <dd class="" style="margin-left:0">Has borrowed：<a th:href="@{/borrowbook(readerid=${reader.getReaderId()})}" th:text="${num}"></a> Books.</dd>
         </dl>
     </div>
     <div class="member_content">

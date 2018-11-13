@@ -37,7 +37,7 @@
             <dd style="margin-left:0">
                 <label th:text="#{book.author}"></label>
                 <span th:text="${book.getBookAuthor()}" style="font-size: 14px; font-weight: lighter"></span>
-                <a th:href="@{bookBorrowRecord(bookid=${book.getBookId()})}">
+                <a th:href="@{/bookBorrowRecord(bookid=${book.getBookId()})}">
                     <label class="label_name" th:text="#{book.borrowRecord}"></label>
                 </a>
             </dd>

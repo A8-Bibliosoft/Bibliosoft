@@ -969,7 +969,7 @@ public class BookController {
 
     /*---------------图书借阅详情------------------------------*/
 
-    @GetMapping("bookBorrowRecord")
+    @GetMapping("/bookBorrowRecord")
     public String gotoDetail(Integer bookid, Model model){
         List<BorrowRecord> bookRecords = borrowRecordRepository.findAllByBookId(bookid);
         model.addAttribute("borrowRecords", bookRecords);
