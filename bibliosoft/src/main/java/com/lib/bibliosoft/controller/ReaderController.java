@@ -14,6 +14,7 @@ import com.lib.bibliosoft.utils.VerifyCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,6 +80,12 @@ public class ReaderController {
     /**/
     private Integer totalCount;
 
+    @Value("${spring.mail.username}")
+    String emailusername;
+    @Value("${spring.mail.password}")
+    String emailpassword;
+    @Value("${spring.mail.host}")
+    String emailhost;
 
     /**
      * 后台首页的数据展示页面，网站统计
@@ -585,7 +592,7 @@ public class ReaderController {
                     + "Your Code:" + emailcode
                     + "\n\n\n\n"
                     + "Thinks, from Librarian";
-            SendEmail.sendMessage(message,reader.getEmail());
+            SendEmail.sendMessage(emailhost,emailusername,emailpassword,message,reader.getEmail());
             logger.info(emailcode);
             return "success";
         }else{
@@ -624,7 +631,7 @@ public class ReaderController {
                             + "Please take care of your password to prevent it from being stolen by others."
                             + "\n\n\n\n"
                             + "Thinks, from Librarian";
-                    SendEmail.sendMessage(message,reader.getEmail());
+                    SendEmail.sendMessage(emailhost,emailusername,emailpassword,message,reader.getEmail());
                     return "success";
                 }
             }
@@ -929,7 +936,7 @@ public class ReaderController {
                         + "Please return the book quickly!."
                         + "\n\n\n\n"
                         + "Thinks, from Librarian";
-                SendEmail.sendMessage(message,reader.getEmail());
+                SendEmail.sendMessage(emailhost,emailusername,emailpassword,message,reader.getEmail());
             }
         }
         //logger.info("还书日期减一天");

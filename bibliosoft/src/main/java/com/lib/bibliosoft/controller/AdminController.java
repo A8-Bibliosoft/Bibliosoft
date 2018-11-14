@@ -306,8 +306,8 @@ public class AdminController {
 
         mailMessage.setFrom(from);
         mailMessage.setTo(mail);
-        mailMessage.setSubject("Subject：find your password");
-        mailMessage.setText("your password is : "+password);
+        mailMessage.setSubject("Find your password");
+        mailMessage.setText("[bibliosoft]your password is : "+password);
 
         try{sender.send(mailMessage);}
         catch (Exception ex){
