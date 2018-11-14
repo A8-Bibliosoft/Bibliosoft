@@ -43,20 +43,31 @@ public class LibrarianController {
     //Logger
     private Logger logger = LoggerFactory.getLogger(LibrarianController.class);
 
-    @Autowired
     private ILibrarianSerivce iLibrarianSerivce;
 
-    @Autowired
     private ReaderRepository readerRepository;
 
-    @Autowired
     private DefSettingRepository defSettingRepository;
 
-    @Autowired
     private BorrowRecordRepository borrowRecordRepository;
 
-    @Autowired
     private LibrarianRepository librarianRepository;
+
+    /**
+     * @description: 把注入信息统一包装到构造方法中去
+     * @param: [iLibrarianSerivce, readerRepository, defSettingRepository, borrowRecordRepository, librarianRepository]
+     * @auther: 毛文杰
+     * @date: 11/14/2018 9:47 AM
+     */
+    @Autowired
+    public LibrarianController(ILibrarianSerivce iLibrarianSerivce, ReaderRepository readerRepository,DefSettingRepository defSettingRepository, BorrowRecordRepository borrowRecordRepository,LibrarianRepository librarianRepository) {
+        this.borrowRecordRepository = borrowRecordRepository;
+        this.defSettingRepository = defSettingRepository;
+        this.readerRepository = readerRepository;
+        this.librarianRepository = librarianRepository;
+        this.iLibrarianSerivce = iLibrarianSerivce;
+    }
+
     /**
      * index Page of Librarian used system
      *
@@ -94,7 +105,7 @@ public class LibrarianController {
                               String password,
                               String code,
                               HttpServletRequest request,
-                              HttpServletResponse response) throws IOException {
+                              HttpServletResponse response) {
 
         HttpSession session = request.getSession();
         //Automatically generated verify code
@@ -152,13 +163,18 @@ public class LibrarianController {
      */
     @PostMapping("income_sbday")
     public String sbday_totalincome(String day, Model model){
-        Integer deposit=0;
+        int deposit=0;
         float fine=0;
         Date date = Date.valueOf(day);
         //logger.info("date={}",date);
-        List<Reader> readerList = readerRepository.findByRegistTime(date);
+        List<Reader> readerList = readerRepository.searchByRegistTimeandStatusnotDel(date,"DEL");
+        //找出没有被注销的用户
+        for(Reader r : readerList)
+                logger.info("reader的状态为：{}", r.getStatus());
+
         //获取这一天注册了多少个新读者，乘以押金
-        deposit = defSettingRepository.findById(2).get().getDefnumber()*readerList.size();
+        if(defSettingRepository.findById(2).isPresent())
+            deposit = defSettingRepository.findById(2).get().getDefnumber()*readerList.size();
         model.addAttribute("deposit", deposit);
         List<BorrowRecord> borrowRecords = borrowRecordRepository.findByReturntime(date);
         for(BorrowRecord b : borrowRecords)
@@ -178,7 +194,7 @@ public class LibrarianController {
      */
     @PostMapping("income_sbweek")
     public String sbweek_totalincome(String week, Model model) throws Exception{
-        Integer deposit=0;
+        int deposit=0;
         float fine=0;
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); //设置时间格式
         Calendar cal=Calendar.getInstance();
@@ -199,8 +215,9 @@ public class LibrarianController {
         //System.out.println("所在周星期六的日期："+enddate);
 
         //获取这一天注册了多少个新读者，乘以押金
-        List<Reader> readerList = readerRepository.findByWeek(startdate,enddate);
-        deposit = defSettingRepository.findById(2).get().getDefnumber()*readerList.size();
+        List<Reader> readerList = readerRepository.findByWeekandStatusnotDel(startdate,enddate,"DEL");
+        if (defSettingRepository.findById(2).isPresent())
+            deposit = defSettingRepository.findById(2).get().getDefnumber()*readerList.size();
         model.addAttribute("deposit", deposit);
         List<BorrowRecord> borrowRecords = borrowRecordRepository.findByWeek(startdate,enddate);
         for(BorrowRecord b : borrowRecords)
@@ -220,12 +237,15 @@ public class LibrarianController {
      */
     @PostMapping("income_sbmonth")
     public String sbmonth_totalincome(String month, Model model){
-        Integer deposit=0;
+        int deposit = 0;
         float fine=0;
         String []m = month.split("-");
-        List<Reader> readerList = readerRepository.findByMonthRegistTime(m[0],m[1]);
+        List<Reader> readerList = readerRepository.findByMonthRegistTimeandStatusnotDel(m[0],m[1],"DEL");
+        logger.info("reader size",readerList.size());
+
         //获取这一天注册了多少个新读者，乘以押金
-        deposit = defSettingRepository.findById(2).get().getDefnumber()*readerList.size();
+        if(defSettingRepository.findById(2).isPresent())
+            deposit = defSettingRepository.findById(2).get().getDefnumber()*readerList.size();
         model.addAttribute("deposit", deposit);
         List<BorrowRecord> borrowRecords = borrowRecordRepository.findByYearAndMonthReturntime(m[0],m[1]);
         for(BorrowRecord b : borrowRecords)
@@ -242,7 +262,7 @@ public class LibrarianController {
      * @return String
      */
     @GetMapping("lib_logout")
-    public String lib_logout(HttpServletRequest request, HttpServletResponse response) {
+    public String lib_logout(HttpServletRequest request) {
         request.getSession().invalidate();
         return "forward:lib_login";
     }

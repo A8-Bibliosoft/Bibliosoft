@@ -73,18 +73,6 @@
 <!-- Date: 2018/10/06 10:16 PM maowenjie -->
 <div class="page_right_style">
     <div class="type_title" th:text="#{book.addbook}">Add Book</div>
-    <!--<div class="clearfix cl">-->
-    <!--<label class="form-label col-2" style="margin-left: 20px;">-->
-    <!--<span class="c-red" th:text="#{book.cover}">*Picture：</span>-->
-    <!--</label>-->
-    <!--<div class="formControls col-10" style="margin-left: 10px;">-->
-    <!--<form action="book_uploadimg" method="post" onsubmit="">-->
-    <!--<input type="file" name="file"/>-->
-    <!--<input type="submit" value="Upload"/>[[#{book.upload}]]-->
-    <!--</form>-->
-    <!--<img src="" name="" alt="Cover">&lt;!&ndash; th:src &ndash;&gt;-->
-    <!--</div>-->
-    <!--</div>-->
     <form method="post" enctype="multipart/form-data" class="form form-horizontal" id="form-article-add">
         <div class=" clearfix cl">
             <div class="Add_p_s">
@@ -98,13 +86,6 @@
             </div>
             <div class="Add_p_s">
                 <em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.cover}">Cover：</label>
-                <!--<label class="form-label col-2">-->
-                <!--<span class="c-red" th:text="#{book.cover}">Cover：</span><em style="color: red;">*</em>-->
-                <!--</label>-->
-                <!--<div class="formControls col-10">-->
-                <!--<input type="file" name="file" style="float: left"/>-->
-                <!--<img src="" name="" alt="Book Cover">&lt;!&ndash; th:src &ndash;&gt;-->
-                <!--</div>-->
                 <div class="upload_cover">
                     <span th:text="#{book.uploadcover}">Upload Cover：</span>
                     <!-- 文件 -->
@@ -117,29 +98,6 @@
                 </div>
             </div>
         </div>
-        <!-- Cover Upload -->
-        <!--<div class="clearfix cl">-->
-            <!--<div class="Add_p_s">-->
-                <!--<em style="color: red;">*</em><label class="form-label col-2" th:text="#{book.cover}">Cover：</label>-->
-                <!--&lt;!&ndash;<label class="form-label col-2">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<span class="c-red" th:text="#{book.cover}">Cover：</span><em style="color: red;">*</em>&ndash;&gt;-->
-                <!--&lt;!&ndash;</label>&ndash;&gt;-->
-                <!--&lt;!&ndash;<div class="formControls col-10">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<input type="file" name="file" style="float: left"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<img src="" name="" alt="Book Cover">&lt;!&ndash; th:src &ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                <!--<div class="upload_cover">-->
-                    <!--<span th:text="#{book.uploadcover}">Upload Cover：</span>-->
-                    <!--&lt;!&ndash; 文件 &ndash;&gt;-->
-                    <!--<input tabindex="3" size="3" class="file-prew required" type="file" onchange="document.getElementById('textName').value=this.value;setImagePreview();" name="bookcover" id="bookcover">-->
-                <!--</div>-->
-                <!--&lt;!&ndash; 展示文件名称 &ndash;&gt;-->
-                <!--<input type="text" id="textName" style="height: 28px;border:1px solid #f1f1f1;float: left;" readonly="readonly"/>-->
-                <!--<div id="localImag" style="float: left">-->
-                    <!--<img src="" alt="Book Cover" id="coverimg" style="margin-left: 10px">-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
 
         <div class=" clearfix cl">
             <!--ISBN-->

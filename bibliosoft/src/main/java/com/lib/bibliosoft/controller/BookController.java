@@ -976,7 +976,7 @@ public class BookController {
         return "borrowBookList";
     }
 
-    /***************展示barcode****************/
+    /*-------------------------------------展示barcode-----------------------------------*/
     /**
      * 展示图书barcode的controller
      * @title ReaderController.java
@@ -991,7 +991,7 @@ public class BookController {
     public String show_barcodeimg(@PathVariable("bookid") Integer bookid){
         String name = "static/barcodeimages/"+String.valueOf(bookid)+".png";
         //把图片附加到末尾，直接显示图片
-        String img = "this book's barcode is: <input class='btn smaller-30' type='button' value='print' onclick='doPrint()'><br><br><!--startprint--><img id='barcodeimg' alt='barcode' src='"+name+"'><!--endprint-->";
+        String img = "this book's barcode is: <input class='btn btn-default' type='button' value='print' onclick='doPrint()'><br><br><!--startprint--><img id='barcodeimg' alt='barcode' src='"+name+"'><!--endprint-->";
         return img;
     }
 }

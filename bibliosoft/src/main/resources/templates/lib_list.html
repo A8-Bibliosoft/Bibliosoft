@@ -118,18 +118,6 @@
                         </a>
                     </td>
                     <td class="td-manage">
-                        <!--<a th:if="${book.getBookStatus()} == ''"-->
-                        <!--th:onClick="'javascript:member_stop('+this+','+${book.getId()}+')'" href="javascript:;"-->
-                        <!--title="Disable"-->
-                        <!--class="btn btn-xs btn-success">-->
-                        <!--<i class="icon-ok bigger-120"></i>-->
-                        <!--</a>-->
-                        <!--<a th:if="${book.getBookStatus()} == ''"-->
-                        <!--th:onClick="'javascript:member_start('+this+','+${book.getId()}+')'"-->
-                        <!--href="javascript:;" title="Enable"-->
-                        <!--class="btn btn-xs btn-primary">-->
-                        <!--<i class="icon-ok bigger-120"></i>-->
-                        <!--</a>-->
 
                         <a title="Edit" th:onclick="'javascript:member_edit('+ this +','+${lib.getLibId()}+',\''+${lib.getLibName()}+'\',\''+${lib.getEmail()}+'\',\''+${lib.getPhone()}+'\')'"
                            href="javascript:;"
@@ -295,11 +283,14 @@
 </body>
 </html>
 <script>
+
+    //日期插件
     laydate({
         elem: '#start',
         event: 'focus'
     });
 
+    //搜索表单检查
     function search_check() {
         var libname = $("#libname").val();
         // var bookaddtime = $("#bookaddtime").val();
@@ -353,6 +344,7 @@
             return 'left';
         }
     });
+
     $(function () {
         $("#products_style").fix({
             float: 'left',
@@ -369,10 +361,10 @@
     //当文档窗口发生改变时 触发
     $(window).resize(function () {
 
-    })
+    });
 
 
-
+    //找回密码
     function find_pass(obj,id) {
         $.ajax({
             type: "POST",
@@ -424,17 +416,6 @@
                         return false;
                     }
                 });
-                // $(".add_menber input[type$='password']").each(function (n) {
-                //     if($(this).val()==""){
-                //         layer.alert(str += "" + $(this).attr("name") + " Can not be empty！\r\n", {
-                //             title: 'Info',
-                //             icon: 0,
-                //         });
-                //         num++;
-                //         return false;
-                //     }
-                //
-                // })
                 if (num > 0) {
                     return false;
                 }
