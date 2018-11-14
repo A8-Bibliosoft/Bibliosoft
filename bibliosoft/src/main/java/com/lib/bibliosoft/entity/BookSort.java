@@ -29,7 +29,7 @@ public class BookSort {
     private BookType bookType;
 
     //相同isbn书籍的数目
-    @Column(columnDefinition = "int default 1")
+//    @Column(columnDefinition = "int default 1")
     private Integer num;
 
     public String getBookName() {

@@ -10,14 +10,14 @@
     <link rel="stylesheet" th:href="@{/static/css/style.css}"/>
     <link th:href="@{/static/assets/css/codemirror.css}" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/static/assets/css/ace.min.css}"/>
-    <link rel="stylesheet" href="@{/static/assets/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th：href="@{/static/assets/css/font-awesome.min.css}"/>
     <script th:src="@{/static/assets/js/jquery.min.js}"></script>
     <title>view reader</title>
 </head>
 <body>
 <div class="member_show">
     <div class="member_jbxx clearfix">
-        <img class="img" th:src="${/static/images/bulletin.png}">
+        <img class="img" th:src="@{/static/images/bulletin.png}">
         <dl class="right_xxln">
             <dt>
                 <span th:text="#{bulletin.title}"></span>

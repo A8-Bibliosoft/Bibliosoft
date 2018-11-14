@@ -135,7 +135,7 @@ public class BulletinController {
      * @method name show_bulletin
      * @date 7:42 PM. 10/18/2018
      */
-    @GetMapping("bulletin_show/{id}")
+    @GetMapping("/bulletin_show/{id}")
     public String show_bulletin(@PathVariable("id") String id, Model model){
         Integer Id = Integer.parseInt(id);
         Notices notices = bulletinRepository.findById(Id).orElse(null);

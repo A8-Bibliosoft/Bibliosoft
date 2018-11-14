@@ -135,8 +135,8 @@ public class ScanerIsbn {
         List<BookSort> bs = scanerIsbn.bookSortRepository.findByBookIsbn(isbn);
         if(bs.size() != 0){
             logger.info("BookSort表已有ISBN编号为==={}的书籍，故不插入", isbn);
-            //增加一本
-            scanerIsbn.bookSortRepository.updateBookNumByisbn(1,isbn);
+            //增加num本
+            scanerIsbn.bookSortRepository.updateBookNumByisbn(num,isbn);
         }else{
             //书籍分类表
             BookSort bookSort = new BookSort();
@@ -144,7 +144,7 @@ public class ScanerIsbn {
             bookSort.setBookIsbn(isbn);
             bookSort.setBookName(bookname);
             bookSort.setTypeId(Integer.parseInt(typeid));
-            bookSort.setNum(1);
+            bookSort.setNum(num);
             scanerIsbn.bookSortRepository.save(bookSort);
             scanerIsbn.bookSortRepository.insertTypeId(Integer.parseInt(typeid),isbn);
         }

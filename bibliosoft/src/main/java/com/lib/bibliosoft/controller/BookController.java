@@ -138,19 +138,26 @@ public class BookController {
     public ResponseEntity<Map<String,Object>> bookDelete(@PathVariable("id") Integer id, HttpSession session){
 
         Map<String,Object> map = new HashMap<String,Object>();
+        Book book = null;
         /*先判断是否已不在数据库*/
-        Book book = bookRepository.findById(id).get();
+        if(bookRepository.findById(id).isPresent())
+            book = bookRepository.findById(id).get();
+        else {
+            map.put("msg",ResultEnum.NOT_EXIST.getMsg());
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        }
         Integer status = book.getBookStatus();
         //logger.info("status={}", status);
         if(status == 5){
             map.put("msg", ResultEnum.BOOK_ALREADY_DEL.getMsg());
-        }else if(status == 0 || status == 2){
+        }else if(status == 0 || status == 2){//0：在架上 2：损坏、丢失
             /*先在删除记录表里记录*/
             BookDelRecord bookDelRecord = new BookDelRecord();
             Librarian librarian = (Librarian) session.getAttribute("librarian");
+            //找到此时正在删除操作的图书馆员，记录到删除表中
             if(librarian == null){
                 map.put("msg", "please login.");
-                return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+                return new ResponseEntity<>(map, HttpStatus.OK);
             }
             Integer bookid = book.getBookId();
             //librarian与delrecord关联
@@ -159,10 +166,33 @@ public class BookController {
             bookDelRecord.setBookName(book.getBookName());
             librarian.getBookDelRecordList().add(bookDelRecord);
             bookDelRecordRepository.save(bookDelRecord);
-            /*5: 先将状态改为5，表示已删除*/
+            /*先将状态改为5，表示已删除*/
             bookRepository.updateBookStatus(5, bookid);
-            /*然后删除book表中的条目*/
+            /*然后删除book表中的对应的条目*/
             bookRepository.deleteById(id);
+            //文件删除：要删除本地图书条形码
+            String barcodename = String.valueOf(book.getBookId());
+
+            File p = null;
+            try {
+                p = new File(ResourceUtils.getURL("classpath:").getPath());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            File upload = new File(p.getAbsolutePath(),"static/barcodeimages/");
+            if(!upload.exists())
+                upload.mkdirs();
+
+            //删除书籍barcode原图片
+            String oldimgrc = barcodename+".png";
+            logger.info(upload.getAbsolutePath()+"\\"+oldimgrc);
+            File oldImg = new File(upload.getAbsolutePath()+"\\"+oldimgrc);
+            if(oldImg.delete()){
+                logger.info("删除原barcode图片成功");
+            }else{
+                logger.info("删除原barcode图片失败");
+            }
+
             //bookSort表也要更新
             List<BookSort> bookSort = bookSortRepository.findByBookIsbn(book.getBookIsbn());
             //实际上最多只能有一条相同isbn的记录,这里为了判断是否存在,用size表示
@@ -523,16 +553,16 @@ public class BookController {
                 //提示语句
                 String name = "static/barcodeimages/" + bookid + ".png";
                 //把图片附加到末尾，直接显示图片
-                s = "<br><img src='" + name + "'>";
-                if(i == 0){
-                    s = "<br><!--startprint--><img src='"+name+"'>";
-                }
-                if(num-1 == i){
-                    s = "<br><img src='"+name+"'><!--endprint-->";
-                }
-                if(num == 1){
-                    s = "<br><!--startprint--><img src='"+name+"'><!--endprint-->";
-                }
+                s = "<img class='tempdel' src='" + name + "'>";
+//                if(i == 0){
+//                    s = "<br><!--startprint--><img class='tempdel' src='"+name+"'>";
+//                }
+//                if(num-1 == i){
+//                    s = "<br><img class='tempdel' src='"+name+"'><!--endprint-->";
+//                }
+//                if(num == 1){
+//                    s = "<br><!--startprint--><img class='tempdel' src='"+name+"'><!--endprint-->";
+//                }
                 bookids.append(s);
             } catch (Exception e) {
                 logger.error("添加书籍出错！error = {}", e.getMessage());
@@ -574,7 +604,7 @@ public class BookController {
             bookSort.setBookName(booktitle);
             bookSort.setTypeId(Integer.parseInt(typeid));
             //第一本
-            bookSort.setNum(1);
+            bookSort.setNum(num);
             //关联
 //            bookSort.getBookList().add(book);
 //            book.setBookSort(bookSort);
@@ -586,7 +616,7 @@ public class BookController {
 //        String ph = ClassUtils.getDefaultClassLoader().getResource("").getPath();
 //        logger.info("path的绝对路径 = {}", ph);
 
-        return msg+bookids;
+        return bookids+"";
     }
 
     /**
@@ -634,12 +664,12 @@ public class BookController {
         } catch (Exception e) {
             e.printStackTrace();
             map.put("msg", e.getMessage());
-            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+            return new ResponseEntity<>(map, HttpStatus.OK);
         }
 
         StringBuilder bookids = new StringBuilder();
         String s = "";
-        int i=0;
+//        int i=0;
         try {
             for (Book b : books){
                 bookService.addBook(b);
@@ -652,17 +682,19 @@ public class BookController {
                 String name = "static/barcodeimages/"+String.valueOf(b.getBookId())+".png";
 //                s = "<a target='view_window' href='http://localhost:8080/"+name+"'>"+b.getBookId()+"</a>;";
                 //把图片附加到末尾，直接显示图片
-                s = "<br><img src='"+name+"'>";
-                ++i;
-                if(i == 1){
-                    s = "<br><!--startprint--><img src='"+name+"'>";
-                }
-                if(books.size() == i){
-                    s = "<br><img src='"+name+"'><!--endprint-->";
-                }
-                if(books.size() == 1){
-                    s = "<br><!--startprint--><img src='"+name+"'><!--endprint-->";
-                }
+                s = "<img class='tempdel' src='"+name+"'>";
+                //注释掉的原因是，每次添加完书籍之后，无法删除每次携带到前端的<!--startprint-->和<!--endprint-->，导致前端即使remove掉上次append的东西，
+                // 但注释还在，导致点击打印，出现的是空页面。改为把两个注释移到前端固定写死，问题解决
+//                ++i;
+//                if(i == 1){
+//                    s = "<br><!--startprint--><img class='tempdel' src='"+name+"'>";
+//                }
+//                if(books.size() == i){
+//                    s = "<br><img class='tempdel' src='"+name+"'><!--endprint-->";
+//                }
+//                if(books.size() == 1){
+//                    s = "<br><!--startprint--><img class='tempdel' src='"+name+"'><!--endprint-->";
+//                }
                 bookids.append(s);
             }
 
@@ -670,12 +702,12 @@ public class BookController {
             logger.error("添加书籍出错！error = {}", e.getMessage());
             map.put("msg", ResultEnum.ADD_BOOK_FAILED.getMsg());
             e.printStackTrace();
-            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.valueOf(500));
+            return new ResponseEntity<>(map, HttpStatus.valueOf(500));
         }
         //http://localhost:8080/downloadImage
 //        map.put("msg", ResultEnum.ADD_BOOK_SUCCESS.getMsg() + " bookid: " + bookids);
-        map.put("msg", "Barcodes list:" + bookids);
-        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+        map.put("msg", bookids);
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     /**
@@ -920,13 +952,14 @@ public class BookController {
      */
     @GetMapping("bookDelRecord")
     public String gotoBookDelRdc(Model model){
-        Integer currpage = 1;
+        int currpage = 1;
+        int pages = 10;//自定义pagesize
         totalcount = bookDelRecordRepository.findAll().size();
         model.addAttribute("totalcount", totalcount);
-        Integer totalPages = (totalcount + pagesize - 1)/pagesize;
+        Integer totalPages = (totalcount + pagesize - 1)/pages;
         model.addAttribute("totalpages", totalPages);
 
-        List<BookDelRecord> bookDelRecords = bookDelService.getPageSort(currpage, pagesize).getContent();
+        List<BookDelRecord> bookDelRecords = bookDelService.getPageSort(currpage, pages).getContent();
         model.addAttribute("deleteRecord", bookDelRecords);
         if(totalcount == 0)
             currpage = 0;
@@ -945,9 +978,10 @@ public class BookController {
      */
     @GetMapping("bookdelrecord_page")
     public String delRecordPaging(@RequestParam(value = "currpage") Integer currpage, Model model){
+        int pages = 10;
         totalcount = bookDelRecordRepository.findAll().size();
         model.addAttribute("totalcount", totalcount);
-        Integer totalPages = (totalcount + pagesize - 1)/pagesize;
+        Integer totalPages = (totalcount + pagesize - 1)/pages;
         model.addAttribute("totalpages", totalPages);
 
         if(currpage == 0)
@@ -955,7 +989,7 @@ public class BookController {
         if(currpage == totalPages+1)
             currpage = totalPages;
         //获得每页的数据
-        List<BookDelRecord> bookDelRecords = bookDelService.getPageSort(currpage, pagesize).getContent();
+        List<BookDelRecord> bookDelRecords = bookDelService.getPageSort(currpage, pages).getContent();
         //logger.info("currpage={}",currpage);
 
         //放在model

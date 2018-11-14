@@ -167,15 +167,20 @@
             <!--<span id="showbookid" style="width:100%;"></span>-->
         <!--</div>-->
         <div class="mybookimgdiv">
-            <img id="img" src="/static/images/bookisbn.png" alt="book image" style="width: 270px;height: 353px;">
+            <img id="img" th:src="@{/static/images/bookisbn.png}" alt="book image" style="width: 270px;height: 353px;">
         </div>
-        <div class="mybarcodeimgdiv">
-            &nbsp;&nbsp;&nbsp;
+
+        <!--打印按钮-->
+        <div style="position: absolute;top: 80px;right: 130px;">
             <img id="barimg" th:src="@{/static/images/barcode-scan.png}" alt="book image" style="width: 50px;height: 40px;">
-            &nbsp;&nbsp;&nbsp;
             <input type="button" id="printbtn" class="btn btn-default radius" value="print" onclick="doPrint()">
-            &nbsp;&nbsp;&nbsp;
         </div>
+        
+        <!--startprint-->
+        <div class="mybarcodeimgdiv">
+
+        </div>
+        <!--endprint-->
     </div>
 </div>
 </body>
@@ -214,6 +219,9 @@
                 url: "book_isbn",
                 data: data,
                 success: function(data){
+                    //删除之前append的图片
+                    $(".tempdel").remove();
+                    $(".mybarcodeimgdiv").show();
                     $(".mybarcodeimgdiv").append(data.msg);
                     $("#printbtn").removeAttr("disabled");
                     // layer.alert(data.msg, {
@@ -258,6 +266,7 @@
 
     $(function(){
         $("#bookisbn").focus();
+        $(".mybarcodeimgdiv").hide();
         $("#printbtn").attr("disabled",true);
     });
 

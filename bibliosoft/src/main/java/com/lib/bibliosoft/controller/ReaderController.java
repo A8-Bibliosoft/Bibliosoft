@@ -268,7 +268,7 @@ public class ReaderController {
      * @modify 毛文杰
      * @Date 2018-10-12 PM 15:29
      */
-    @GetMapping("/reader_show/{id}")
+    @GetMapping("reader_show/{id}")
     public String show_reader(@PathVariable("id") String readerId, Model model){
         //查询出这个reader的详细信息
 //        logger.info(readerId);
@@ -284,7 +284,7 @@ public class ReaderController {
     /**
      * librarian delete a reader
      * @param id
-     * @return
+     * @return String
      */
     @PostMapping("/delete")
     @ResponseBody
@@ -316,7 +316,7 @@ public class ReaderController {
      * @param sex
      * @param phone
      * @param email
-     * @return
+     * @return String
      */
     @PostMapping("add_reader")
     public String reader_add(String readerId,String readerName,
