@@ -326,7 +326,7 @@ public class ReaderController {
         if (flag.equals("edit")){
             Integer id = readerRepository.findReaderByReaderId(readerId).getId();
             //id是主键
-            iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status, password);
+            iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status, password,new Date());
         }else if(flag.equals("add")){
             //如果数据库里面存在之前标记为del的用户,则把它激活即可
             Reader reader1 = readerRepository.findReaderByReaderId(readerId);
@@ -334,7 +334,7 @@ public class ReaderController {
                  readerRepository.updateReaderStatusById(reader1.getId(),"ON");
                  Integer id = reader1.getId();
                  //更新他的信息
-                 iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status, password);
+                 iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status, password,new Date());
                  return "redirect:/reader_list";
             }
             //之前不存在新建读者
@@ -383,9 +383,14 @@ public class ReaderController {
     public String start_reader(String id, Model model){
         Integer Iid = Integer.parseInt(id);
         logger.info("OFF >>> ON");
+        String s = Objects.requireNonNull(readerRepository.findById(Iid).orElse(null)).getStatus();
+
         iReaderDao.updateReaderStatusById(Iid, "ON");
         Reader reader=readerRepository.findById(Iid).get();
         reader.setAlldebt(0);
+        //如果是del状态就更新注册日期
+        if (s.equals("DEL"))
+            reader.setRegistTime(new Date());
         readerRepository.save(reader);
         logger.info("reader.status >>> ={}",iReaderDao.findById(Iid).getStatus());
         model.addAttribute("readers", iReaderDao.findAll());
