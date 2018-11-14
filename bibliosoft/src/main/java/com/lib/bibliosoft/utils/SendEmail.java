@@ -6,7 +6,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 public class SendEmail {
-	 public static boolean sendMessage(String message, String toEmail) throws MessagingException {
+	 public static boolean sendMessage(String host,String username,String password,String message, String toEmail) throws MessagingException {
 		 try {
             Properties props = new Properties();
             // 开启debug调试
@@ -14,7 +14,7 @@ public class SendEmail {
             // 发送服务器需要身份验证
             props.setProperty("mail.smtp.auth", "true");
             // 设置邮件服务器主机名
-            props.setProperty("mail.host", "smtp.qq.com");
+            props.setProperty("mail.host", host);
             // 发送邮件协议名称
             props.setProperty("mail.transport.protocol", "smtp");
             // 设置环境信息
@@ -28,11 +28,11 @@ public class SendEmail {
             // 设置邮件内容
             msg.setText(message);
             // 设置发件人
-            msg.setFrom(new InternetAddress("1448318125@qq.com"));
+            msg.setFrom(new InternetAddress(username));
 
             Transport transport = session.getTransport();
             // 连接邮件服务器
-            transport.connect("1448318125@qq.com", "ajhyxrxdkyipjjcg");  //******代表我的邮箱授权码，需要自己再邮箱内开启SMTP协议
+            transport.connect(username, password);  //******代表我的邮箱授权码，需要自己再邮箱内开启SMTP协议
             // 发送邮件
             transport.sendMessage(msg, new Address[] {new InternetAddress(toEmail)});
             // 关闭连接
@@ -42,5 +42,5 @@ public class SendEmail {
 			e.printStackTrace();
 			return false;
 		}
-	 }  
+	 }
 }

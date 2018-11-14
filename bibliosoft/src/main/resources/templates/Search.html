@@ -76,7 +76,7 @@
 			</div><!-- /navbar-collapse -->
 		</nav>
 		<div id="readeronline" style="float: right" >
-			<a th:if="${session.loginname} eq null" href="/lib_login">Librarian</a>
+			<a th:if="${session.loginname} eq null" href="lib_login">Librarian</a>
 			<a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}">登录</a>
 			&nbsp;
 			<div th:if="${session.loginname} ne null">
@@ -143,12 +143,12 @@
 				</a>
 			</li>
 			<li th:if="${currpage ne 1}" style="margin: 0 5px;">
-				<a th:href="@{/goSearch(booktypeid=${booktypeid},currpage=1)}">
+				<a th:href="@{goSearch(booktypeid=${booktypeid},currpage=1)}">
 					index
 				</a>
 			</li>
 			<li th:if="${currpage ne 1}" style="margin: 0 5px;">
-				<a th:href="@{/goSearch(booktypeid=${booktypeid},currpage=${currpage}-1)}">&larr; Older</a>
+				<a th:href="@{goSearch(booktypeid=${booktypeid},currpage=${currpage}-1)}">&larr; Older</a>
 			</li>
 			<li th:if="${currpage eq 1}" style="margin: 0 5px;" class="disabled">
 				<a href="javascript:return false;">&larr; Older</a>
@@ -163,7 +163,7 @@
 				<a href="javascript:return false;">Newer &rarr;</a>
 			</li>
 			<li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-				<a th:href="@{/goSearch(booktypeid=${booktypeid},currpage=${currpage}+1)}">Newer &rarr;</a>
+				<a th:href="@{goSearch(booktypeid=${booktypeid},currpage=${currpage}+1)}">Newer &rarr;</a>
 			</li>
 			<li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
 				<a href="javascript:return false;">
@@ -171,7 +171,7 @@
 				</a>
 			</li>
 			<li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-				<a th:href="@{/goSearch(booktypeid=${booktypeid},currpage=${totalpages})}">
+				<a th:href="@{goSearch(booktypeid=${booktypeid},currpage=${totalpages})}">
 					&nbsp;last&nbsp;
 				</a>
 			</li>

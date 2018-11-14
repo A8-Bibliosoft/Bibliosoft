@@ -166,7 +166,7 @@
                     <font color="white">
                         <span id="nameerr">Copyright © XD University 2018</span>
                         <br>
-                        <span><a style="color:white;cursor: pointer" th:href="@{/lib_login(l='zh_CN')}">中文</a>&nbsp;&nbsp;<a th:href="@{/lib_login(l='en_US')}" style="color:white;cursor: pointer;">english</a></span>
+                        <span><a style="color:white;cursor: pointer" th:href="@{lib_login(l='zh_CN')}">中文</a>&nbsp;&nbsp;<a th:href="@{lib_login(l='en_US')}" style="color:white;cursor: pointer;">english</a></span>
                     </font>
                 </div>
             </div>
@@ -192,7 +192,7 @@
         var id = $("#loginname").val();
         $.ajax({
             type: "POST",
-            url: '/find_pass',
+            url: 'find_pass',
             data: "id="+id,
             // dataType: "json",
             async: false,
@@ -215,7 +215,7 @@
             var code = "libid=" + libid + "&password=" + password + "&code=" + $("#code").val();
             $.ajax({
                 type: "POST",
-                url: '/librarian_login',
+                url: 'librarian_login',
                 data: code,
                 // dataType:"json",不能写这个，否则永远返回不了String数据
                 async: false,
@@ -224,7 +224,7 @@
                     //alert(data);
                     if ("success" === data) {
                         saveCookie();
-                        window.location.href = "/lib_index";//进入主页
+                        window.location.href = "lib_index";//进入主页
                     } else if ("usererror" === data) {
                         $("#loginname").tips({
                             side: 1,

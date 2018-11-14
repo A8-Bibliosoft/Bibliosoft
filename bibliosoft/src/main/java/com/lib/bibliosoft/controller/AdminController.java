@@ -54,7 +54,7 @@ public class AdminController {
      * @ Description :登录主页地址
      */
 
-    @RequestMapping("/goAdminLogin")
+    @RequestMapping("goAdminLogin")
     public String adminLogin(Model model) throws  Exception{
         return "admin_login";
     }
@@ -65,7 +65,7 @@ public class AdminController {
      * @ Description :登录验证
      */
 
-    @PostMapping("/admin_login")
+    @PostMapping("admin_login")
     @ResponseBody
     public String loginAdmin(String name, String password,
                               HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -89,29 +89,29 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/adminLogout")
+    @GetMapping("adminLogout")
     public String logout(HttpServletRequest request, HttpServletResponse response){
         HttpSession session=request.getSession();
         session.setAttribute("islogin",false);
-        return "redirect:/goAdminLogin";
+        return "redirect:goAdminLogin";
     }
 
     @ResponseBody
-    @GetMapping("/find_all_librarian")
+    @GetMapping("find_all_librarian")
     public List<Librarian> findAll(Model model){
         List<Librarian> list=adminService.findAll();
         model.addAttribute("librarians",list);
         return list;
     }
 
-    @PostMapping("/create_librarian")
+    @PostMapping("create_librarian")
     public String create(Librarian librarian){
         librarianRepository.save(librarian);
-        return "redirect:/lib_list";
+        return "redirect:lib_list";
     }
 
 
-    @PostMapping("/update_librarian")
+    @PostMapping("update_librarian")
     public String update(Librarian librarian){
         String id=librarianRepository.findByLibId(librarian.getLibId()).getLibId();
         if(librarian.getPassword()!="") {
@@ -119,11 +119,11 @@ public class AdminController {
         }else {
             librarianRepository.updateLibrarianWithoutPass(librarian.getLibId(), librarian.getLibName(), librarian.getEmail(), librarian.getPhone());
         }
-        return "redirect:/lib_list";
+        return "redirect:lib_list";
     }
 
     @ResponseBody
-    @DeleteMapping("/delete_librarian")
+    @DeleteMapping("delete_librarian")
     public void  deleteById(String id){
         adminService.deleteByLibId(id);
     }
@@ -137,7 +137,7 @@ public class AdminController {
      *@ Description: 查询图书馆员
      *@ Date: 2018.10.22
      */
-    @PostMapping("/lib_search")
+    @PostMapping("lib_search")
     public String search_book(Model model, @RequestParam("libname") String libname){
         logger.info("lib name==={}",libname);
         List<Librarian> searchLibrarian = null;
@@ -162,7 +162,7 @@ public class AdminController {
 
 
 
-    @GetMapping("/lib_list")
+    @GetMapping("lib_list")
     public String list_librarian(Model model){
         Integer currpage = 1;
         totalcount = adminService.findAll().size();
@@ -186,7 +186,7 @@ public class AdminController {
         return "lib_list";
     }
 
-    @GetMapping("/lib_page")
+    @GetMapping("lib_page")
     public String page_lib(@RequestParam(value = "currpage") Integer currpage, Model model){
         totalcount = librarianRepository.findAll().size();
         model.addAttribute("totalcount", totalcount);
@@ -255,7 +255,7 @@ public class AdminController {
     }
 
     @ResponseBody
-    @GetMapping("/get_threshold")
+    @GetMapping("get_threshold")
     public  Def getThreahole(){
        Def def=new Def();
        def.fine= defSettingRepository.findDefSettingById(1).getDefnumber();
@@ -265,7 +265,7 @@ public class AdminController {
     }
 
 
-    @PostMapping("/update_threshold")
+    @PostMapping("update_threshold")
     public String  changeThreshold(Def def){
         DefSetting setting1=new DefSetting();
         DefSetting setting2=new DefSetting();
@@ -284,7 +284,7 @@ public class AdminController {
         adminService.saveSetting(setting1,setting2,setting3);
         logger.info("阈值修改成功");
 
-        return "redirect:/lib_list";
+        return "redirect:lib_list";
     }
 
     @Autowired
@@ -293,7 +293,7 @@ public class AdminController {
     String from;
 
     @ResponseBody
-    @PostMapping("/find_pass")
+    @PostMapping("find_pass")
     public String findPass(String id){
         //logger.info(librarianRepository.findByLibId(id).getPassword());
         //判空！！！
@@ -318,7 +318,7 @@ public class AdminController {
     }
 
     @ResponseBody
-    @PostMapping("/change_pass")
+    @PostMapping("change_pass")
     public String change_pass(String old_pass, String new_pass, String new_pass_check){
         if(!new_pass.equals(new_pass_check)){
             return "input inconsistency";

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 public class CodeController {
     private static Logger logger = LoggerFactory.getLogger(CodeController.class);
 
-    @GetMapping("/code")
+    @GetMapping("code")
     public void createCode(HttpServletRequest request, HttpServletResponse response) {
 
         try {

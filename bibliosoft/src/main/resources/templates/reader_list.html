@@ -2,21 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href="../static/assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="../static/css/style.css"/>
-    <link href="../static/assets/css/codemirror.css" rel="stylesheet">
-    <link rel="stylesheet" href="../static/assets/css/ace.min.css"/>
-    <link rel="stylesheet" href="../static/assets/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="../static/assets/layer/layui.css"/>
-    <link rel="stylesheet" href="../static/assets/layer/skin/layer.css"/>
+    <link th:href="@{/static/assets/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/static/css/style.css}"/>
+    <link th:href="@{/static/assets/css/codemirror.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/static/assets/css/ace.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/layer/layui.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/layer/skin/layer.css}"/>
 
     <!--[if IE 7]>
-    <link rel="stylesheet" href="../static/assets/css/font-awesome-ie7.min.css"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/font-awesome-ie7.min.css}"/>
     <![endif]-->
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="../static/assets/css/ace-ie.min.css"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/ace-ie.min.css}"/>
     <![endif]-->
-    <script src="../static/assets/js/jquery.min.js"></script>
+    <script th:src="@{/static/assets/js/jquery.min.js}"></script>
 
     <!-- <![endif]-->
 
@@ -28,7 +28,7 @@
 
     <script type="text/javascript">
         // language=HTML
-        window.jQuery || document.write("<script src='../static/assets/js/jquery-2.0.3.min.js'>" + "<" + "/script>");
+        window.jQuery || document.write("<script th:src='@{/static/assets/js/jquery-2.0.3.min.js}'>" + "<" + "/script>");
     </script>
 
     <!-- <![endif]-->
@@ -41,17 +41,17 @@
 
     <script type="text/javascript">
         if ("ontouchend" in document)
-            document.write("<script src='../static/assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+            document.write("<script th:src='@{/static/assets/js/jquery.mobile.custom.min.js}'>" + "<" + "/script>");
     </script>
-    <script src="../static/assets/js/bootstrap.min.js"></script>
-    <script src="../static/assets/js/typeahead-bs2.min.js"></script>
+    <script th:src="@{/static/assets/js/bootstrap.min.js}"></script>
+    <script th:src="@{/static/assets/js/typeahead-bs2.min.js}"></script>
     <!-- page specific plugin scripts -->
-    <script src="../static/assets/js/jquery.dataTables.min.js"></script>
-    <script src="../static/assets/js/jquery.dataTables.bootstrap.js"></script>
-    <script type="text/javascript" src="../static/js/H-ui.js"></script>
-    <script type="text/javascript" src="../static/js/H-ui.admin.js"></script>
-    <script src="../static/assets/layer/layer.js" type="text/javascript"></script>
-    <script src="../static/assets/laydate/laydate.js" type="text/javascript"></script>
+    <script th:src="@{/static/assets/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/static/assets/js/jquery.dataTables.bootstrap.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/H-ui.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/H-ui.admin.js}"></script>
+    <script th:src="@{/static/assets/layer/layer.js}" type="text/javascript"></script>
+    <script th:src="@{/static/assets/laydate/laydate.js}" type="text/javascript"></script>
     <title>reader list</title>
     <style>
         td {
@@ -67,7 +67,7 @@
             <div class="search_style">
                 <div class="title_names" th:text="#{search.name}"></div>
                 <ul class="search_content clearfix">
-                    <form action="/reader_serach" method="post" id="search" onsubmit="return search_check()">
+                    <form action="reader_serach" method="post" id="search" onsubmit="return search_check()">
                         <li>
                             <label class="l_f" th:text="#{search.tip}">
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You Can Search&nbsp;&nbsp;&nbsp;&nbsp;
@@ -162,7 +162,7 @@
                 <div id="fenye" style="width: 600px;margin: 0 auto;">
                     <!--页码-->
 
-                    <!--<a th:href="@{/reader_page(currpage=${currpage}-1)}">-->
+                    <!--<a th:href="@{reader_page(currpage=${currpage}-1)}">-->
                     <!--<button type="button" class="btn btn-success">prev</button>-->
                     <!--</a>-->
                     <ul class="pager">
@@ -178,7 +178,7 @@
                             </a>
                         </li>
                         <li th:if="${currpage ne 1}" style="margin: 0 5px;">
-                            <a th:href="@{/reader_page(currpage=${currpage}-1)}" th:text="#{page.old}">&larr; Older</a>
+                            <a th:href="@{reader_page(currpage=${currpage}-1)}" th:text="#{page.old}">&larr; Older</a>
                         </li>
                         <li th:if="${currpage eq 1}" style="margin: 0 5px;" class="disabled">
                             <a href="javascript:return false;" th:text="#{page.old}">&larr; Older</a>
@@ -193,7 +193,7 @@
                             <a href="javascript:return false;" th:text="#{page.new}">Newer &rarr;</a>
                         </li>
                         <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                            <a th:href="@{/reader_page(currpage=${currpage}+1)}" th:text="#{page.new}">Newer &rarr;</a>
+                            <a th:href="@{reader_page(currpage=${currpage}+1)}" th:text="#{page.new}">Newer &rarr;</a>
                         </li>
                         <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
                             <a href="javascript:return false;" th:text="#{page.index}">
@@ -201,7 +201,7 @@
                             </a>
                         </li>
                         <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                            <a th:href="@{/reader_page(currpage=${totalpages})}" th:text="#{page.last}">
+                            <a th:href="@{reader_page(currpage=${totalpages})}" th:text="#{page.last}">
                                 &nbsp;last&nbsp;
                             </a>
                         </li>
@@ -214,7 +214,7 @@
 
     <!--添加用户图层-->
     <div class="add_menber" id="add_menber_style" style="display:none">
-        <form action="/add_reader" method="post" id="addReader">
+        <form action="add_reader" method="post" id="addReader">
             <ul class=" page-content">
                 <li>
                     <label class="label_name" th:text="#{reader.rid}">Reader ID：</label>
@@ -291,9 +291,6 @@
         </form>
     </div>
 </div>
-
-</body>
-</html>
 <script th:inline="javascript">
     /*<![CDATA[*/
     var message1 = [[#{alert.empty}]];
@@ -392,7 +389,7 @@
             var dataid = "id=" + id;
             $.ajax({
                 type: "POST",
-                url: "/reader_stop",
+                url: "reader_stop",
                 data: dataid,
                 success: function (data) {
                     if (data != null) {
@@ -414,7 +411,7 @@
             var dataid = "id=" + id;
             $.ajax({
                 type: "POST",
-                url: "/reader_start",
+                url: "reader_start",
                 data: dataid,
                 success: function (data) {
                     if (data != null) {
@@ -500,7 +497,7 @@
             $.ajax({
                 type: "POST",
                 data: dataid,
-                url: '/delete',
+                url: 'delete',
                 async: false,
                 cache: false,
                 success: function (result) {
@@ -517,3 +514,5 @@
     }
 
 </script>
+</body>
+</html>

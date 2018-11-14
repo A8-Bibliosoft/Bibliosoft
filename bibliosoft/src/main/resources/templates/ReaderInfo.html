@@ -77,7 +77,7 @@
                     </div>
                     <div class="col-md-4 form-group">
                         <div class="col-md-12">
-                            <img  style="width: 200px;height: 200px" id="headimgshow" th:src="${reader.imgsrc}">
+                            <img  style="width: 200px;height: 200px" id="headimgshow" th:src="@{${reader.imgsrc}}">
                         </div>
                         <div class="col-md-12">
                             <input type="file" name="imgFile" id="file-btn" style="display:none;">
@@ -172,8 +172,8 @@
                 <ul class="nav imgsize">
                     <li th:each="history:${historylist}">
                         <a th:href="@{'goBookDetail?bookIsbn='+${history.book.bookIsbn}}" style="float: left">
-                            <img th:if="${history.book.judgeSrcLocalOrWeb() eq 1}" th:src="${'https://images.weserv.nl/?url='+history.book.bookImg}" alt="" >
-                            <img th:if="${history.book.judgeSrcLocalOrWeb() eq 0}" th:src="${history.book.bookImg}" alt="" >
+                            <img th:if="${history.book.judgeSrcLocalOrWeb() eq 1}" th:src="@{${'https://images.weserv.nl/?url='+history.book.bookImg}}" alt="" >
+                            <img th:if="${history.book.judgeSrcLocalOrWeb() eq 0}" th:src="@{${history.book.bookImg}}" alt="" >
                         </a>
                         <div class="bookinfo">
                             <h4><span th:text="#{readerinfo.bookname}">书籍名称:</span><span th:text="${history.book.bookName}"></span></h4>
@@ -215,7 +215,7 @@
     function  GoChangeEmail(){
         $.ajax({
             type: "POST",
-            url: "/sendEmailCode",
+            url: "sendEmailCode",
             data: null,
             async: false,
             cache: false,
@@ -244,14 +244,14 @@
         var code="emailcode="+emailcode+"&&newemail="+newemail;
         $.ajax({
             type: "POST",
-            url: "/changeEmail",
+            url: "changeEmail",
             data: code,
             async: false,
             cache: false,
             success: function (data) {
                 if ("success" === data) {
                     alert("更改邮箱成功！");
-                    window.location.href="/goReaderInfo";
+                    window.location.href="goReaderInfo";
                 } else if ("erremailcode" === data) {
                     alert("验证码错误！");
                 } else if ("error" === data) {
@@ -296,14 +296,14 @@
         var code="oldpassword="+oldpassword+"&&newpassword="+newpassword;
         $.ajax({
             type: "POST",
-            url: "/changePassword",
+            url: "changePassword",
             data: code,
             async: false,
             cache: false,
             success: function (data) {
                 if ("success" === data) {
                     alert("修改密码成功！");
-                    window.location.href="/goReaderInfo";
+                    window.location.href="goReaderInfo";
                 } else if ("erroldpassword" === data) {
                     alert("原密码输入错误!");
                 } else if ("error" === data) {

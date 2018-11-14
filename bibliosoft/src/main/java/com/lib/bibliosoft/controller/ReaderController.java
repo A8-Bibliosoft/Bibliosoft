@@ -14,6 +14,7 @@ import com.lib.bibliosoft.utils.VerifyCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,6 +80,12 @@ public class ReaderController {
     /**/
     private Integer totalCount;
 
+    @Value("${spring.mail.username}")
+    String emailusername;
+    @Value("${spring.mail.password}")
+    String emailpassword;
+    @Value("${spring.mail.host}")
+    String emailhost;
 
     /**
      * 后台首页的数据展示页面，网站统计
@@ -271,11 +278,13 @@ public class ReaderController {
     @GetMapping("/reader_show/{id}")
     public String show_reader(@PathVariable("id") String readerId, Model model){
         //查询出这个reader的详细信息
+//        logger.info(readerId);
         Reader reader = iReaderDao.findByReaderId(readerId);
         model.addAttribute("reader", reader);
         //找出借了几本书
         Integer borrownum = iReaderService.findBorrowCountByReaderId(readerId);
         model.addAttribute("num", borrownum);
+//        logger.info(reader.getImgsrc());
         return "reader_show";
     }
 
@@ -316,7 +325,7 @@ public class ReaderController {
      * @param email
      * @return
      */
-    @PostMapping("/add_reader")
+    @PostMapping("add_reader")
     public String reader_add(String readerId,String readerName,
                              @RequestParam("form-field-radio") String sex,
                              String phone, String email, String password,
@@ -324,7 +333,7 @@ public class ReaderController {
         if (flag.equals("edit")){
             Integer id = readerRepository.findReaderByReaderId(readerId).getId();
             //id是主键
-            iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status, password);
+            iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status, password,new Date());
         }else if(flag.equals("add")){
             //如果数据库里面存在之前标记为del的用户,则把它激活即可
             Reader reader1 = readerRepository.findReaderByReaderId(readerId);
@@ -332,7 +341,7 @@ public class ReaderController {
                  readerRepository.updateReaderStatusById(reader1.getId(),"ON");
                  Integer id = reader1.getId();
                  //更新他的信息
-                 iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status, password);
+                 iReaderDao.updateReader(id, sex, readerName, phone, readerId, email, status, password,new Date());
                  return "redirect:/reader_list";
             }
             //之前不存在新建读者
@@ -349,7 +358,7 @@ public class ReaderController {
             iReaderDao.addReader(reader);
             //logger.info("Add reader={}", reader.toString());
         }
-        return "redirect:/reader_list";
+        return "redirect:reader_list";
     }
 
     /**
@@ -358,7 +367,7 @@ public class ReaderController {
      * @param model
      * @return
      */
-    @PostMapping("/reader_stop")
+    @PostMapping("reader_stop")
     @ResponseBody
     public String stop_reader(String id, Model model){
         logger.info("id={}",id);
@@ -376,14 +385,19 @@ public class ReaderController {
      * @param model
      * @return
      */
-    @PostMapping("/reader_start")
+    @PostMapping("reader_start")
     @ResponseBody
     public String start_reader(String id, Model model){
         Integer Iid = Integer.parseInt(id);
         logger.info("OFF >>> ON");
+        String s = Objects.requireNonNull(readerRepository.findById(Iid).orElse(null)).getStatus();
+
         iReaderDao.updateReaderStatusById(Iid, "ON");
         Reader reader=readerRepository.findById(Iid).get();
         reader.setAlldebt(0);
+        //如果是del状态就更新注册日期
+        if (s.equals("DEL"))
+            reader.setRegistTime(new Date());
         readerRepository.save(reader);
         logger.info("reader.status >>> ={}",iReaderDao.findById(Iid).getStatus());
         model.addAttribute("readers", iReaderDao.findAll());
@@ -396,7 +410,7 @@ public class ReaderController {
      * @param model
      * @return
      */
-    @GetMapping("/reader_page")
+    @GetMapping("reader_page")
     public String page_reader(@RequestParam(value = "currpage") Integer currpage, Model model){
 
         totalCount = iReaderDao.findAll().size();
@@ -425,7 +439,7 @@ public class ReaderController {
     }
 
     // 排序分页显示数据
-    @PostMapping("/reader_pageSort")
+    @PostMapping("reader_pageSort")
     @ResponseBody
     public Page<Reader> showSortPage(@RequestParam(value = "currpage") Integer currpage, @RequestParam(value = "pagesize") Integer pagesize){
         logger.info("paging-sort >>> currpage= {}, pagesize= {}", currpage, pagesize);
@@ -438,7 +452,7 @@ public class ReaderController {
      * @param search_content
      * @return
      */
-    @RequestMapping("/reader_serach")
+    @RequestMapping("reader_serach")
     public String search_reader(Model model, @RequestParam("search_content") String search_content){
         logger.info("search_content==={}",search_content);
         List<Reader> searchReader = iReaderService.searchReaderByPhoneOrName(search_content);
@@ -457,12 +471,12 @@ public class ReaderController {
      *@Description: test
      *@Date: 11:14 PM. 10/1/2018
      */
-    @RequestMapping("/goLogin")
+    @RequestMapping("goLogin")
     public String goLogin(Model model) throws Exception{
         return "ReaderLogin";
     }
 
-    @PostMapping("/reader_login")
+    @PostMapping("reader_login")
     @ResponseBody
     public String loginReader(String readerId, String password, String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Reader reader=null;
@@ -505,7 +519,7 @@ public class ReaderController {
             return "usererror";
         }
     }
-    @RequestMapping("/goReaderInfo")
+    @RequestMapping("goReaderInfo")
     public String goReaderInfo(Model model,HttpServletRequest request) throws Exception{
         HttpSession session=request.getSession();
         String readerId=null;
@@ -525,7 +539,7 @@ public class ReaderController {
         return "redirect:goLogin";
     }
 
-    @RequestMapping("/changeReaderInfo")
+    @RequestMapping("changeReaderInfo")
     public synchronized String changeReaderInfo (HttpServletRequest request,String readerName,String sex,MultipartFile imgFile){
         HttpSession session=request.getSession();
         String readerId=session.getAttribute("readerId").toString();
@@ -578,7 +592,7 @@ public class ReaderController {
                     + "Your Code:" + emailcode
                     + "\n\n\n\n"
                     + "Thinks, from Librarian";
-            SendEmail.sendMessage(message,reader.getEmail());
+            SendEmail.sendMessage(emailhost,emailusername,emailpassword,message,reader.getEmail());
             logger.info(emailcode);
             return "success";
         }else{
@@ -587,7 +601,7 @@ public class ReaderController {
     }
 
     //修改邮箱
-    @RequestMapping("/changeEmail")
+    @RequestMapping("changeEmail")
     @ResponseBody
     public String changeEmail(HttpSession session,String emailcode,String newemail) throws Exception{
         if(session.getAttribute("emailcode")!=null&&session.getAttribute("readerId")!=null&&emailcode!=null&&!emailcode.equals("")&&newemail!=null&&!newemail.equals("")){
@@ -604,7 +618,7 @@ public class ReaderController {
         return "error";
     }
     //忘记密码
-    @RequestMapping("/forgetPassword")
+    @RequestMapping("forgetPassword")
     @ResponseBody
     public String forgetPassword(String readerId) throws Exception{
         if(readerId!=null&&!readerId.equals("")){
@@ -617,7 +631,7 @@ public class ReaderController {
                             + "Please take care of your password to prevent it from being stolen by others."
                             + "\n\n\n\n"
                             + "Thinks, from Librarian";
-                    SendEmail.sendMessage(message,reader.getEmail());
+                    SendEmail.sendMessage(emailhost,emailusername,emailpassword,message,reader.getEmail());
                     return "success";
                 }
             }
@@ -626,7 +640,7 @@ public class ReaderController {
         return "error";
     }
     //修改密码
-    @RequestMapping("/changePassword")
+    @RequestMapping("changePassword")
     @ResponseBody
     public String changePassword(HttpSession session,String oldpassword,String newpassword) throws Exception{
         if(session.getAttribute("readerId")!=null&&oldpassword!=null&&!oldpassword.equals("")&&newpassword!=null&&!newpassword.equals("")){
@@ -642,7 +656,7 @@ public class ReaderController {
         return "error";
     }
 
-    @RequestMapping(value={"/goHomePage", "/"})
+    @RequestMapping(value={"goHomePage", "/"})
     public String goHomePage(Model model) throws Exception{
         if(bulletinRepository.findHMNotices().size()>0&&bookSortRepository.findHMBook().size()>0){
             List<Notices> noticesList=bulletinRepository.findHMNotices();
@@ -653,16 +667,14 @@ public class ReaderController {
         return "HomePage";
     }
 
-    @RequestMapping("/goSearch")
+    @RequestMapping("goSearch")
     public String goSearch(Model model,Integer booktypeid,Integer currpage) throws Exception{
         if(booktypeid!=null&&currpage!=0){
             Integer totalPages =  bookSortService.PageBook(0,pagesize,booktypeid).getTotalPages();
             model.addAttribute("totalpages", totalPages);
             //获得每页的数据
-            if(currpage == 1)
-                currpage = 0;
-            if(currpage == totalPages&&currpage>0)
-                currpage = totalPages-1;
+            if(currpage >0)
+                currpage = currpage-1;
             List<BookSort> bookSortList=bookSortService.PageBook(currpage,pagesize,booktypeid).getContent();
             if(totalPages>1){
                 model.addAttribute("currpage",currpage+1);
@@ -676,12 +688,11 @@ public class ReaderController {
             model.addAttribute("currpage",0);
             model.addAttribute("booktypelist",bookTypeRepository.findAll());
         }
-        //logger.info(bookSortRepository.findByTypeId(1).get(0).getOneBook().getBookPosition().getPlace());
         return "Search";
     }
 
 
-    @RequestMapping("/search")
+    @RequestMapping("search")
     public String search(Model model,String find_type,String find_info,Integer booktypeid) throws Exception{
         model.addAttribute("booktypelist",bookTypeRepository.findAll());
         model.addAttribute("currpage",0);
@@ -704,7 +715,7 @@ public class ReaderController {
         return "Search";
     }
 
-    @RequestMapping("/goBookDetail")
+    @RequestMapping("goBookDetail")
     public String goBookDetail(Model model,String bookIsbn){
         List<Book> booklist=bookRepository.findBookByBookIsbn(bookIsbn);
         if(booklist.size()>0){
@@ -718,14 +729,14 @@ public class ReaderController {
         return "HomePage";
     }
 
-    @RequestMapping("/goOut")
+    @RequestMapping("goOut")
     public String goOut(HttpServletRequest request) {
         request.getSession().invalidate();
         return "redirect:goHomePage";
     }
 
     //预约书籍
-    @RequestMapping("/bookBook")
+    @RequestMapping("bookBook")
     @ResponseBody
     public String bookBook(HttpServletRequest request,Integer bookId){
         HttpSession session=request.getSession();
@@ -736,7 +747,7 @@ public class ReaderController {
         DefSetting defSetting=defSettingRepository.findDefSettingById(4);
         //获取最大借书数量
         DefSetting maxborrow=defSettingRepository.findDefSettingById(5);
-        logger.info(defSetting.getDeftype());
+
         String readerId=session.getAttribute("readerId").toString();
         updateReaderAlldebt(readerId);
         //已借书籍+已预约书籍<最大可借书籍 剩余书籍大于0 用户未欠款(或状态为on)
@@ -763,18 +774,17 @@ public class ReaderController {
             }
         }else{
             return "error";
-
         }
     }
 
     //读者借书
-    @RequestMapping("/goBorrowBook")
+    @RequestMapping("goBorrowBook")
     public String goBorrowBook(){
         return "BorrowBook";
     }
 
     //借书，返回提示信息
-    @RequestMapping("/borrowBook")
+    @RequestMapping("borrowBook")
     @ResponseBody
     public synchronized String borrowBook(String readerId,Integer bookId){
 
@@ -814,13 +824,13 @@ public class ReaderController {
     }
 
     //读者还书页面
-    @RequestMapping("/goReturnBook")
+    @RequestMapping("goReturnBook")
     public String goReturnBook(){
         return "ReturnBook";
     }
 
     //还书 书籍存在 借书记录存在 书籍欠款为0
-    @RequestMapping("/returnBook")
+    @RequestMapping("returnBook")
     @ResponseBody
     public synchronized String returnBook(String bookid){
         Integer bookId = Integer.parseInt(bookid);
@@ -865,7 +875,7 @@ public class ReaderController {
      * @date 12:13 PM. 11/10/2018
      */
     @Transactional
-    @PostMapping("/pay_fine")
+    @PostMapping("pay_fine")
     @ResponseBody
     public String payfine(String bookid, String fine){
         Integer bookId = Integer.parseInt(bookid);
@@ -926,7 +936,7 @@ public class ReaderController {
                         + "Please return the book quickly!."
                         + "\n\n\n\n"
                         + "Thinks, from Librarian";
-                SendEmail.sendMessage(message,reader.getEmail());
+                SendEmail.sendMessage(emailhost,emailusername,emailpassword,message,reader.getEmail());
             }
         }
         //logger.info("还书日期减一天");
@@ -974,12 +984,12 @@ public class ReaderController {
     /**
      * 胡皓
      */
-    @RequestMapping("/goFeedBack")
+    @RequestMapping("goFeedBack")
     public String goFeedBack(){
         return "FeedBack";
     }
 
-    @RequestMapping("/feedBack")
+    @RequestMapping("feedBack")
     @ResponseBody
     public String feedBack(HttpSession session,String content){
         if(session.getAttribute("readerId")!=null){
@@ -1005,7 +1015,7 @@ public class ReaderController {
      * @method name gotoFeedbackPage
      * @date 12:18 PM. 10/20/2018
      */
-    @GetMapping("/reader_feedback")
+    @GetMapping("reader_feedback")
     public String gotoFeedbackPage(Model model){
         Integer currpage = 1;
         totalCount = feedbackRepository.findFeedbacksByIsView("no").size();
@@ -1034,7 +1044,7 @@ public class ReaderController {
      * @method name page_feedback
      * @date 10:44 PM. 10/20/2018
      */
-    @GetMapping("/feedback_page")
+    @GetMapping("feedback_page")
     public String page_feedback(@RequestParam(value = "currpage") Integer currpage,
                                 @RequestParam(value = "flag") String flag, Model model){
         List<Feedback> feedbacks = null;
@@ -1084,7 +1094,7 @@ public class ReaderController {
      * @method name deleteFeedback
      * @date 12:26 PM. 10/20/2018
      */
-    @PostMapping("/feedback/{id}")
+    @PostMapping("feedback/{id}")
     public ResponseEntity<Map<String,Object>> deleteFeedback(@PathVariable("id") Integer id){
         feedbackRepository.deleteById(id);
         Map<String,Object> map = new HashMap<String,Object>();
@@ -1100,7 +1110,7 @@ public class ReaderController {
      * @method name viewFeedback
      * @date 2:17 PM. 10/20/2018
      */
-    @PostMapping("/setviewfeedback/{id}")
+    @PostMapping("setviewfeedback/{id}")
     public ResponseEntity<Map<String,Object>> viewFeedback(@PathVariable("id") Integer id){
         feedbackRepository.updateStatusById(id);
         Map<String,Object> map = new HashMap<String,Object>();
@@ -1116,7 +1126,7 @@ public class ReaderController {
      * @method name showViewedFeedbacks
      * @date 2:22 PM. 10/20/2018
      */
-    @GetMapping("/viewed_feedback")
+    @GetMapping("viewed_feedback")
     public String showViewedFeedbacks(Model model){
         Integer currpage = 1;
         totalCount = feedbackRepository.findFeedbacksByIsView("yes").size();
@@ -1142,7 +1152,7 @@ public class ReaderController {
      * @method name showViewedFeedbacks
      * @date 2:23 PM. 10/20/2018
      */
-    @GetMapping("/unviewed_feedback")
+    @GetMapping("unviewed_feedback")
     public String showUnviewedFeedbacks(Model model){
         Integer currpage = 1;
         totalCount = feedbackRepository.findFeedbacksByIsView("no").size();

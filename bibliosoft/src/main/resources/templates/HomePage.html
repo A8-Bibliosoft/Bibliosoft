@@ -85,15 +85,15 @@
 							</div><!-- /navbar-collapse -->
 		</nav>
 		<div id="readeronline" style="float: right" >
-			<a th:if="${session.loginname} eq null" href="/lib_login">Librarian</a>
-			<a th:if="${session.loginname} eq null" href="/goLogin" th:text="#{homepage.login}">登录</a>
+			<a th:if="${session.loginname} eq null" href="lib_login">Librarian</a>
+			<a th:if="${session.loginname} eq null" href="goLogin" th:text="#{homepage.login}">登录</a>
             &nbsp;
 			<div th:if="${session.loginname} ne null">
                 <a href="goReaderInfo"><span th:text="${session.loginname}"></span></a>
 				<a href="goOut" th:text="#{homepage.logout}">退出登录</a>
 			</div>
             &nbsp;
-			<span><a style="color:white;cursor: pointer" th:href="@{/goHomePage(l='zh_CN')}">中文</a>&nbsp;&nbsp;<a th:href="@{/goHomePage(l='en_US')}" style="color:white;cursor: pointer;">english</a></span>
+			<span><a style="color:white;cursor: pointer" th:href="@{goHomePage(l='zh_CN')}">中文</a>&nbsp;&nbsp;<a th:href="@{goHomePage(l='en_US')}" style="color:white;cursor: pointer;">english</a></span>
 		</div>
 
 		<div class="banner-info wow bounceInDown" data-wow-duration="1s" data-wow-delay="0s">
@@ -222,7 +222,7 @@
 			</div>
 			<div class="col-md-4 gal-grid wow bounceInUp" data-wow-duration="1.5s" data-wow-delay="0s">
 				<div class="gal-img">
-					<a href="/goFeedBack">
+					<a href="goFeedBack">
 						<div class="item item-type-double">
 							<div class="item-hover">
 								<div class="item-info">			

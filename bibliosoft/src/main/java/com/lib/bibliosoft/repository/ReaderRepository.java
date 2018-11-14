@@ -25,13 +25,15 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
      */
     Reader findReaderByReaderName(String name);
 
-    List<Reader> findByRegistTime(Date day);
+    //找出所有的状态不是del的且注册日期时指定日期的读者
+    @Query(value = "select * from reader where regist_time = ?1 and status != ?2",nativeQuery = true)
+    List<Reader> searchByRegistTimeandStatusnotDel(Date day, String status);
 
-    @Query(value = "select * from reader where year(regist_time)=?1 and month(regist_time)=?2",nativeQuery = true)
-    List<Reader> findByMonthRegistTime(String year,String month);
+    @Query(value = "select * from reader where year(regist_time)=?1 and month(regist_time)=?2 and status != ?3",nativeQuery = true)
+    List<Reader> findByMonthRegistTimeandStatusnotDel(String year,String month, String status);
 
-    @Query(value = "select * from reader where regist_time>=?1 and regist_time<=?2",nativeQuery = true)
-    List<Reader> findByWeek(Date startdate,Date enddate);
+    @Query(value = "select * from reader where regist_time>=?1 and regist_time<=?2 and status != ?3",nativeQuery = true)
+    List<Reader> findByWeekandStatusnotDel(Date startdate,Date enddate, String status);
     /**
      * find a reader by reader_id not id
      * @param id
@@ -50,7 +52,7 @@ public interface ReaderRepository extends JpaRepository<Reader, Integer> {
     @Transactional
     @Modifying
     @Query(value = "update reader r set r.reader_name=?3, r.sex=?2, r.phone=?4, r.reader_id=?5, r.email=?6, r.status=?7, r.password=?8 where r.id = ?1", nativeQuery = true)
-    void updateReader(Integer id, String sex, String readerName, String phone, String readerId, String email, String status, String password);
+    void updateReader(Integer id, String sex, String readerName, String phone, String readerId, String email, String status, String password, java.util.Date registTime);
 
     @Transactional
     @Modifying

@@ -5,31 +5,31 @@
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="shortcut icon" href="/static/images/favicon.ico"/>
-    <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/static/css/style.css"/>
-    <link rel="stylesheet" href="/static/assets/css/ace.min.css"/>
-    <link rel="stylesheet" href="/static/assets/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/static/Widget/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
-    <link href="/static/Widget/icheck/icheck.css" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/static/assets/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/static/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/ace.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/font-awesome.min.css}"/>
+    <!--<link rel="stylesheet" href="/static/Widget/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">-->
+    <link th:href="@{/static/Widget/icheck/icheck.css}" rel="stylesheet" type="text/css"/>
 
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/static/assets/css/font-awesome-ie7.min.css"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/font-awesome-ie7.min.css}"/>
     <![endif]-->
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="/static/assets/css/ace-ie.min.css"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/ace-ie.min.css}"/>
     <![endif]-->
-    <script src="/static/js/jquery-1.9.1.min.js" type="text/javascript"></script>
-    <script src="/static/assets/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="/static/assets/js/typeahead-bs2.min.js" type="text/javascript"></script>
+    <script th:src="@{/static/js/jquery-1.9.1.min.js}" type="text/javascript"></script>
+    <script th:src="@{/static/assets/js/bootstrap.min.js}" type="text/javascript"></script>
+    <script th:src="@{/static/assets/js/typeahead-bs2.min.js}" type="text/javascript"></script>
     <!-- page specific plugin scripts -->
-    <script src="/static/assets/js/jquery.dataTables.min.js" type="text/javascript"></script>
-    <script src="/static/assets/js/jquery.dataTables.bootstrap.js" type="text/javascript"></script>
-    <script src="/static/js/H-ui.js" type="text/javascript"></script>
-    <script src="/static/js/H-ui.admin.js" type="text/javascript"></script>
-    <script src="/static/assets/layer/layer.js" type="text/javascript"></script>
-    <script src="/static/assets/laydate/laydate.js" type="text/javascript"></script>
-    <script type="text/javascript" src="/static/Widget/zTree/js/jquery.ztree.all-3.5.min.js"></script>
-    <script src="/static/js/lrtk.js" type="text/javascript"></script>
+    <script th:src="@{/static/assets/js/jquery.dataTables.min.js}" type="text/javascript"></script>
+    <script th:src="@{/static/assets/js/jquery.dataTables.bootstrap.js}" type="text/javascript"></script>
+    <script th:src="@{/static/js/H-ui.js}" type="text/javascript"></script>
+    <script th:src="@{/static/js/H-ui.admin.js}" type="text/javascript"></script>
+    <script th:src="@{/static/assets/layer/layer.js}" type="text/javascript"></script>
+    <script th:src="@{/static/assets/laydate/laydate.js}" type="text/javascript"></script>
+    <script type="text/javascript" th:src="@{/static/Widget/zTree/js/jquery.ztree.all-3.5.min.js}"></script>
+    <script th:src="@{/static/js/lrtk.js}" type="text/javascript"></script>
     <title>Librarian list</title>
 </head>
 <body>
@@ -39,7 +39,7 @@
         <img src="/static/images/biglogo.png" style="font-size: 30px;color: #EEEEEE;padding-left: 20px;height: 65% "/>
     </div>
     <div style="line-height: 75px;position:absolute; right:20px;top:2px;display: table-cell;vertical-align: middle;">
-        <a href="/adminLogout" style="color:#EEEEEE;display: table-cell;vertical-align: middle;font-size: 15px" >Logout</a>
+        <a href="adminLogout" style="color:#EEEEEE;display: table-cell;vertical-align: middle;font-size: 15px" >Logout</a>
     </div>
 </div>
 
@@ -50,7 +50,7 @@
         <div class="search_style">
             <div class="title_names">Librarian Query</div>
 
-            <form action="/lib_search" method="post" id="search" onsubmit="return search_check()">
+            <form action="lib_search" method="post" id="search" onsubmit="return search_check()">
                 <ul class="search_content clearfix">
                     <li>
                         <label class="l_f">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You Can
@@ -118,18 +118,6 @@
                         </a>
                     </td>
                     <td class="td-manage">
-                        <!--<a th:if="${book.getBookStatus()} == ''"-->
-                        <!--th:onClick="'javascript:member_stop('+this+','+${book.getId()}+')'" href="javascript:;"-->
-                        <!--title="Disable"-->
-                        <!--class="btn btn-xs btn-success">-->
-                        <!--<i class="icon-ok bigger-120"></i>-->
-                        <!--</a>-->
-                        <!--<a th:if="${book.getBookStatus()} == ''"-->
-                        <!--th:onClick="'javascript:member_start('+this+','+${book.getId()}+')'"-->
-                        <!--href="javascript:;" title="Enable"-->
-                        <!--class="btn btn-xs btn-primary">-->
-                        <!--<i class="icon-ok bigger-120"></i>-->
-                        <!--</a>-->
 
                         <a title="Edit" th:onclick="'javascript:member_edit('+ this +','+${lib.getLibId()}+',\''+${lib.getLibName()}+'\',\''+${lib.getEmail()}+'\',\''+${lib.getPhone()}+'\')'"
                            href="javascript:;"
@@ -160,7 +148,7 @@
                         </a>
                     </li>
                     <li th:if="${currpage ne 1}" style="margin: 0 5px;">
-                        <a th:href="@{/lib_page(currpage=${currpage}-1)}">&larr; Older</a>
+                        <a th:href="@{lib_page(currpage=${currpage}-1)}">&larr; Older</a>
                     </li>
                     <li th:if="${currpage eq 1}" style="margin: 0 5px;" class="disabled">
                         <a href="javascript:return false;">&larr; Older</a>
@@ -175,7 +163,7 @@
                         <a href="javascript:return false;">Newer &rarr;</a>
                     </li>
                     <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                        <a th:href="@{/lib_page(currpage=${currpage}+1)}">Newer &rarr;</a>
+                        <a th:href="@{lib_page(currpage=${currpage}+1)}">Newer &rarr;</a>
                     </li>
                     <li th:if="${currpage eq totalpages}" style="margin: 0 5px;" class="disabled">
                         <a href="javascript:return false;">
@@ -183,7 +171,7 @@
                         </a>
                     </li>
                     <li th:if="${currpage ne totalpages}" style="margin: 0 5px;">
-                        <a th:href="@{/lib_page(currpage=${totalpages})}">
+                        <a th:href="@{lib_page(currpage=${totalpages})}">
                             &nbsp;last&nbsp;
                         </a>
                     </li>
@@ -193,7 +181,7 @@
     </div>
     <!--添加管理员图层-->
     <div class="add_menber" id="add_menber_style" style="display:none">
-        <form action="/update_librarian" method="post" id="addbook">
+        <form action="update_librarian" method="post" id="addbook">
             <ul class=" page-content">
                 <li><label class="label_name">Librarian ID：</label>
                     <span class="add_name">
@@ -233,7 +221,7 @@
 
     <!--编辑阈值图层-->
     <div class="edit_threshold" id="edit_threshold_style" style="display:none">
-        <form action="/update_threshold" method="post" id="threshold_edit">
+        <form action="update_threshold" method="post" id="threshold_edit">
             <ul class=" page-content">
                 <li><label class="label_name">Fine Value:</label>
                     <span class="add_name">
@@ -262,7 +250,7 @@
 
     <!--修改密码图层-->
     <div class="edit_threshold" id="change_pass" style="display:none">
-        <form   id="change_password">
+        <form id="change_password">
             <ul class=" page-content">
                 <li><label class="label_name">Old Password:</label>
                     <span class="add_name">
@@ -295,11 +283,14 @@
 </body>
 </html>
 <script>
+
+    //日期插件
     laydate({
         elem: '#start',
         event: 'focus'
     });
 
+    //搜索表单检查
     function search_check() {
         var libname = $("#libname").val();
         // var bookaddtime = $("#bookaddtime").val();
@@ -353,6 +344,7 @@
             return 'left';
         }
     });
+
     $(function () {
         $("#products_style").fix({
             float: 'left',
@@ -369,14 +361,14 @@
     //当文档窗口发生改变时 触发
     $(window).resize(function () {
 
-    })
+    });
 
 
-
+    //找回密码
     function find_pass(obj,id) {
         $.ajax({
             type: "POST",
-            url: '/find_pass',
+            url: 'find_pass',
             data: "id="+id,
             // dataType: "json",
             async: false,
@@ -399,7 +391,7 @@
         $('#email').val(email);
         $('#phone').val(phone);
         $('#flag').val('edit');
-        $('#addbook').attr("action","/update_librarian");
+        $('#addbook').attr("action","update_librarian");
         $('#libId').attr("readonly","readonly");
         $('#libname').focus();
         layer.open({
@@ -424,17 +416,6 @@
                         return false;
                     }
                 });
-                // $(".add_menber input[type$='password']").each(function (n) {
-                //     if($(this).val()==""){
-                //         layer.alert(str += "" + $(this).attr("name") + " Can not be empty！\r\n", {
-                //             title: 'Info',
-                //             icon: 0,
-                //         });
-                //         num++;
-                //         return false;
-                //     }
-                //
-                // })
                 if (num > 0) {
                     return false;
                 }
@@ -462,7 +443,7 @@
         $('#phone').val("");
         $('#libId').val("");
         $('#libId').removeAttr("readonly");
-        $('#addbook').attr("action","/create_librarian");
+        $('#addbook').attr("action","create_librarian");
         layer.open({
             type: 1,
             title: 'Add Librarian',
@@ -520,10 +501,10 @@
         // $('#libname').focus();
         // $('#libId').val("");
         // $('#libId').removeAttr("readonly");
-        // $('#addbook').attr("action","/create_librarian");
+        // $('#addbook').attr("action","create_librarian");
         $.ajax({
             type: "GET",
-            url: '/get_threshold',
+            url: 'get_threshold',
             data: null,
             dataType: "json",
             async: false,
@@ -605,7 +586,7 @@
                else {
                    $.ajax({
                        type: "POST",
-                       url: '/change_pass',
+                       url: 'change_pass',
                        data: "old_pass="+$('#old_pass').val()+"&new_pass="+$('#new_pass').val()+"&new_pass_check="+$('#new_pass_chack').val(),
                        // dataType: "json",
                        async: false,
@@ -635,7 +616,7 @@
 
        $.ajax({
            type: "DELETE",
-           url: '/delete_librarian?id='+id,
+           url: 'delete_librarian?id='+id,
            data: null,
            async: false,
            cache: false,

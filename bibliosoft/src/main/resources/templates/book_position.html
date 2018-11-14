@@ -6,19 +6,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
           content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-    <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/static/css/style.css"/>
-    <link rel="stylesheet" href="/static/assets/css/ace.min.css"/>
-    <link rel="stylesheet" href="/static/assets/css/font-awesome.min.css"/>
-    <link href="/static/Widget/icheck/icheck.css" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/static/assets/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/static/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/ace.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/font-awesome.min.css}"/>
+    <link th:href="@{/static/Widget/icheck/icheck.css}" rel="stylesheet" type="text/css"/>
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/static/assets/css/font-awesome-ie7.min.css"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/font-awesome-ie7.min.css}"/>
     <![endif]-->
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="/static/assets/css/ace-ie.min.css"/>
+    <link rel="stylesheet" th:href="@{/static/assets/css/ace-ie.min.css}"/>
     <![endif]-->
-    <script src="/static/js/jquery-1.9.1.min.js"></script>
-    <script src="/static/assets/js/bootstrap.min.js"></script>
+    <script th:src="@{/static/js/jquery-1.9.1.min.js}"></script>
+    <script th:src="@{/static/assets/js/bootstrap.min.js}"></script>
     <title>Book Location Management</title>
 </head>
 <body>
@@ -108,7 +108,7 @@
 
 <!-- 编辑书籍位置图层-->
 <div class="add_menber" id="add_menber_style" style="display:none">
-    <form action="/edit_position" method="post" id="editplace">
+    <form action="edit_position" method="post" id="editplace">
         <ul class=" page-content">
             <li><label class="label_name" th:text="#{category.id}">ID：</label>
                 <span class="add_name">
@@ -125,10 +125,10 @@
         </ul>
     </form>
 </div>
-<script type="text/javascript" src="/static/Widget/icheck/jquery.icheck.min.js"></script>
-<script type="text/javascript" src="/static/assets/layer/layer.js"></script>
-<script type="text/javascript" src="/static/js/H-ui.js"></script>
-<script type="text/javascript" src="/static/js/H-ui.admin.js"></script>
+<script type="text/javascript" th:src="@{/static/Widget/icheck/jquery.icheck.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/assets/layer/layer.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/H-ui.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/H-ui.admin.js}"></script>
 
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
@@ -150,7 +150,7 @@
             var data="placename="+placename;
             $.ajax({
                 type: "post",
-                url: "/add_position",
+                url: "add_position",
                 data: data,
                 success: function(data){
                     layer.alert(data.msg, {
@@ -171,7 +171,7 @@
     /*书籍位置信息-删除*/
     function place_del(obj, id) {
         layer.confirm(message2, function (index) {
-            $.post("/bookposition/" + id, {}, function (data) {
+            $.post("bookposition/" + id, {}, function (data) {
                 if (data.msg == "location deleted successfully!") {
                     $(obj).parents("tr").remove();
                     layer.msg(data.msg, {icon: 1, time: 1000});
