@@ -866,6 +866,34 @@ public class ReaderController {
     }
 
     /**
+     * @description: 当损坏或者丢失的时候需要缴纳的金额
+     * @param: [bid]
+     * @return: java.lang.String
+     * @auther: 毛文杰
+     * @date: 11/14/2018 11:10 PM
+     */
+    @PostMapping("bookreturn_calculatefine")
+    @ResponseBody
+    public String return_calculatefine(String bid){
+        Integer bookid = Integer.parseInt(bid);
+        Book book = bookRepository.findByBookId(bookid);
+        if(book == null){
+            return "null";
+        }
+        float price = book.getBookPrice();
+        BorrowRecord borrowRecord = borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookid);
+        float f = 0;
+        if(borrowRecord != null) {
+            f = borrowRecord.getDebt();
+        }
+        float money = price+f;
+//        String msg = "You have been overdue for " + f + " days.";
+//        return "As the books are damaged / lost, you need to pay " +money+ " yuan for it."+msg;
+        return String.valueOf(money);
+    }
+
+
+    /**
      * 书籍损坏\丢失 缴纳罚款
      * @title ReaderController.java
      * @param bookid, fine
@@ -887,10 +915,11 @@ public class ReaderController {
         //2查找此bookid是否在bookrecord表中存在,如果不存在返回提示
         if(borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId) == null){
             return ResultEnum.BORROW_RECORD_NOT_EXIST.getMsg();
-        }else if(borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId) == null){
-            //书籍已还,无须再还
-            return ResultEnum.BOOK_ALREADY_RETURN.getMsg();
         }
+//       else if(borrowRecordRepository.findByBookIdAndReturntimeIsNull(bookId) == null){
+//            //书籍已还,无须再还
+//            return ResultEnum.BOOK_ALREADY_RETURN.getMsg();
+//        }
 
         //3将书籍的状态标志为已损坏\丢失(2)---->
         bookRepository.updateBookStatus(2,bookId);

@@ -100,6 +100,35 @@
     /*]]>*/
 
 
+    //bid失去焦点
+    $('#bid').blur(function() {
+        var bid = $("#bid").val();
+        //提示用户先填写isbn
+        if(bid == ""){
+            // layer.msg("please input bid first!", {
+            //     title: 'Info',
+            //     icon: 2
+            // });
+            $("#bid").focus();
+        }else{
+            var bid = "bid="+bid;
+            $.ajax({
+                type: "post",
+                url: "bookreturn_calculatefine",
+                data: bid,
+                success: function(data){
+                    // layer.alert(data);
+                    if(data == "null")
+                        layer.alert("the book id doesn't exist!");
+                    else{
+                        $("#fine").val(data);
+                    }
+                },
+            });
+        }
+    });
+
+
     /*还欠款*/
     function subform() {
         var bid = $("#bid").val();
@@ -107,7 +136,7 @@
         if (bid == '' || fine == '') {
             layer.msg(message2,{icon: 7});
         }
-        if(fine < 0){
+        else if(fine < 0){
             $("#numbig0").show();
             $("#fine").focus();
         }else{

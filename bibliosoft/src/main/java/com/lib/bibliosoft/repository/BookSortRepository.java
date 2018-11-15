@@ -45,6 +45,16 @@ public interface BookSortRepository extends JpaRepository<BookSort, Integer>,Jpa
     @Query(value = "update booksort set num = num+?1 where book_isbn = ?2",nativeQuery = true)
     @Modifying
     @Transactional
-    void updateBookNumByisbn(Integer num, String isbn);
+    void updateBookNumByisbn(int num, String isbn);
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM booksort WHERE book_isbn=?1",nativeQuery = true)
+    void deleteByIsbn(String isbn);
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM booksort WHERE num=0",nativeQuery = true)
+    void deleteNumEquals0();
 }
 

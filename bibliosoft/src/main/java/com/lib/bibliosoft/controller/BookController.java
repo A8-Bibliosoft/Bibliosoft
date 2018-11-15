@@ -7,6 +7,7 @@ import com.lib.bibliosoft.repository.*;
 import com.lib.bibliosoft.service.impl.BookDelService;
 import com.lib.bibliosoft.service.impl.BookService;
 import com.lib.bibliosoft.utils.*;
+import org.hibernate.annotations.Synchronize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -199,12 +200,15 @@ public class BookController {
             if(bookSort.size()>0){
                 //同一类(ISBN)书籍的数目减一
                 bookSortRepository.updateBookNumByisbn(-1,book.getBookIsbn());
-                //判断是否为0,是在删除此类(isbn)书籍
-                BookSort bookSort1 = bookSort.get(0);
-                if(bookSort1.getNum() == 0){
-                    //无此类书籍,删除,否则在读者页面会出现空白格子
-                    bookSortRepository.delete(bookSort1);
-                }
+//                List<BookSort> bookSort2 = bookSortRepository.findByBookIsbn(book.getBookIsbn());
+//                //判断是否为0,是在删除此类(isbn)书籍
+//                if(bookSort2.get(0).getNum() == 0){
+//                    logger.info("进入删除");
+//                    //无此类书籍,删除,否则在读者页面会出现空白格子
+//                    bookSortRepository.deleteByIsbn(bookSort2.get(0).getBookIsbn());
+//                }
+                //以上写法执行顺序有问题，永远进入不了if判断，因为num即使数据库已经为0，bookSort2也为1，不知道为什么
+                bookSortRepository.deleteNumEquals0();
             }
             map.put("msg", ResultEnum.BOOK_DEL_SUCCESS.getMsg());
         }else{
