@@ -35,6 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @Author: 毛文杰
@@ -875,6 +876,10 @@ public class ReaderController {
     @PostMapping("bookreturn_calculatefine")
     @ResponseBody
     public String return_calculatefine(String bid){
+        Pattern pattern = Pattern.compile("[0-9]*");
+        if(!pattern.matcher(bid).matches()){
+            return "null";
+        }
         Integer bookid = Integer.parseInt(bid);
         Book book = bookRepository.findByBookId(bookid);
         if(book == null){
