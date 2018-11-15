@@ -168,8 +168,10 @@
 		<div class="callbacks_container">
 				<ul class="rslides" id="slider4">
 					<li th:each="booksort:${booksortlist}">
-						<h4 th:text="${booksort.getOneBook().getBookName()}"></h4>
-						<p th:text="${booksort.getOneBook().getHMBookDesc()}"></p>
+						<div th:if="${booksort.getOneBook() ne null}">
+							<h4 th:text="${booksort.getOneBook().getBookName()}"></h4>
+							<p th:text="${booksort.getOneBook().getHMBookDesc()}"></p>
+						</div>
 					</li>
 				</ul>
 		</div>
