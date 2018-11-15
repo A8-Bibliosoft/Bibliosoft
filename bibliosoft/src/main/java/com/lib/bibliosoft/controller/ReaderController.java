@@ -978,7 +978,7 @@ public class ReaderController {
 
     //预约时间
 //    @Scheduled(cron = "0 0 */1 * * ?")  //cron接受cron表达式，根据cron表达式确定定时规则
-    @Scheduled(cron = "*/10 * * * * *")
+    @Scheduled(cron = "*/20 * * * * *")
     public void testCron2() {
         //时间减少
         appointmentRecordRepository.minusLasttime();
